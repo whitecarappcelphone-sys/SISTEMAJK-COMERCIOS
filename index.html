@@ -516,6 +516,102 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
     .conta-wrap { padding: 28px 18px 20px; }
     .conta-btn-pdf { margin-left: 0; width: 100%; justify-content: center; }
 }
+/* ============ MENÚ HAMBURGUESA DE NAVEGACIÓN DE MÓDULOS ============ */
+.hm-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 43px;
+    height: 43px;
+    border-radius: 12px;
+    border: 1px solid rgba(18,216,196,.32);
+    background: rgba(18,216,196,.08);
+    cursor: pointer;
+    transition: background .25s ease, border-color .25s ease, box-shadow .25s ease;
+    flex-shrink: 0;
+    z-index: 1501;
+}
+.hm-btn:hover { background: rgba(18,216,196,.18); border-color: #12d8c4; box-shadow: 0 0 14px rgba(18,216,196,.35); }
+.hm-btn:focus-visible { outline: none; border-color: #12d8c4; box-shadow: 0 0 0 3px rgba(18,216,196,.3); }
+.hm-btn span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: #12d8c4;
+    box-shadow: 0 0 6px rgba(18,216,196,.55);
+    transition: transform .3s cubic-bezier(.22,1.36,.44,1), opacity .2s ease;
+}
+.hm-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hm-btn.open span:nth-child(2) { opacity: 0; }
+.hm-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.hm-panel {
+    position: fixed;
+    top: 84px;
+    right: 20px;
+    width: 252px;
+    max-width: 78vw;
+    z-index: 1500;
+    background: linear-gradient(170deg, #0d1c20 0%, #101319 60%);
+    border: 1px solid rgba(18,216,196,.25);
+    border-radius: 18px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 22px 55px rgba(0,0,0,.65), 0 0 30px rgba(18,216,196,.08);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-14px) scale(.95);
+    transition: opacity .3s ease, transform .38s cubic-bezier(.22,1.36,.44,1), visibility .3s ease;
+}
+.hm-panel.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+.hm-panel-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: #7b9c99;
+    padding: 2px 8px 6px;
+}
+.hm-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 13px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #e9f8f6;
+    background: linear-gradient(90deg, rgba(18,216,196,.07), rgba(255,255,255,.015));
+    border: 1px solid rgba(18,216,196,.16);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: border-color .2s ease, background .2s ease, opacity .34s ease, transform .34s cubic-bezier(.22,1.36,.44,1);
+}
+.hm-item:hover { border-color: rgba(18,216,196,.55); background: rgba(18,216,196,.16); }
+.hm-item i.hm-ico { color: #12d8c4; width: 24px; text-align: center; font-size: 16px; flex-shrink: 0; }
+.hm-item .hm-txt { min-width: 0; }
+.hm-item .hm-name { display: block; font-weight: 600; font-size: 14px; }
+.hm-item .hm-sub { display: block; color: #7d8594; font-size: 10.5px; margin-top: 1px; }
+.hm-item .hm-arrow { margin-left: auto; font-size: 11px; color: #12d8c4; opacity: 0; transform: translateX(-6px); transition: opacity .25s ease, transform .25s ease; }
+.hm-item:hover .hm-arrow { opacity: 1; transform: translateX(0); }
+.hm-panel.open .hm-item { opacity: 1; transform: translateY(0); }
+.hm-panel.open .hm-item:nth-child(2) { transition-delay: .07s; }
+.hm-panel.open .hm-item:nth-child(3) { transition-delay: .14s; }
+.hm-panel.open .hm-item:nth-child(4) { transition-delay: .21s; }
+@media (max-width: 700px) {
+    .hm-panel { top: 76px; right: 14px; width: 230px; }
+    .hm-btn { width: 39px; height: 39px; }
+}
 </style>
 </head>
 <body>
@@ -526,6 +622,7 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
             <div><h1>Sistema JK</h1><span>ERP Empresarial</span></div>
         </div>
         <div class="user">
+            <button type="button" id="hmBtn" class="hm-btn" aria-label="Abrir menú de módulos" aria-expanded="false" aria-controls="hmPanel"><span></span><span></span><span></span></button>
             <div class="user-info">
                 <strong id="headerUsuario">Usuario</strong>
                 <span id="headerRol">Vendedor</span>
@@ -534,6 +631,13 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
             <div class="avatar"><img src="https://i.imgur.com/SC6JNcp.gif" alt="Usuario"></div>
         </div>
     </header>
+    <!-- MENÚ HAMBURGUESA DE NAVEGACIÓN DE MÓDULOS -->
+    <nav id="hmPanel" class="hm-panel" aria-label="Módulos del Sistema JK">
+        <div class="hm-panel-title">Módulos</div>
+        <a class="hm-item" href="index.html"><i class="hm-ico fa-solid fa-chart-pie"></i><div class="hm-txt"><span class="hm-name">Dashboard</span><span class="hm-sub">Panel central y caja</span></div><i class="hm-arrow fa-solid fa-arrow-right"></i></a>
+        <a class="hm-item" href="taller.html"><i class="hm-ico fa-solid fa-screwdriver-wrench"></i><div class="hm-txt"><span class="hm-name">Taller</span><span class="hm-sub">Estado de reparaciones</span></div><i class="hm-arrow fa-solid fa-arrow-right"></i></a>
+        <a class="hm-item" href="inventario.html"><i class="hm-ico fa-solid fa-boxes-stacked"></i><div class="hm-txt"><span class="hm-name">Inventario</span><span class="hm-sub">Stock y productos</span></div><i class="hm-arrow fa-solid fa-arrow-right"></i></a>
+    </nav>
     <div class="title">
         <h2>Registrar operación</h2>
         <p>Selecciona el tipo de operación que deseas registrar.</p>
@@ -3752,6 +3856,34 @@ function tallerQRRender() {
 (function () {
     const _panelRenderTodoOriginal = panelRenderTodo;
     panelRenderTodo = function () { _panelRenderTodoOriginal(); tallerQRRender(); };
+})();
+</script>
+<script>
+/* =====================================================================
+   MENÚ HAMBURGUESA DE NAVEGACIÓN DE MÓDULOS
+   ===================================================================== */
+(function () {
+    var btn = document.getElementById('hmBtn');
+    var panel = document.getElementById('hmPanel');
+    if (!btn || !panel) return;
+    function toggle(force) {
+        var open = (typeof force === 'boolean') ? force : !panel.classList.contains('open');
+        panel.classList.toggle('open', open);
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggle();
+    });
+    document.addEventListener('click', function (e) {
+        if (panel.classList.contains('open') && !panel.contains(e.target) && !btn.contains(e.target)) {
+            toggle(false);
+        }
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { toggle(false); }
+    });
 })();
 </script>
 </body>
