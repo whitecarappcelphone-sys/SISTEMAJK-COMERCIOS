@@ -1048,6 +1048,7 @@ body.jk-locked { overflow: hidden !important; }
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sistema JK">
 
+<link rel="manifest" href="manifest.json">
 </head>
   <body>
 <!-- LOCKSCREEN: contraseña del comercio -->
@@ -1788,6 +1789,13 @@ function jkInicializar() {
     jkMostrarLockscreen();
 }
 jkInicializar();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+}
 </script>
 </body>
 </html>
