@@ -4880,53 +4880,34 @@ function tallerQRRender() {
     var configurar = /configurar=1/.test(window.location.search);
     var sess = jkSesionActiva();
     var cached = jkCargarSesionLocal();
-    var active = sess || cached;
-    jkAplicarTema((active && active.theme) || 'oscuro');
-    if (cached) { jkRenderMarca(cached); jkActualizarLockLogo(cached); }
+    var active = sess;
+    var brand = active || cached;
+    jkAplicarTema((brand && brand.theme) || 'oscuro');
+    if (brand) { jkRenderMarca(brand); jkActualizarLockLogo(brand); }
+
     var form = document.getElementById('jkLockForm');
     var input = document.getElementById('jkLockPassword');
     var btn = document.getElementById('jkLockBtn');
     var err = document.getElementById('jkLockErr');
     var configurarBtn = document.getElementById('jkLockConfigurar');
     var lock = document.getElementById('jkLock');
+    var cmd = typeof cmdIniciar === 'function' ? cmdIniciar : (window.cmdIniciar || null);
 
-    if (configurar) {
-        // Modo crear comercio desde cero: sin lockscreen
-        if (lock) lock.classList.remove('show');
-        document.body.classList.remove('jk-locked');
-        setTimeout(function () { abrirEdicionComercio(); }, 250);
-        return;
+    function bindLockscreen() {
+        if (form) form.addEventListener('submit', function (e) { e.preventDefault(); entrar(); });
+        if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
+        if (configurarBtn) configurarBtn.addEventListener('click', function () { window.location.href = 'index.html?configurar=1'; });
     }
-
     function unlockAndStart() {
-        if (active) {
-            jkActivarSesion(active);
+        var nowActive = jkSesionActiva();
+        if (nowActive) {
+            jkActivarSesion(nowActive);
             jkEsconderLockscreen();
-            if (typeof cmdIniciar === 'function') cmdIniciar(active);
+            if (cmd) cmd(nowActive);
         } else {
             jkMostrarLockscreen();
         }
     }
-
-    window.addEventListener('jk-install-closed', unlockAndStart);
-
-    if (active) {
-        // Sesión activa — no volver a pedir la contraseña
-        jkActivarSesion(active);
-        jkEsconderLockscreen();
-        if (typeof cmdIniciar === 'function') cmdIniciar(active);
-        return;
-    }
-
-    // Sin sesión activa — mostrar popup de instalación si no se instaló/descartó
-    if (!jkInstallDetected()) {
-        jkShowInstallPopup();
-        return;
-    }
-
-    // Mostrar lockscreen directo (instalado o descartado)
-    jkMostrarLockscreen();
-
     function entrar() {
         var pwd = (input.value || '').trim();
         err.style.display = 'none'; err.textContent = '';
@@ -4936,7 +4917,7 @@ function tallerQRRender() {
             if (!c) { err.textContent = 'Contraseña incorrecta o no registrada.'; err.style.display = 'block'; return; }
             jkActivarSesion(c);
             jkEsconderLockscreen();
-            if (typeof cmdIniciar === 'function') cmdIniciar(c);
+            if (cmd) cmd(c);
         }).catch(function (e) {
             err.textContent = 'Error: ' + (e && e.message ? e.message : 'no se pudo validar');
             err.style.display = 'block';
@@ -4945,9 +4926,33 @@ function tallerQRRender() {
             btn.innerHTML = '<i class="fa-solid fa-lock"></i> Ingresar';
         });
     }
-    if (form) form.addEventListener('submit', function (e) { e.preventDefault(); entrar(); });
-    if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
-    if (configurarBtn) configurarBtn.addEventListener('click', function () { window.location.href = 'index.html?configurar=1'; });
+
+    if (configurar) {
+        // Modo crear comercio desde cero: sin lockscreen
+        if (lock) lock.classList.remove('show');
+        document.body.classList.remove('jk-locked');
+        setTimeout(function () { abrirEdicionComercio(); }, 250);
+        return;
+    }
+
+    // Binding lockscreen una sola vez
+    bindLockscreen();
+    window.addEventListener('jk-install-closed', unlockAndStart);
+
+    if (active) {
+        // Sesión activa — desbloquear, sin popup
+        unlockAndStart();
+        return;
+    }
+
+    // Sin sesión activa — popup de instalación primero
+    if (!jkInstallDetected()) {
+        jkShowInstallPopup();
+        return;
+    }
+
+    // Sin popup (instalado o descartado en esta sesión) — lockscreen directo
+    jkMostrarLockscreen();
 })();
 </script>
 <script>
@@ -4960,7 +4965,7 @@ window.addEventListener('beforeinstallprompt', function (e) {
     jkInstallEvent = e;
 });
 window.addEventListener('appinstalled', function () {
-    try { localStorage.removeItem('jk_install_dismissed'); localStorage.setItem('jk_install_ok', '1'); } catch (e) {}
+    try { sessionStorage.removeItem('jk_install_dismissed'); } catch (e) {}
     jkHideInstallPopup();
 });
 function jkInstallDetected() {
@@ -4968,8 +4973,7 @@ function jkInstallDetected() {
         if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
         if (window.matchMedia && window.matchMedia('(display-mode: fullscreen)').matches) return true;
         if (window.navigator && window.navigator.standalone === true) return true;
-        if (localStorage.getItem('jk_install_ok') === '1') return true;
-        if (localStorage.getItem('jk_install_dismissed') === '1') return true;
+        if (sessionStorage.getItem('jk_install_dismissed') === '1') return true;
     } catch (e) {}
     return false;
 }
@@ -5013,7 +5017,7 @@ function jkInstallInstalar() {
     }
 }
 function jkInstallAhoraNo() {
-    try { localStorage.setItem('jk_install_dismissed', '1'); } catch (e) {}
+    try { sessionStorage.setItem('jk_install_dismissed', '1'); } catch (e) {}
     jkHideInstallPopup();
 }
 </script>
