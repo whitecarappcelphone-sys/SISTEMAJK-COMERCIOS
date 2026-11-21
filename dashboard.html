@@ -1051,7 +1051,7 @@ body.jk-locked { overflow: hidden !important; }
 </head>
   <body>
 <!-- LOCKSCREEN: contraseña del comercio -->
-<div class="jk-lock show" id="jkLock">
+<div class="jk-lock" id="jkLock">
     <div class="jk-lock-box">
         <div class="jk-lock-logo" id="jkLockLogo"><img id="jkLockLogoImg" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:20px;display:none"><span id="jkLockLogoText"><i class="fa-solid fa-lock"></i></span></div>
         <h2 class="jk-lock-title">Acceso de comercio</h2>
@@ -1687,6 +1687,11 @@ function jkActualizarLockLogo(c) {
         else txt.innerHTML = '<i class="fa-solid fa-lock"></i>';
     }
 }
+function jkMostrarLockscreen() {
+    document.body.classList.add('jk-locked');
+    var lock = document.getElementById('jkLock');
+    if (lock) lock.classList.add('show');
+}
 function jkEsconderLockscreen() {
     var lock = document.getElementById('jkLock');
     if (lock) lock.classList.remove('show');
@@ -1716,23 +1721,34 @@ function jkInicializar() {
     var configurar = /configurar=1/.test(window.location.search);
     var sess = jkSesionActiva();
     var cached = jkCargarSesionLocal();
-    var active = sess || cached;
-    jkAplicarTema((active && active.theme) || 'oscuro');
-    jkRenderMarca(active);
-    jkActualizarLockLogo(active);
+    var active = sess;
+    var brand = active || cached;
+    jkAplicarTema((brand && brand.theme) || 'oscuro');
+    if (brand) { jkRenderMarca(brand); jkActualizarLockLogo(brand); }
     var cmd = window.cmdIniciar;
-    // Si la sesión sigue activa (mismo tab/window), no vuelve a pedir la contraseña
-    if (active && !configurar) {
-        jkActivarSesion(active);
-        jkEsconderLockscreen();
-        if (cmd) cmd(active);
-        return;
-    }
+
     var form = document.getElementById('jkLockForm');
     var input = document.getElementById('jkLockPassword');
     var btn = document.getElementById('jkLockBtn');
     var err = document.getElementById('jkLockErr');
     var configurarBtn = document.getElementById('jkLockConfigurar');
+    var lock = document.getElementById('jkLock');
+
+    function bindLockscreen() {
+        if (form) form.addEventListener('submit', function (e) { e.preventDefault(); entrar(); });
+        if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
+        if (configurarBtn) configurarBtn.addEventListener('click', function () { window.location.href = 'index.html?configurar=1'; });
+    }
+    function unlockAndStart() {
+        var nowActive = jkSesionActiva();
+        if (nowActive) {
+            jkActivarSesion(nowActive);
+            jkEsconderLockscreen();
+            if (cmd) cmd(nowActive);
+        } else {
+            jkMostrarLockscreen();
+        }
+    }
     function entrar() {
         var pwd = (input.value || '').trim();
         err.style.display = 'none'; err.textContent = '';
@@ -1750,9 +1766,26 @@ function jkInicializar() {
             btn.innerHTML = '<i class="fa-solid fa-lock"></i> Ingresar';
         });
     }
-    if (form) form.addEventListener('submit', function (e) { e.preventDefault(); entrar(); });
-    if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
-    if (configurarBtn) configurarBtn.addEventListener('click', function () { window.location.href = 'index.html?configurar=1'; });
+
+    if (configurar) {
+        // Modo crear comercio desde cero: sin lockscreen
+        if (lock) lock.classList.remove('show');
+        document.body.classList.remove('jk-locked');
+        window.location.href = 'index.html?configurar=1';
+        return;
+    }
+
+    bindLockscreen();
+    window.addEventListener('jk-install-closed', unlockAndStart);
+
+    if (active) {
+        // Sesión activa — desbloquear, sin lockscreen
+        unlockAndStart();
+        return;
+    }
+
+    // Sin sesión activa — lockscreen
+    jkMostrarLockscreen();
 }
 jkInicializar();
 </script>
