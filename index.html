@@ -985,6 +985,18 @@ body.jk-locked { overflow: hidden !important; }
 .com-password-row .conta-btn { white-space: nowrap; }
 .com-cfg-titulo { display: flex; align-items: center; gap: 8px; margin: 18px 0 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.06); font-size: 14px; font-weight: 600; color: #e9f8f6; }
 .com-cfg-titulo i { color: #12d8c4; }
+
+/* ============ FIRMA / SELLO ============ */
+.firma-canvas { width: 100%; height: 170px; max-width: 800px; background: #ffffff; border-radius: 12px; border: 1px dashed rgba(18,216,196,.45); touch-action: none; cursor: crosshair; display: block; }
+.firma-wrap, .com-sello-wrap { margin-bottom: 14px; }
+.com-firma-hint { color: #7d8594; font-size: 10.5px; margin: 8px 0; text-align: center; }
+.com-firma-preview, .com-sello-preview { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.com-firma-preview img, .com-sello-preview img { max-height: 70px; max-width: 220px; border-radius: 10px; border: 1px solid rgba(18,216,196,.3); background: #ffffff; padding: 4px; object-fit: contain; }
+.factura-firma-img, .factura-sello-img { display: block; margin: 8px 0 4px; text-align: center; }
+.factura-firma-img img, .factura-sello-img img { border-radius: 8px; border: 1px dashed rgba(18,216,196,.4); padding: 2px; background: #fff; max-height: 74px; object-fit: contain; }
+.com-firma-preview .conta-btn, .com-sello-preview .conta-btn { height: 32px; font-size: 10px; padding: 0 10px; }
+.cfg-grid .field.firma-full { grid-column: 1 / -1 !important; }
+.firma-wrap { margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -1614,7 +1626,7 @@ PART 2
 <!-- MODAL EDICIÓN DE COMERCIO -->
 <div class="form-modal" id="modal_config">
     <div class="form-modal-content conta-content">
-        <button type="button" class="modal-close" onclick="cerrarModalFormulario('modal_config')" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+        <button type="button" class="modal-close" onclick="comCerrarModal()" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
         <div class="conta-wrap">
             <div class="form-header">
                 <div class="form-icon"><i class="fa-solid fa-store"></i></div>
@@ -1674,8 +1686,34 @@ PART 2
                 </div>
                 <label id="com_facturas_titulo">Detalles de la factura</label>
                 <div id="com_form" class="cfg-grid"></div>
+                <div class="com-grupo" style="margin-top:14px">
+                    <label for="com_firma_text">Texto de firma “Autorizado”</label>
+                    <input type="text" id="com_firma_text" placeholder="Ej: ACCESORIOS JK — el texto que aparecerá abajo de tu firma">
+                    <small class="asesor-hint">Texto que aparece debajo de tu firma “Autorizado” en la factura y en los PDFs.</small>
+                </div>
+                <div class="com-grupo">
+                    <label>Firma y sello “Autorizado”</label>
+                    <div class="firma-wrap">
+                        <canvas id="com_firma_canvas" width="800" height="220" class="firma-canvas"></canvas>
+                        <p class="com-firma-hint">Firma aquí con el mouse o el dedo — aparecerá en cada factura</p>
+                        <button type="button" class="conta-btn" onclick="comFirmaLimpiar()"><i class="fa-solid fa-eraser"></i> Borrar firma</button>
+                        <div id="com_firma_preview" class="com-firma-preview" style="display:none">
+                            <img id="com_firma_img" src="" alt="Firma">
+                            <button type="button" class="conta-btn" onclick="comFirmaQuitar()"><i class="fa-solid fa-trash"></i> Quitar firma</button>
+                        </div>
+                    </div>
+                    <div class="com-sello-wrap">
+                        <input type="file" id="com_sello_file" accept="image/*" style="display:none" hidden>
+                        <button type="button" class="conta-btn" onclick="document.getElementById('com_sello_file').click()"><i class="fa-solid fa-seal-blank"></i> Subir foto de sello</button>
+                        <small class="asesor-hint">Opcional. Aparece en las facturas junto a tu firma.</small>
+                        <div id="com_sello_preview" class="com-sello-preview" style="display:none">
+                            <img id="com_sello_img" src="" alt="Sello">
+                            <button type="button" class="conta-btn" onclick="comSelloQuitar()"><i class="fa-solid fa-trash"></i> Quitar</button>
+                        </div>
+                    </div>
+                </div>
                 <div class="cfg-acc">
-                    <button type="button" class="conta-btn" onclick="cerrarModalFormulario('modal_config')"><i class="fa-solid fa-xmark"></i> Cerrar</button>
+                    <button type="button" class="conta-btn" onclick="comCerrarModal()"><i class="fa-solid fa-xmark"></i> Cerrar</button>
                     <button type="submit" class="submit" id="btnComercio"><i class="fa-solid fa-floppy-disk"></i> Guardar comercio</button>
                 </div>
             </form>
@@ -1762,7 +1800,10 @@ PART 2
         </div>
         <div class="pdf-signatures">
             <div class="signature-box">Recibí Conforme<span id="pdf-firma-cliente"></span></div>
-            <div class="signature-box">Autorizado<span id="cfg-firma">ACCESORIOS JK</span></div>
+            <div class="signature-box">Autorizado<br>
+                <span id="cfg-firma-img" class="factura-firma-img" style="display:none"><img id="cfg-firma-img-src" src="" alt="Firma" style="max-height:70px;max-width:180px;object-fit:contain"></span>
+                <span id="cfg-sello-img" class="factura-sello-img" style="display:none"><img id="cfg-sello-img-src" src="" alt="Sello" style="max-height:60px;max-width:180px;object-fit:contain"></span>
+                <span id="cfg-firma">ACCESORIOS JK</span></div>
         </div>
         <div class="inv-footer">Documento generado automáticamente por Sistema JK · ACCESORIOS JK</div>
     </div>
@@ -3207,7 +3248,21 @@ function repMembrete_old(titulo, subtitulo, meta) {
 function repCierre(firmas) {
     return `${firmas || ''}<div class="rep-footer-note">Documento generado por el Sistema JK. Información confidencial de uso interno y de los proveedores o clientes involucrados.</div></div>`;
 }
-function repFirmas(a, b) { return `<div class="rep-firmas"><div class="rep-firma">${a}</div><div class="rep-firma">${b}</div></div>`; }
+function repFirmaImgHtml() {
+    var c = window.JK_COMERCIO || {};
+    var d = c.data || {};
+    if (!d.firma_url) return '';
+    return '<img src="' + d.firma_url + '" alt="Firma" style="display:block;margin:0 auto 4px;max-height:56px;max-width:80%;object-fit:contain;">';
+}
+function repFirmas(a, b) {
+    var firmaImg = repFirmaImgHtml();
+    var imgSello = '';
+    var c = window.JK_COMERCIO || {};
+    var d = c.data || {};
+    if (d.sello_url) imgSello = '<img src="' + d.sello_url + '" alt="Sello" style="display:block;margin:0 auto 2px;max-height:44px;max-width:60%;object-fit:contain;opacity:.8;">';
+    var aCombined = (firmaImg + imgSello + a).trim();
+    return `<div class="rep-firmas"><div class="rep-firma">${aCombined}</div><div class="rep-firma">${b}</div></div>`;
+}
 function repKpis(items) {
     return `<div class="rep-kpis">${items.map(k => `<div class="rep-kpi" style="background:${k.col}"><span>${contaEsc(k.lbl)}</span><strong>${k.val}</strong></div>`).join('')}</div>`;
 }
@@ -3801,7 +3856,6 @@ const CFG_CAMPOS = [
     ['terminosTaller', 'Términos en la factura final del taller', 'area'],
     ['cierreTaller', 'Texto de cierre del mensaje al cliente (taller)', 'area'],
     ['mensajeGracias', 'Mensaje de agradecimiento (WhatsApp)', 'text'],
-    ['firmaAutorizado', 'Texto de firma "Autorizado"', 'text'],
     ['pieReportes', 'Texto del pie de página de reportes', 'text']
 ];
 function cfgAplicarDOM() {
@@ -3814,15 +3868,27 @@ function cfgAplicarDOM() {
 }
 function cfgAplicarDOMCompleto() {
     cfgAplicarDOM();
+    var c = window.JK_COMERCIO || {};
     // Renderiza el logo de la factura (inv-logo del comprobante)
     var logoDiv = document.getElementById('inv-logo');
     if (logoDiv) {
-        var c = window.JK_COMERCIO || {};
         if (c.logo_url) {
             logoDiv.innerHTML = '<img src="' + c.logo_url + '" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:50%;display:block">';
         } else {
             logoDiv.innerHTML = '<span>' + (JK_CFG.empresa || 'J').trim().charAt(0).toUpperCase() + '</span>';
         }
+    }
+    // Firma/sello en la factura
+    var fDiv = document.getElementById('cfg-firma-img'), fImg = document.getElementById('cfg-firma-img-src');
+    var data = c.data || {};
+    if (fDiv && fImg) {
+        if (data.firma_url) { fImg.src = data.firma_url; fDiv.style.display = 'block'; }
+        else { fDiv.style.display = 'none'; fImg.src = ''; }
+    }
+    var sDiv = document.getElementById('cfg-sello-img'), sImg = document.getElementById('cfg-sello-img-src');
+    if (sDiv && sImg) {
+        if (data.sello_url) { sImg.src = data.sello_url; sDiv.style.display = 'block'; }
+        else { sDiv.style.display = 'none'; sImg.src = ''; }
     }
 }
 
@@ -3928,18 +3994,54 @@ function jkCargarConComercio() {
     (document.getElementById('btnComercio') || { innerHTML: '' }).innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar comercio';
     (document.getElementById('btnComercio') || { disabled: false }).disabled = false;
 }
+var PLACEHOLDERS = {
+    empresa: 'Ej: Comercial XYZ — el nombre que aparecerá en todas las facturas, encabezados, etiquetas y PDFs.',
+    nit: 'Ej: 1002345678 — el número de identificación fiscal de tu empresa.',
+    regimen: 'Ej: Régimen simplificado — el régimen fiscal de tu empresa.',
+    subtitulo: 'Ej: Comprobante de operativa comercial — subtítulo que aparece debajo del NIT.',
+    direccion: 'Ej: Calle 5 # 10-23 — dirección completa de tu establecimiento.',
+    servicios: 'Ej: Servicio técnico y telefonía — línea de pie de factura.',
+    garantia: 'Escribe aquí el texto que aparecerá en las facturas. Ej: «La garantía es de 30 días contados a partir de la emisión…»',
+    notaGarantia: 'Texto de nota de garantía que aparecerá en los mensajes de WhatsApp.',
+    terminosTaller: 'Escribe aquí los términos de garantía que aparecerán en la factura final del taller.',
+    cierreTaller: 'Texto de cierre del mensaje que se envía al cliente por WhatsApp (taller).',
+    mensajeGracias: 'Ej: ¡GRACIAS POR SU COMPRA! — mensaje de agradecimiento en WhatsApp.',
+    pieReportes: 'Ej: Documento generado automáticamente — texto del pie de página de los reportes.'
+};
 function jkRenderCfgForm() {
     var sesion = jkCargarSesionLocal();
-    var data = (sesion && sesion.data) || {};
+    var has = !!(sesion && sesion.id);
+    var data = has ? (sesion.data || {}) : {};
     var cfg = Object.assign({}, JK_CFG_DEFAULT, data);
     var nombre = (document.getElementById('com_nombre').value || '').trim();
-    if (nombre) cfg.empresa = nombre;
-    if (nombre && !data.firmaAutorizado) cfg.firmaAutorizado = nombre;
+    document.getElementById('com_nombre').value = nombre;
     document.getElementById('com_form').innerHTML = CFG_CAMPOS.map(function(x) {
-        var k = x[0], l = x[1], t = x[2], val = (cfg[k] || '');
-        var content = t === 'area' ? '<textarea id="cfg_' + k + '">' + contaEsc(val) + '</textarea>' : '<input type="text" id="cfg_' + k + '" value="' + contaEsc(val) + '">';
+        var k = x[0], l = x[1], t = x[2];
+        var val = has ? (cfg[k] || '') : '';
+        var ph = PLACEHOLDERS[k] || '';
+        var content = t === 'area'
+            ? '<textarea id="cfg_' + k + '" placeholder="' + contaEsc(ph) + '">' + contaEsc(val) + '</textarea>'
+            : '<input type="text" id="cfg_' + k + '" placeholder="' + contaEsc(ph) + '" value="' + contaEsc(val) + '">';
         return '<div class="field ' + (t === 'area' ? 'full' : '') + '"><label>' + l + '</label>' + content + '</div>';
     }).join('');
+    document.getElementById('com_firma_text').value = has ? (cfg.firmaAutorizado || '') : '';
+    // Firma canvas y sello
+    firmaCanvasReiniciar();
+    var firmaUrl = has ? (data.firma_url || '') : '';
+    var selloUrl = has ? (data.sello_url || '') : '';
+    window._firmaTrazos = false;
+    var fPrev = document.getElementById('com_firma_preview');
+    var fImg = document.getElementById('com_firma_img');
+    if (fPrev && fImg) {
+        if (firmaUrl) { fImg.src = firmaUrl; fPrev.style.display = 'flex'; }
+        else { fPrev.style.display = 'none'; fImg.src = ''; }
+    }
+    var sPrev = document.getElementById('com_sello_preview');
+    var sImg = document.getElementById('com_sello_img');
+    if (sPrev && sImg) {
+        if (selloUrl) { sImg.src = selloUrl; sPrev.style.display = 'flex'; }
+        else { sPrev.style.display = 'none'; sImg.src = ''; }
+    }
 }
 function jkActualizarLogoPreview() {
     var img = document.getElementById('com_logo_img');
@@ -3988,16 +4090,137 @@ async function comLogoSubir() {
     var urlData = window.jkSupabase.storage.from('logos').getPublicUrl(name);
     return urlData.data.publicUrl;
 }
+function firmaCanvasInitOnce() {
+    if (window._firmaCanvasInited) return;
+    window._firmaCanvasInited = true;
+    var c = document.getElementById('com_firma_canvas');
+    if (!c) return;
+    var ctx = c.getContext('2d');
+    ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#111111';
+    var drawing = false;
+    function pos(e) {
+        var r = c.getBoundingClientRect();
+        return { x: (e.clientX - r.left) * c.width / r.width, y: (e.clientY - r.top) * c.height / r.height };
+    }
+    c.addEventListener('pointerdown', function (e) {
+        drawing = true;
+        var p = pos(e);
+        ctx.beginPath(); ctx.moveTo(p.x, p.y);
+        try { c.setPointerCapture(e.pointerId); } catch (err) {}
+        e.preventDefault();
+    });
+    c.addEventListener('pointermove', function (e) {
+        if (!drawing) return;
+        var p = pos(e);
+        ctx.lineTo(p.x, p.y); ctx.stroke();
+        window._firmaTrazos = true;
+        var img = document.getElementById('com_firma_img');
+        var prev = document.getElementById('com_firma_preview');
+        if (img && prev) { img.src = c.toDataURL('image/png'); prev.style.display = 'flex'; }
+    });
+    function fin() { drawing = false; }
+    c.addEventListener('pointerup', fin);
+    c.addEventListener('pointercancel', fin);
+    // sello file picker
+    var sF = document.getElementById('com_sello_file');
+    if (sF) sF.addEventListener('change', function () {
+        var f = sF.files && sF.files[0];
+        if (!f) return;
+        window._selloFile = f;
+        window._selloRemove = false;
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            window._selloData = e.target.result;
+            var img = document.getElementById('com_sello_img');
+            var prev = document.getElementById('com_sello_preview');
+            if (img && prev) { img.src = e.target.result; prev.style.display = 'flex'; }
+        };
+        reader.readAsDataURL(f);
+    });
+}
+function firmaCanvasLimpiar() {
+    var c = document.getElementById('com_firma_canvas');
+    if (!c) return;
+    var ctx = c.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, c.width, c.height);
+}
+function comFirmaLimpiar() {
+    firmaCanvasLimpiar();
+    window._firmaTrazos = false;
+}
+function comFirmaQuitar() {
+    firmaCanvasLimpiar();
+    window._firmaTrazos = false;
+    window._firmaRemove = true;
+    var prev = document.getElementById('com_firma_preview');
+    var img = document.getElementById('com_firma_img');
+    if (prev && img) { prev.style.display = 'none'; img.src = ''; }
+}
+function comSelloQuitar() {
+    window._selloFile = null;
+    window._selloData = null;
+    window._selloRemove = true;
+    var f = document.getElementById('com_sello_file'); if (f) f.value = '';
+    var prev = document.getElementById('com_sello_preview');
+    var img = document.getElementById('com_sello_img');
+    if (prev && img) { prev.style.display = 'none'; img.src = ''; }
+}
+function comSelloElegirFile() {}
+
+async function firmaCanvasSubir() {
+    var c = document.getElementById('com_firma_canvas');
+    if (!c) return null;
+    var blob = await new Promise(function (res) { c.toBlob(res, 'image/png'); });
+    if (!blob) return null;
+    var file = new File([blob], 'firma_' + Date.now() + '.png', { type: 'image/png' });
+    var name = 'firma_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7) + '.png';
+    var res = await window.jkSupabase.storage.from('logos').upload(name, file);
+    if (res.error) throw res.error;
+    return window.jkSupabase.storage.from('logos').getPublicUrl(name).data.publicUrl;
+}
+async function selloSubir() {
+    var f = window._selloFile;
+    if (!f) return null;
+    var ext = (f.name.split('.').pop() || 'png').toLowerCase();
+    var name = 'sello_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7) + '.' + ext;
+    var res = await window.jkSupabase.storage.from('logos').upload(name, f);
+    if (res.error) throw res.error;
+    return window.jkSupabase.storage.from('logos').getPublicUrl(name).data.publicUrl;
+}
+function comCerrarModal() {
+    var sesion = jkCargarSesionLocal();
+    document.documentElement.setAttribute('data-theme', (sesion && sesion.theme) || 'oscuro');
+    cerrarModalFormulario('modal_config');
+}
 function abrirEdicionComercio() {
     var sesion = jkCargarSesionLocal();
+    // Tema: preview en vivo (restaurado al cerrar sin guardar)
+    var temaSel = document.getElementById('com_tema');
+    window._comThemeOriginal = document.documentElement.getAttribute('data-theme') || 'oscuro';
+    if (!window._temaPreviewInited) {
+        window._temaPreviewInited = true;
+        temaSel.addEventListener('change', function () {
+            document.documentElement.setAttribute('data-theme', temaSel.value || 'oscuro');
+        });
+    }
+    // Firma canvas (una sola vez: listeners)
+    firmaCanvasInitOnce();
+    window._firmaTrazos = false;
+    window._firmaRemove = false;
+    window._selloRemove = false;
+    window._selloFile = null;
+    window._selloData = null;
     jkRenderCfgForm();
     document.getElementById('com_nombre').value = (sesion && sesion.name) || '';
     document.getElementById('com_tema').value = (sesion && sesion.theme) || 'oscuro';
+    document.getElementById('com_tema').dispatchEvent(new Event('change'));
     document.getElementById('com_password').value = (sesion && sesion.password) || generarPasswordComercio();
     window._comLogoUrl = (sesion && sesion.logo_url) || '';
     window._comLogoPreviewData = window._comLogoUrl || null;
     window._comLogoData = null;
     jkActualizarLogoPreview();
+    firmaCanvasLimpiar();
     var res = document.getElementById('com_resultado'); if (res) res.style.display = 'none';
     jkCargarConComercio();
     abrirModalFormulario('modal_config');
@@ -4022,8 +4245,19 @@ async function comGuardar() {
             var el = document.getElementById('cfg_' + k);
             config[k] = el ? (el.value || '').trim() : '';
         });
-        if (nombre && !config.firmaAutorizado) config.firmaAutorizado = nombre;
-        if (nombre) config.empresa = nombre;
+        // Firma/sello
+        var firmaTexto = (document.getElementById('com_firma_text').value || '').trim();
+        if (firmaTexto) config.firmaAutorizado = firmaTexto;
+        else if (nombre) config.firmaAutorizado = nombre;
+        config.empresa = nombre;
+        var firmaUrl = null;
+        if (window._firmaTrazos) firmaUrl = await firmaCanvasSubir();
+        else if (!window._firmaRemove && sesion && sesion.data && sesion.data.firma_url) firmaUrl = sesion.data.firma_url;
+        config.firma_url = firmaUrl || null;
+        var selloUrl = null;
+        if (window._selloFile) selloUrl = await selloSubir();
+        else if (!window._selloRemove && sesion && sesion.data && sesion.data.sello_url) selloUrl = sesion.data.sello_url;
+        config.sello_url = selloUrl || null;
         var record = {
             id: id,
             name: nombre,
