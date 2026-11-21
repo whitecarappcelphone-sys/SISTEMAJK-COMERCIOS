@@ -1689,6 +1689,7 @@ PART 2
 <!-- MODAL EDICIÓN DE COMERCIO -->
 <div class="form-modal" id="modal_config">
     <div class="form-modal-content conta-content">
+        <button type="button" id="com_x_close" class="modal-close" onclick="comCerrarModal()" aria-label="Cerrar" style="display:none"><i class="fa-solid fa-xmark"></i></button>
         <div class="conta-wrap">
             <div class="form-header">
                 <div class="form-icon"><i class="fa-solid fa-store"></i></div>
@@ -1698,14 +1699,6 @@ PART 2
                 <span>ID del comercio</span>
                 <strong id="com_id_actual">—</strong>
                 <small id="com_id_hint"></small>
-            </div>
-            <div id="com_resultado" class="com-resultado" style="display:none">
-                <h4><i class="fa-solid fa-check-circle"></i> Tu comercio está listo</h4>
-                <div class="com-resultado-datos">
-                    <div><span>ID</span><strong id="com_resultado_id"></strong></div>
-                    <div><span>Contraseña</span><strong id="com_resultado_pwd"></strong></div>
-                </div>
-                <p class="com-resultado-warn"><i class="fa-solid fa-triangle-exclamation"></i> Apúntala y guárdala bien. Es la única autorización para tu comercio. Si la pierdes, contacta al administrador.</p>
             </div>
             <form id="form_comercio" onsubmit="event.preventDefault(); comGuardar();">
                 <div class="com-grupo">
@@ -1775,6 +1768,7 @@ PART 2
                     </div>
                 </div>
                 <div class="cfg-acc">
+                    <button type="button" class="conta-btn" id="com_cerrar" onclick="comCerrarModal()" style="display:none"><i class="fa-solid fa-xmark"></i> Cerrar</button>
                     <button type="submit" class="submit" id="btnComercio"><i class="fa-solid fa-floppy-disk"></i> Guardar comercio</button>
                 </div>
             </form>
@@ -4057,7 +4051,7 @@ function jkActivarSesion(c) {
 async function jkValidarPassword(pwd) {
     if (!window.jkSupabase) return null;
     const { data, error } = await window.jkSupabase.from('comercio')
-        .select('id, name, logo_url, theme, password, data').eq('password', pwd).limit(1);
+        .select('id, name, logo_url, theme, password, data, bloqueado').eq('password', pwd).limit(1);
     if (error) throw error;
     return (data && data[0]) ? data[0] : null;
 }
@@ -4297,7 +4291,13 @@ function abrirEdicionComercio() {
     window._comLogoData = null;
     jkActualizarLogoPreview();
     firmaCanvasLimpiar();
-    var res = document.getElementById('com_resultado'); if (res) res.style.display = 'none';
+    // Mostrar botones de cierre solo si el comercio ya fue guardado
+    var xBtn = document.getElementById('com_x_close');
+    var closeBtn = document.getElementById('com_cerrar');
+    var guardado = !!(sesion && sesion.id);
+    if (xBtn) xBtn.style.display = guardado ? 'flex' : 'none';
+    if (closeBtn) closeBtn.style.display = guardado ? 'inline-flex' : 'none';
+    window._comercioGuardado = guardado;
     jkCargarConComercio();
     abrirModalFormulario('modal_config');
 }
@@ -4353,14 +4353,10 @@ async function comGuardar() {
         }
         if (error) throw error;
         jkActivarSesion(record);
-        jkEsconderLockscreen();
-        var res = document.getElementById('com_resultado');
-        if (res) {
-            res.style.display = 'block';
-            document.getElementById('com_resultado_id').textContent = id;
-            document.getElementById('com_resultado_pwd').textContent = password;
-        }
-        mostrarAlertaExito('Comercio guardado correctamente.');
+        window._comercioGuardado = true;
+        // El modal queda bloqueado si falla el guardado; si sale bien, se cierra
+        cerrarModalFormulario('modal_config');
+        mostrarAlertaExito('Comercio guardado correctamente. ID: ' + id + ' · contraseña: ' + password);
     } catch (e) {
         mostrarAlertaError('No se pudo guardar: ' + (e.message || 'error'));
     } finally {
@@ -4963,9 +4959,30 @@ function jkInstallAhoraNo() {
         if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
         if (configurarBtn) configurarBtn.addEventListener('click', function () { window.location.href = 'index.html?configurar=1'; });
     }
-    function unlockAndStart() {
+    async function unlockAndStart() {
         var nowActive = jkSesionActiva();
         if (nowActive) {
+            // Revalidar bloqueado con la base de datos (best-effort)
+            try {
+                var sg = window.jkSupabase;
+                if (sg) {
+                    var fresh = await sg.from('comercio').select('id, name, logo_url, theme, password, data, bloqueado').eq('id', nowActive.id).maybeSingle();
+                    if (fresh && fresh.data && fresh.data.bloqueado) {
+                        jkEsconderLockscreen();
+                        var errB = document.getElementById('jkLockErr');
+                        if (errB) { errB.textContent = '⛔ ' + (fresh.data.name || 'Este comercio') + ' está bloqueado. Contacta al administrador.'; errB.style.display = 'block'; }
+                        jkMostrarLockscreen();
+                        return;
+                    }
+                    if (fresh && fresh.data) {
+                        nowActive = Object.assign({}, nowActive, fresh.data);
+                        jkActivarSesion(nowActive);
+                        jkEsconderLockscreen();
+                        if (cmd) cmd(nowActive);
+                        return;
+                    }
+                }
+            } catch (e) { /* fallback: usar sesión local */ }
             jkActivarSesion(nowActive);
             jkEsconderLockscreen();
             if (cmd) cmd(nowActive);
@@ -4980,6 +4997,7 @@ function jkInstallAhoraNo() {
         btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando...';
         jkValidarPassword(pwd).then(function (c) {
             if (!c) { err.textContent = 'Contraseña incorrecta o no registrada.'; err.style.display = 'block'; return; }
+            if (c.bloqueado) { err.textContent = '⛔ ' + (c.name || 'Este comercio') + ' está bloqueado. Contacta al administrador.'; err.style.display = 'block'; return; }
             jkActivarSesion(c);
             jkEsconderLockscreen();
             if (cmd) cmd(c);
