@@ -168,7 +168,7 @@ select option { background: #171a21; }
 .pdf-garantia #pdf-garantia-texto { white-space: pre-wrap; }
 .pdf-signatures { clear: both; margin-top: 50px; display: flex; justify-content: space-between; }
 .signature-box { width: 40%; text-align: center; border-top: 1px solid #000; padding-top: 10px; font-size: 14px; }
-select.estado-taller-select { 
+select.estado-taller-select {
     background: #101319; border: 1px solid rgba(255,255,255,.06); color: #fff; height: 48px; border-radius: 12px; padding: 0 14px; font-family: 'Poppins', sans-serif; font-size: 13px; width: 100%; cursor: pointer;
 }
 select.estado-taller-select:focus { border-color: #12d8c4; outline: none; }
@@ -954,7 +954,11 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
             <button type="submit" class="submit">Registrar Venta</button>
         </form>
     </div>
-</div><!-- MODAL ANIMADO: FORMULARIO REPARACION -->
+</div>
+<!-- ============================================================
+PART 2
+-->
+<!-- MODAL ANIMADO: FORMULARIO REPARACION -->
 <div class="form-modal" id="modal_reparacion">
     <div class="form-modal-content">
         <button type="button" class="modal-close" onclick="cerrarModalFormulario('modal_reparacion')" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
@@ -1004,7 +1008,7 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
                     </div>
                 </div>
                 <div class="field full">
-                    <label>Evidencia (hasta 5 fotos)</label>
+                    <label>Evidencia (hasta 3 fotos)</label>
                     <div class="evidence">
                         <div class="evidence-multi">
                             <div class="evidence-slot">
@@ -2709,9 +2713,7 @@ function cotHTML(d, prov) {
             <tr class="total"><td>TOTAL</td><td class="num">${pnlFmt(d.total)}</td></tr>
         </tbody></table></div></div>`;
     if (d.notas) h += `<div class="rep-sec"><h3>Condiciones y notas</h3><p class="rep-nota">${contaEsc(d.notas)}</p></div>`;
-    return h + repCierre(repFirmas('Elaborado por
-' + contaEsc(d.asesor || ''), 'Aceptado por el proveedor
-' + contaEsc(d.proveedor_nombre || '')));
+    return h + repCierre(repFirmas('Elaborado por\n' + contaEsc(d.asesor || ''), 'Aceptado por el proveedor\n' + contaEsc(d.proveedor_nombre || '')));
 }
 // ---------- REPORTE CONTABLE PDF (VERSION PROFESIONAL) ----------
 function contaReportePDFv2_old() {
@@ -2758,9 +2760,7 @@ function contaReportePDFv2_old() {
         ['Fecha', 'Concepto', 'Categoría', 'Método', 'Monto'],
         egr.slice(0, 120).map(e => [fmtF(e.fecha), contaEsc(e.concepto), contaEsc(e.categoria || '—'), contaEsc(e.metodo_pago || '—'), contaFmt(e.monto)]),
         [4])}</div>`;
-    h += repCierre(repFirmas('Elaborado por
-' + contaEsc(sesion.nombre || ''), 'Revisado / Gerencia
-ACCESORIOS JK'));
+    h += repCierre(repFirmas('Elaborado por\n' + contaEsc(sesion.nombre || ''), 'Revisado / Gerencia\nACCESORIOS JK'));
     panelGenerarPDF(h, `Reporte_Contable_JK_${contaHoyISO()}.pdf`);
 }
 // ---------- INICIO ----------
@@ -2796,7 +2796,8 @@ function repLeerChecklist() {
 function repEtiquetaEstado(raw) {
     const m = { 'Pendiente': 'Por reparar', 'En Proceso': 'En proceso', 'Listo': 'Reparado', 'Entregado': 'Entregado' };
     return m[raw] || 'Por reparar';
-}// ---------- FIRMA DIGITAL ----------
+}
+// ---------- FIRMA DIGITAL ----------
 function firmaFondo(c, ctx) {
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, c.width, c.height);
@@ -3015,8 +3016,7 @@ function repFacturaHTML(d) {
     ]);
     h += `<div class="rep-sec"><h3>Datos del cliente y del equipo</h3><table class="rep-table"><tbody>
         <tr><td><b>Cliente</b></td><td>${contaEsc(d.cliente || '—')}</td><td><b>Teléfono</b></td><td>${contaEsc(d.telefono || '—')}</td></tr>
-        <tr><td><b>Equipo</b></td><td>${contaEsc(d.equipo || '—')}</td><td><b>IMEI / Serial</b></td><td>${contaEsc(d.imei1 || '—')}${d.imei2 ? '
-' + contaEsc(d.imei2) : ''}</td></tr>
+        <tr><td><b>Equipo</b></td><td>${contaEsc(d.equipo || '—')}</td><td><b>IMEI / Serial</b></td><td>${contaEsc(d.imei1 || '—')}${d.imei2 ? '\n' + contaEsc(d.imei2) : ''}</td></tr>
         <tr><td><b>Falla reportada</b></td><td colspan="3">${contaEsc(d.falla || '—')}</td></tr>
         <tr><td><b>Estado al entregar</b></td><td>${contaEsc(estado)}</td><td><b>Garantía</b></td><td>${dias > 0 ? dias + ' días' : 'Sin garantía'}</td></tr>
     </tbody></table></div>`;
@@ -3033,9 +3033,7 @@ function repFacturaHTML(d) {
     </tbody></table></div></div>`;
     h += `<div class="rep-sec"><h3>Términos y condiciones</h3><p class="rep-nota">${contaEsc(JK_CFG.terminosTaller)} Presente esta factura para cualquier reclamación. Método de pago: ${contaEsc(d.metodo || 'N/A')} (${contaEsc(d.tipoPago || '')}).</p></div>`;
     const firmaImg = d.firmaSrc ? `<img src="${d.firmaSrc}" alt="Firma" style="max-height:70px;display:block;margin:0 auto 4px;">` : '<div style="height:70px;"></div>';
-    return h + repCierre(repFirmas(`${firmaImg}Recibí conforme (cliente)
-${contaEsc(d.cliente || '')}`, `<div style="height:70px;"></div>Entregado por
-${contaEsc(d.asesor || 'ACCESORIOS JK')}`));
+    return h + repCierre(repFirmas(`${firmaImg}Recibí conforme (cliente)\n${contaEsc(d.cliente || '')}`, `<div style="height:70px;"></div>Entregado por\n${contaEsc(d.asesor || 'ACCESORIOS JK')}`));
 }
 function ftMostrarResumen(d) {
     const saldo = Math.max(0, d.total - d.abono);
@@ -3662,9 +3660,7 @@ function contaReportePDFv2() {
         ['Fecha', 'Concepto', 'Categoría', 'Método', 'Monto'],
         egr.slice(0, 120).map(e => [fmtF(e.fecha), contaEsc(e.concepto), contaEsc(e.categoria || '—'), contaEsc(e.metodo_pago || '—'), contaFmt(e.monto)]),
         [4])}</div>`;
-    h += repCierre(repFirmas('Elaborado por
-' + contaEsc(sesion.nombre || ''), 'Revisado / Gerencia
-' + contaEsc(JK_CFG.empresa)));
+    h += repCierre(repFirmas('Elaborado por\n' + contaEsc(sesion.nombre || ''), 'Revisado / Gerencia\n' + contaEsc(JK_CFG.empresa)));
     panelGenerarPDF(h, `Reporte_Contable_JK_${contaHoyISO()}.pdf`);
 }
 // ---------- INICIO ----------
