@@ -155,19 +155,56 @@ select option { background: #171a21; }
 .btn-pdf { background: #ff4757; color: #fff; }
 .btn-whatsapp { background: #25D366; color: #000; }
 .btn-cerrar { background: rgba(255,255,255,.1); color: #ccc; }
-.pdf-container { width: 100%; max-width: 750px; margin: 0 auto; background: #ffffff !important; color: #000000 !important; font-family: Arial, sans-serif; padding: 20px; box-sizing: border-box; }
-.pdf-header { text-align: center; border-bottom: 2px solid #12d8c4; padding-bottom: 20px; margin-bottom: 20px; }
-.pdf-header h1 { margin: 0; font-size: 28px; color: #000; text-transform: uppercase; }
-.pdf-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; }
-.pdf-table { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 30px; }
-.pdf-table th, .pdf-table td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px;}
-.pdf-totals { width: 50%; float: right; border: 1px solid #ddd; padding: 15px; border-radius: 5px; }
-.pdf-totals div { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;}
-.pdf-totals div.neto { font-weight: bold; border-top: 1px solid #ccc; padding-top: 8px; font-size: 16px;}
-.pdf-garantia { clear: both; margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; font-size: 11px; color: #444; text-align: justify; line-height: 1.4; }
-.pdf-garantia #pdf-garantia-texto { white-space: pre-wrap; }
-.pdf-signatures { clear: both; margin-top: 50px; display: flex; justify-content: space-between; }
-.signature-box { width: 40%; text-align: center; border-top: 1px solid #000; padding-top: 10px; font-size: 14px; }
+/* ============ NUEVA FACTURA PROFESIONAL ============ */
+.pdf-container { width: 100%; max-width: 750px; margin: 0 auto; background: #ffffff !important; color: #1b1f27 !important; font-family: Arial, Helvetica, sans-serif; box-sizing: border-box; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 45px rgba(0,0,0,0.45); }
+.pdf-container *, .pdf-container *::before, .pdf-container *::after { box-sizing: border-box; }
+.inv-band { display: flex; align-items: center; justify-content: space-between; gap: 18px; background: linear-gradient(135deg, #0b2e33 0%, #093a37 100%); color: #fff; padding: 26px 28px; border-bottom: 4px solid #12d8c4; }
+.inv-crest { display: flex; align-items: center; gap: 15px; min-width: 0; }
+.inv-logo { width: 62px; height: 62px; border-radius: 50%; background: #12d8c4; color: #0b2e33; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 3px solid rgba(255,255,255,.9); }
+.inv-brand { min-width: 0; }
+.inv-brand h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: .8px; color: #fff; text-transform: uppercase; }
+.inv-brand p { margin: 4px 0 0; font-size: 10.5px; color: #bfeee9; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; }
+.inv-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+.inv-meta-cell { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.inv-meta-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.4px; color: #8fd9d2; font-weight: 600; }
+.inv-meta-val { font-size: 14px; font-weight: 700; color: #ffffff; }
+.inv-body { padding: 22px 28px 24px; }
+.inv-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 10px; }
+.inv-meta-cell { background: #f5fbfb; border: 1px solid #e0f1ee; border-radius: 12px; padding: 10px 14px; min-width: 0; }
+.inv-meta-cell .inv-meta-label { display: block; color: #6b8b88; font-size: 9px; letter-spacing: 1.2px; }
+.inv-meta-cell .inv-meta-val { display: block; margin-top: 3px; color: #1b1f27; font-size: 14px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; }
+.inv-imei { margin-bottom: 16px; }
+.pdf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.pdf-table th { background: #0b2e33; color: #fff; font-size: 10px; text-transform: uppercase; letter-spacing: 1.1px; text-align: left; padding: 10px 12px; font-weight: 700; white-space: nowrap; border-right: 1px solid rgba(255,255,255,.12); }
+.pdf-table th:last-child { border-right: none; }
+.pdf-table td { padding: 12px; border-bottom: 1px solid #e0f1ee; border-right: 1px solid #e0f1ee; color: #1b1f27; vertical-align: top; line-height: 1.45; font-size: 13px; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; text-align: left; }
+.pdf-table td:last-child { border-right: none; }
+.pdf-totals { display: flex; flex-direction: column; margin-left: auto; width: 58%; max-width: 420px; border: 1px solid #e0f1ee; border-radius: 12px; padding: 14px 18px; margin-top: 14px; background: linear-gradient(0deg, #fafdfe, #ffffff); box-shadow: 0 6px 18px rgba(11,46,51,.08); }
+.pdf-totals .inv-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 6px 0; font-size: 12px; }
+.pdf-totals .inv-line span { font-size: 10px; text-transform: uppercase; letter-spacing: 1.1px; color: #6b8b88; font-weight: 600; }
+.pdf-totals .inv-line strong { color: #0b2e33; font-size: 15px; font-weight: 700; text-align: right; }
+.pdf-totals .inv-line:not(:last-child) { border-bottom: 1px solid #eef5f3; }
+.pdf-totals .neto { background: #fff8e0; border-top: 2px solid #12d8c4 !important; border-radius: 8px; padding: 10px 12px !important; margin-top: 8px; }
+.pdf-totals .neto span { color: #8a6d1e !important; }
+.pdf-totals .neto strong { color: #c2372b !important; }
+.pdf-garantia { background: #f7fafa; border: 1px dashed #bfe3df; border-radius: 12px; margin-top: 18px; padding: 14px 16px; }
+.pdf-garantia > strong { display: block; font-size: 10px; letter-spacing: 1.6px; color: #0b5f58; margin-bottom: 7px; text-transform: uppercase; font-weight: 700; }
+.pdf-garantia p { margin: 0; font-size: 11.5px; color: #444; line-height: 1.55; text-align: justify; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; }
+.pdf-garantia .inv-direccion { margin-top: 10px; padding-top: 9px; border-top: 1px dashed #e0f1ee; font-size: 10px; color: #8b969f; text-align: center; line-height: 1.55; word-wrap: break-word; overflow-wrap: break-word; }
+.pdf-garantia .inv-direccion strong { color: #0b5f58; }
+.pdf-signatures { display: flex; justify-content: space-between; gap: 24px; margin-top: 44px; }
+.signature-box { width: 45%; text-align: center; border-top: 1px solid #2b3440; padding-top: 10px; font-size: 13px; color: #1b1f27; font-weight: 600; line-height: 1.45; }
+.signature-box span { white-space: pre-wrap; display: block; margin-top: 6px; font-weight: 400; font-size: 11px; color: #5a6572; }
+.inv-footer { text-align: center; border-top: 1px solid #e0f1ee; margin-top: 28px; padding: 13px 16px; background: #f0f7f6; font-size: 9.5px; letter-spacing: .6px; color: #8b969f; text-transform: uppercase; }
+@media (max-width: 620px) {
+    .inv-band { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .inv-meta { align-items: flex-start; flex-direction: row; gap: 18px; flex-wrap: wrap; }
+    .inv-meta-cell { white-space: normal; }
+    .inv-meta-val { white-space: normal; }
+    .inv-grid { grid-template-columns: 1fr; }
+    .inv-body { padding: 20px 18px; }
+    .pdf-totals { width: 100%; }
+}
 select.estado-taller-select {
     background: #101319; border: 1px solid rgba(255,255,255,.06); color: #fff; height: 48px; border-radius: 12px; padding: 0 14px; font-family: 'Poppins', sans-serif; font-size: 13px; width: 100%; cursor: pointer;
 }
@@ -613,8 +650,359 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
     .hm-btn { width: 39px; height: 39px; }
 }
 </style>
+
+<!-- Script de inicialización temprana de tema -->
+<script>
+(function(){try{var c=JSON.parse(localStorage.getItem('jk_comercio')||'null');if(c&&c.theme){document.documentElement.setAttribute('data-theme',c.theme);}else{document.documentElement.setAttribute('data-theme','oscuro');}}catch(e){document.documentElement.setAttribute('data-theme','oscuro');}})();
+</script>
+<style>
+/* ============================================================
+   TEMAS — 5 estilos modernos (oscuro, claro, gradiente, esmeralda, océano)
+   ============================================================ */
+html[data-theme="claro"] body { background: radial-gradient(circle at top left, #e8ecf3 0%, #f6f8fb 45%, #eceff5 100%) !important; color: #1a1e28 !important; }
+html[data-theme="claro"] h1, html[data-theme="claro"] h2, html[data-theme="claro"] h3 { color: #1a1e28 !important; }
+html[data-theme="claro"] .brand span, html[data-theme="claro"] .brand-text span, html[data-theme="claro"] .title span, html[data-theme="claro"] .user-info span, html[data-theme="claro"] .brand span { color: #5b6673 !important; }
+html[data-theme="claro"] .brand-text span { color: #5b6673 !important; }
+html[data-theme="claro"] .title p, html[data-theme="claro"] .section-title p, html[data-theme="claro"] .panel-header p, html[data-theme="claro"] .brand span, html[data-theme="claro"] .subtitle, html[data-theme="claro"] .section-title span { color: #5b6673 !important; }
+html[data-theme="claro"] .card, html[data-theme="claro"] .form, html[data-theme="claro"] .form-modal-content, html[data-theme="claro"] .modal-content, html[data-theme="claro"] .conta-content, html[data-theme="claro"] .panel, html[data-theme="claro"] .stat-card, html[data-theme="claro"] .kpi, html[data-theme="claro"] .pk, html[data-theme="claro"] .det-item, html[data-theme="claro"] .det-sec, html[data-theme="claro"] .conta-tipo, html[data-theme="claro"] .conta-sec, html[data-theme="claro"] .tqr-card, html[data-theme="claro"] .det-acc-row, html[data-theme="claro"] .conta-table-wrap, html[data-theme="claro"] .lista-wrap, html[data-theme="claro"] .table-container, html[data-theme="claro"] .lista-table, html[data-theme="claro"] .rep-ext, html[data-theme="claro"] .rep-ext-head, html[data-theme="claro"] .ck-item, html[data-theme="claro"] .det-grid, html[data-theme="claro"] .rename, html[data-theme="claro"] .card-text, html[data-theme="claro"] .conta-egreso-grid, html[data-theme="claro"] .cfg-grid { background: #ffffff !important; color: #1a1e28 !important; border-color: rgba(20,30,50,.10) !important; }
+html[data-theme="claro"] .card h3, html[data-theme="claro"] .card-text h3, html[data-theme="claro"] .card-text p { color: #1a1e28 !important; }
+html[data-theme="claro"] .card p { color: #5b6673 !important; }
+html[data-theme="claro"] .card.active { border-color: #0d9488 !important; }
+html[data-theme="claro"] .card.locked { opacity: .78; }
+html[data-theme="claro"] .total-box, html[data-theme="claro"] .total-item, html[data-theme="claro"] .total-item span, html[data-theme="claro"] .caja-total { background: #f1f4f8 !important; color: #1a1e28 !important; border-color: rgba(20,30,50,.10) !important; }
+html[data-theme="claro"] .total-item strong, html[data-theme="claro"] .caja-total strong { color: #0d9488 !important; }
+html[data-theme="claro"] .total-item.pendiente strong { color: #e11d48 !important; }
+html[data-theme="claro"] label { color: #2c3440 !important; }
+html[data-theme="claro"] input, html[data-theme="claro"] select, html[data-theme="claro"] textarea { background: #f1f4f8 !important; color: #1a1e28 !important; border-color: rgba(20,30,50,.12) !important; }
+html[data-theme="claro"] input:focus, html[data-theme="claro"] select:focus, html[data-theme="claro"] textarea:focus { border-color: #0d9488 !important; box-shadow: 0 0 12px rgba(13,148,136,.18) !important; }
+html[data-theme="claro"] select option { background: #ffffff !important; color: #1a1e28 !important; }
+html[data-theme="claro"] .lista-table th, html[data-theme="claro"] .conta-table th { background: #f1f4f8 !important; color: #4b5563 !important; border-bottom-color: rgba(0,0,0,.08) !important; }
+html[data-theme="claro"] .lista-table td, html[data-theme="claro"] .conta-table td { color: #1a1e28 !important; border-bottom-color: rgba(0,0,0,.06) !important; }
+html[data-theme="claro"] .lista-table td b, html[data-theme="claro"] .lista-table tr:hover td { color: #1a1e28 !important; }
+html[data-theme="claro"] .vacio-box { background: #f8fafc !important; color: #6b7280 !important; border-color: rgba(0,0,0,.10) !important; }
+html[data-theme="claro"] .empty, html[data-theme="claro"] .empty-state { background: #f8fafc !important; color: #6b7280 !important; border-color: rgba(0,0,0,.10) !important; }
+html[data-theme="claro"] .form-header p, html[data-theme="claro"] .panel-header p, html[data-theme="claro"] .rec-label { color: #5b6673 !important; }
+html[data-theme="claro"] .form-modal, html[data-theme="claro"] .modal-overlay, html[data-theme="claro"] .rep-overlay { background: rgba(15, 21, 32, .42) !important; }
+html[data-theme="claro"] .modal-close { border-color: rgba(0,0,0,.18) !important; background: #f1f4f8 !important; color: #1a1e28 !important; }
+html[data-theme="claro"] .modal-close:hover { background: rgba(225,29,72,.12) !important; border-color: rgba(225,29,72,.5) !important; color: #e11d48 !important; }
+html[data-theme="claro"] .conta-seg { background: #f1f4f8 !important; border-color: rgba(0,0,0,.08) !important; }
+html[data-theme="claro"] .conta-seg button { color: #4b5563 !important; }
+html[data-theme="claro"] .conta-seg button.on { background: #0d9488 !important; color: #ffffff !important; }
+html[data-theme="claro"] .btn-contabilidad { background: rgba(13,148,136,.10) !important; color: #0d9488 !important; border-color: rgba(13,148,136,.3) !important; }
+html[data-theme="claro"] .btn-tec { background: #7c3a8c !important; }
+html[data-theme="claro"] .btn-edi { background: #b45309 !important; }
+html[data-theme="claro"] .btn-sesion { background: #0d9488 !important; color: #ffffff !important; border-color: #0d9488 !important; }
+html[data-theme="claro"] .btn-add { background: linear-gradient(135deg, #0d9488, #14b8a6) !important; color: #ffffff !important; }
+html[data-theme="claro"] .btn-excel { background: #15803d !important; color: #ffffff !important; border-color: #15803d !important; }
+html[data-theme="claro"] .submit { background: linear-gradient(135deg, #0d9488, #14b8a6) !important; color: #ffffff !important; }
+html[data-theme="claro"] .secondary-bill { background: rgba(13,148,136,.10) !important; color: #0d9488 !important; border-color: rgba(13,148,136,.4) !important; }
+html[data-theme="claro"] .conta-btn { background: rgba(13,148,136,.10) !important; color: #0d9488 !important; border-color: rgba(13,148,136,.35) !important; }
+html[data-theme="claro"] .conta-btn-pdf { background: #e11d48 !important; border-color: #e11d48 !important; color: #ffffff !important; }
+html[data-theme="claro"] .conta-btn-wa { background: #15803d !important; border-color: #15803d !important; color: #ffffff !important; }
+html[data-theme="claro"] .kpi span, html[data-theme="claro"] .kpi small { color: #6b7280 !important; }
+html[data-theme="claro"] .kpi strong { color: #1a1e28 !important; }
+html[data-theme="claro"] .pk span { color: #5b6673 !important; }
+html[data-theme="claro"] .pk strong { color: #1a1e28 !important; }
+html[data-theme="claro"] .pk small { color: #6b7280 !important; }
+html[data-theme="claro"] .pk-top span { color: #6b7280 !important; }
+html[data-theme="claro"] .pk-top i { background: #f1f4f8 !important; color: #0d9488 !important; }
+html[data-theme="claro"] .pk strong { color: #1a1e28 !important; }
+html[data-theme="claro"] .custom-alert-container { background: #ffffff !important; color: #1a1e28 !important; border: 2px solid #0d9488 !important; box-shadow: 0 10px 28px rgba(20,30,50,.22) !important; }
+html[data-theme="claro"] .custom-alert-container p { color: #1a1e28 !important; }
+html[data-theme="claro"] .custom-alert-container.error { border-color: #e11d48 !important; }
+html[data-theme="claro"] .chip { background: #f1f4f8 !important; color: #0d9488 !important; border-color: rgba(13,148,136,.35) !important; }
+html[data-theme="claro"] .mini-btn { background: rgba(13,148,136,.10) !important; color: #0d9488 !important; border-color: rgba(13,148,136,.4) !important; }
+html[data-theme="claro"] .mini-del { background: rgba(225,29,72,.10) !important; color: #e11d48 !important; border-color: rgba(225,29,72,.4) !important; }
+html[data-theme="claro"] .chip, html[data-theme="claro"] .det-item strong, html[data-theme="claro"] .stat-value, html[data-theme="claro"] .det-item span { color: #1a1e28 !important; }
+html[data-theme="claro"] .det-item span { color: #6b7280 !important; }
+html[data-theme="claro"] .tqr-info strong { color: #1a1e28 !important; }
+html[data-theme="claro"] .tqr-info span, html[data-theme="claro"] .tqr-info small { color: #5b6673 !important; }
+html[data-theme="claro"] .tqr-card, html[data-theme="claro"] .tqr-img { background: #ffffff !important; }
+html[data-theme="claro"] .tqr-img img { border-color: rgba(0,0,0,.08) !important; }
+html[data-theme="claro"] .lista-buscar input { background: #f1f4f8 !important; color: #1a1e28 !important; border-color: rgba(20,30,50,.12) !important; }
+html[data-theme="claro"] .lista-buscar i { color: #0d9488 !important; }
+html[data-theme="claro"] .hm-panel { background: #ffffff !important; border-color: rgba(13,148,136,.35) !important; color: #1a1e28 !important; box-shadow: 0 20px 45px rgba(20,30,50,.18) !important; }
+html[data-theme="claro"] .hm-item { background: #f1f4f8 !important; color: #1a1e28 !important; border-color: rgba(20,30,50,.10) !important; }
+html[data-theme="claro"] .hm-item small { color: #6b7280 !important; }
+html[data-theme="claro"] .hm-item i { color: #0d9488 !important; }
+html[data-theme="claro"] .hm-panel-title { color: #6b7280 !important; }
+html[data-theme="claro"] .hm-btn { background: #0d9488 !important; border-color: #0d9488 !important; box-shadow: 0 4px 14px rgba(13,148,136,.3) !important; }
+html[data-theme="claro"] .hm-btn span { background: #ffffff !important; }
+html[data-theme="claro"] .hk-page-title { color: #1a1e28 !important; }
+html[data-theme="claro"] .sc-band { background: linear-gradient(135deg, #0d9488, #14b8a6) !important; }
+html[data-theme="claro"] .stat-value { color: #1a1e28 !important; }
+html[data-theme="claro"] .stat-label, html[data-theme="claro"] .stat-icon { color: #6b7280 !important; }
+html[data-theme="claro"] select option { color: #1a1e28 !important; background: #fff !important; }
+html[data-theme="claro"] .regi-line { color: #6b7280 !important; }
+
+/* ---- GRADIENTE ----- */
+html[data-theme="gradiente"] body { background: radial-gradient(circle at top left, #2a1a4a 0%, #16102b 48%, #0c0a16 100%) !important; color: #f5f3ff !important; }
+html[data-theme="gradiente"] h1, html[data-theme="gradiente"] h2, html[data-theme="gradiente"] h3 { color: #f5f3ff !important; }
+html[data-theme="gradiente"] .card, html[data-theme="gradiente"] .form, html[data-theme="gradiente"] .form-modal-content, html[data-theme="gradiente"] .modal-content, html[data-theme="gradiente"] .conta-content, html[data-theme="gradiente"] .panel, html[data-theme="gradiente"] .stat-card, html[data-theme="gradiente"] .kpi, html[data-theme="gradiente"] .pk, html[data-theme="gradiente"] .det-item, html[data-theme="gradiente"] .det-sec, html[data-theme="gradiente"] .conta-tipo, html[data-theme="gradiente"] .conta-sec, html[data-theme="gradiente"] .tqr-card, html[data-theme="gradiente"] .lista-wrap, html[data-theme="gradiente"] .table-container, html[data-theme="gradiente"] .rep-ext, html[data-theme="gradiente"] .ck-item, html[data-theme="gradiente"] .kpi-box { background: #1a1330 !important; color: #f5f3ff !important; border-color: rgba(167,139,250,.28) !important; }
+html[data-theme="gradiente"] .card h3, html[data-theme="gradiente"] .card-text h3 { color: #f5f3ff !important; }
+html[data-theme="gradiente"] .card p, html[data-theme="gradiente"] .card-text p { color: #c7c2db !important; }
+html[data-theme="gradiente"] .card.active { border-color: #a78bfa !important; background: linear-gradient(160deg, #241a45, #1a1330) !important; box-shadow: 0 0 30px rgba(167,139,250,.25) !important; }
+html[data-theme="gradiente"] .form-modal, html[data-theme="gradiente"] .modal-overlay, html[data-theme="gradiente"] .rep-overlay { background: rgba(10,7,22,.72) !important; }
+html[data-theme="gradiente"] input, html[data-theme="gradiente"] select, html[data-theme="gradiente"] textarea { background: #120e24 !important; color: #f5f3ff !important; border-color: rgba(167,139,250,.25) !important; }
+html[data-theme="gradiente"] label { color: #d3cfef !important; }
+html[data-theme="gradiente"] .lista-table th, html[data-theme="gradiente"] .conta-table th { background: #1c1434 !important; color: #c4b5e8 !important; border-bottom-color: rgba(167,139,250,.22) !important; }
+html[data-theme="gradiente"] .lista-table td, html[data-theme="gradiente"] .conta-table td { color: #f5f3ff !important; border-bottom-color: rgba(167,139,250,.15) !important; }
+html[data-theme="gradiente"] .lista-table td b { color: #ffffff !important; }
+html[data-theme="gradiente"] .vacio-box, html[data-theme="gradiente"] .empty, html[data-theme="gradiente"] .empty-state { background: #120e24 !important; color: #c7c2db !important; border-color: rgba(167,139,250,.22) !important; }
+html[data-theme="gradiente"] .kpi span, html[data-theme="gradiente"] .pk span, html[data-theme="gradiente"] .pk-top span, html[data-theme="gradiente"] .pk small, html[data-theme="gradiente"] .kpi small { color: #c7c2db !important; }
+html[data-theme="gradiente"] .kpi strong, html[data-theme="gradiente"] .pk strong { color: #f5f3ff !important; }
+html[data-theme="gradiente"] .pk-top i { background: rgba(167,139,250,.14) !important; color: #a78bfa !important; }
+html[data-theme="gradiente"] .submit { background: linear-gradient(135deg, #a78bfa, #d8b4fe) !important; color: #1a1330 !important; }
+html[data-theme="gradiente"] .btn-contabilidad { border-color: rgba(167,139,250,.45) !important; background: rgba(167,139,250,.15) !important; color: #d8b4fe !important; }
+html[data-theme="gradiente"] .btn-tec { background: rgba(236,72,153,.12) !important; border-color: rgba(236,72,153,.45) !important; color: #f9a8d4 !important; }
+html[data-theme="gradiente"] .btn-edi { background: rgba(245,158,11,.12) !important; border-color: rgba(245,158,11,.45) !important; color: #fbbf24 !important; }
+html[data-theme="gradiente"] .btn-sesion { background: rgba(167,139,250,.15) !important; color: #d8b4fe !important; border-color: rgba(167,139,250,.4) !important; }
+html[data-theme="gradiente"] .btn-add { background: linear-gradient(135deg, #a78bfa, #d8b4fe) !important; color: #1a1330 !important; }
+html[data-theme="gradiente"] .btn-excel { background: rgba(52,211,153,.13) !important; border-color: rgba(52,211,153,.35) !important; color: #34d399 !important; }
+html[data-theme="gradiente"] .conta-btn { background: rgba(167,139,250,.12) !important; color: #d8b4fe !important; border-color: rgba(167,139,250,.35) !important; }
+html[data-theme="gradiente"] .conta-btn-pdf { background: #e11d48 !important; border-color: #e11d48 !important; color: #ffffff !important; }
+html[data-theme="gradiente"] .conta-btn-wa { background: #15803d !important; border-color: #15803d !important; color: #ffffff !important; }
+html[data-theme="gradiente"] .secondary-bill { background: rgba(167,139,250,.12) !important; color: #d8b4fe !important; border-color: rgba(167,139,250,.4) !important; }
+html[data-theme="gradiente"] .conta-seg { background: #120e24 !important; border-color: rgba(167,139,250,.22) !important; }
+html[data-theme="gradiente"] .conta-seg button { color: #c7c2db !important; }
+html[data-theme="gradiente"] .conta-seg button.on { background: rgba(167,139,250,.22) !important; color: #d8b4fe !important; }
+html[data-theme="gradiente"] .logo { background: #a78bfa !important; color: #1a1330 !important; box-shadow: 0 0 22px rgba(167,139,250,.45) !important; }
+html[data-theme="gradiente"] .chip, html[data-theme="gradiente"] .det-item span { color: #c7c2db !important; }
+html[data-theme="gradiente"] .det-item strong { color: #f5f3ff !important; }
+html[data-theme="gradiente"] .stat-card .stat-value, html[data-theme="gradiente"] .stat-value { color: #f5f3ff !important; }
+html[data-theme="gradiente"] .stat-card .stat-label, html[data-theme="gradiente"] .stat-label, html[data-theme="gradiente"] .stat-icon { color: #c7c2db !important; }
+html[data-theme="gradiente"] .ck-item.ok b { color: #34d399 !important; }
+html[data-theme="gradiente"] .ck-item.fail b { color: #fb7185 !important; }
+html[data-theme="gradiente"] .chk-si:has(input:checked) { background: rgba(52,211,153,.15) !important; border-color: #34d399 !important; color: #34d399 !important; }
+html[data-theme="gradiente"] .chk-no:has(input:checked) { background: rgba(251,113,133,.18) !important; border-color: #fb7185 !important; color: #fb7185 !important; }
+html[data-theme="gradiente"] .custom-alert-container { background: #1a1330 !important; color: #f5f3ff !important; border-color: #a78bfa !important; }
+html[data-theme="gradiente"] .custom-alert-container p { color: #f5f3ff !important; }
+html[data-theme="gradiente"] .hm-panel { background: linear-gradient(170deg, #1a1330 0%, #120e24 60%) !important; border-color: rgba(167,139,250,.35) !important; box-shadow: 0 20px 50px rgba(0,0,0,.6) !important; color: #f5f3ff !important; }
+html[data-theme="gradiente"] .hm-item { background: rgba(167,139,250,.10) !important; border-color: rgba(167,139,250,.22) !important; color: #f5f3ff !important; }
+html[data-theme="gradiente"] .hm-item small { color: #c7c2db !important; }
+html[data-theme="gradiente"] .hm-item i { color: #a78bfa !important; }
+html[data-theme="gradiente"] .hm-panel-title { color: #c4b5e8 !important; }
+html[data-theme="gradiente"] .hm-btn { background: rgba(167,139,250,.12) !important; border-color: rgba(167,139,250,.4) !important; }
+html[data-theme="gradiente"] .hm-btn span { background: #a78bfa !important; }
+html[data-theme="gradiente"] .hm-item:hover { border-color: rgba(167,139,250,.6) !important; background: rgba(167,139,250,.22) !important; }
+
+/* ---- ESMERALDA ----- */
+html[data-theme="esmeralda"] body { background: radial-gradient(circle at top left, #012b22 0%, #0b1f1a 50%, #061311 100%) !important; color: #f0fff9 !important; }
+html[data-theme="esmeralda"] h1, html[data-theme="esmeralda"] h2, html[data-theme="esmeralda"] h3 { color: #f0fff9 !important; }
+html[data-theme="esmeralda"] .card, html[data-theme="esmeralda"] .form, html[data-theme="esmeralda"] .form-modal-content, html[data-theme="esmeralda"] .modal-content, html[data-theme="esmeralda"] .conta-content, html[data-theme="esmeralda"] .panel, html[data-theme="esmeralda"] .stat-card, html[data-theme="esmeralda"] .kpi, html[data-theme="esmeralda"] .pk, html[data-theme="esmeralda"] .det-item, html[data-theme="esmeralda"] .det-sec, html[data-theme="esmeralda"] .conta-tipo, html[data-theme="esmeralda"] .conta-sec, html[data-theme="esmeralda"] .tqr-card, html[data-theme="esmeralda"] .lista-wrap, html[data-theme="esmeralda"] .table-container, html[data-theme="esmeralda"] .rep-ext, html[data-theme="esmeralda"] .ck-item, html[data-theme="esmeralda"] .kpi-box { background: #12251f !important; color: #f0fff9 !important; border-color: rgba(52,211,153,.24) !important; }
+html[data-theme="esmeralda"] .card h3, html[data-theme="esmeralda"] .card-text h3 { color: #f0fff9 !important; }
+html[data-theme="esmeralda"] .card p, html[data-theme="esmeralda"] .card-text p { color: #7ea69b !important; }
+html[data-theme="esmeralda"] .card.active { border-color: #34d399 !important; background: linear-gradient(160deg, #183028, #12251f) !important; box-shadow: 0 0 30px rgba(52,211,153,.22) !important; }
+html[data-theme="esmeralda"] .form-modal, html[data-theme="esmeralda"] .modal-overlay, html[data-theme="esmeralda"] .rep-overlay { background: rgba(3,16,13,.74) !important; }
+html[data-theme="esmeralda"] input, html[data-theme="esmeralda"] select, html[data-theme="esmeralda"] textarea { background: #0b1a16 !important; color: #f0fff9 !important; border-color: rgba(52,211,153,.22) !important; }
+html[data-theme="esmeralda"] label { color: #c0d9d0 !important; }
+html[data-theme="esmeralda"] .lista-table th, html[data-theme="esmeralda"] .conta-table th { background: #12251f !important; color: #7ea69b !important; border-bottom-color: rgba(52,211,153,.22) !important; }
+html[data-theme="esmeralda"] .lista-table td, html[data-theme="esmeralda"] .conta-table td { color: #f0fff9 !important; border-bottom-color: rgba(52,211,153,.13) !important; }
+html[data-theme="esmeralda"] .lista-table td b { color: #ffffff !important; }
+html[data-theme="esmeralda"] .vacio-box, html[data-theme="esmeralda"] .empty, html[data-theme="esmeralda"] .empty-state { background: #0b1a16 !important; color: #7ea69b !important; border-color: rgba(52,211,153,.22) !important; }
+html[data-theme="esmeralda"] .kpi span, html[data-theme="esmeralda"] .pk span, html[data-theme="esmeralda"] .pk-top span, html[data-theme="esmeralda"] .pk small, html[data-theme="esmeralda"] .kpi small { color: #7ea69b !important; }
+html[data-theme="esmeralda"] .kpi strong, html[data-theme="esmeralda"] .pk strong { color: #f0fff9 !important; }
+html[data-theme="esmeralda"] .pk-top i { background: rgba(52,211,153,.14) !important; color: #34d399 !important; }
+html[data-theme="esmeralda"] .submit { background: linear-gradient(135deg, #34d399, #6ee7b7) !important; color: #052e22 !important; }
+html[data-theme="esmeralda"] .btn-contabilidad { border-color: rgba(52,211,153,.45) !important; background: rgba(52,211,153,.15) !important; color: #6ee7b7 !important; }
+html[data-theme="esmeralda"] .btn-sesion { background: rgba(52,211,153,.16) !important; color: #6ee7b7 !important; border-color: rgba(52,211,153,.42) !important; }
+html[data-theme="esmeralda"] .btn-add { background: linear-gradient(135deg, #34d399, #6ee7b7) !important; color: #052e22 !important; }
+html[data-theme="esmeralda"] .btn-excel { background: rgba(16,185,129,.16) !important; border-color: rgba(16,185,129,.4) !important; color: #6ee7b7 !important; }
+html[data-theme="esmeralda"] .conta-btn { background: rgba(52,211,153,.12) !important; color: #6ee7b7 !important; border-color: rgba(52,211,153,.35) !important; }
+html[data-theme="esmeralda"] .conta-btn-pdf { background: #e11d48 !important; border-color: #e11d48 !important; color: #ffffff !important; }
+html[data-theme="esmeralda"] .conta-btn-wa { background: #15803d !important; border-color: #15803d !important; color: #ffffff !important; }
+html[data-theme="esmeralda"] .secondary-bill { background: rgba(52,211,153,.12) !important; color: #6ee7b7 !important; border-color: rgba(52,211,153,.4) !important; }
+html[data-theme="esmeralda"] .conta-seg { background: #0b1a16 !important; border-color: rgba(52,211,153,.22) !important; }
+html[data-theme="esmeralda"] .conta-seg button { color: #7ea69b !important; }
+html[data-theme="esmeralda"] .conta-seg button.on { background: rgba(52,211,153,.22) !important; color: #6ee7b7 !important; }
+html[data-theme="esmeralda"] .logo { background: #34d399 !important; color: #052e22 !important; box-shadow: 0 0 22px rgba(52,211,153,.45) !important; }
+html[data-theme="esmeralda"] .det-item strong { color: #f0fff9 !important; }
+html[data-theme="esmeralda"] .det-item span { color: #7ea69b !important; }
+html[data-theme="esmeralda"] .stat-card .stat-value, html[data-theme="esmeralda"] .stat-value { color: #f0fff9 !important; }
+html[data-theme="esmeralda"] .stat-card .stat-label, html[data-theme="esmeralda"] .stat-label, html[data-theme="esmeralda"] .stat-icon { color: #7ea69b !important; }
+html[data-theme="esmeralda"] .custom-alert-container { background: #12251f !important; color: #f0fff9 !important; border-color: #34d399 !important; }
+html[data-theme="esmeralda"] .custom-alert-container p { color: #f0fff9 !important; }
+html[data-theme="esmeralda"] .hm-panel { background: linear-gradient(170deg, #12251f 0%, #0b1a16 60%) !important; border-color: rgba(52,211,153,.35) !important; box-shadow: 0 20px 50px rgba(0,0,0,.6) !important; color: #f0fff9 !important; }
+html[data-theme="esmeralda"] .hm-item { background: rgba(52,211,153,.10) !important; border-color: rgba(52,211,153,.22) !important; color: #f0fff9 !important; }
+html[data-theme="esmeralda"] .hm-item small { color: #7ea69b !important; }
+html[data-theme="esmeralda"] .hm-item i { color: #34d399 !important; }
+html[data-theme="esmeralda"] .hm-panel-title { color: #7ea69b !important; }
+html[data-theme="esmeralda"] .hm-btn { background: rgba(52,211,153,.12) !important; border-color: rgba(52,211,153,.4) !important; }
+html[data-theme="esmeralda"] .hm-btn span { background: #34d399 !important; }
+html[data-theme="esmeralda"] .hm-item:hover { border-color: rgba(52,211,153,.6) !important; background: rgba(52,211,153,.22) !important; }
+
+/* ---- OCÉANO ----- */
+html[data-theme="oceano"] body { background: radial-gradient(circle at top left, #06192e 0%, #0d2133 45%, #05101f 100%) !important; color: #eef5ff !important; }
+html[data-theme="oceano"] h1, html[data-theme="oceano"] h2, html[data-theme="oceano"] h3 { color: #eef5ff !important; }
+html[data-theme="oceano"] .card, html[data-theme="oceano"] .form, html[data-theme="oceano"] .form-modal-content, html[data-theme="oceano"] .modal-content, html[data-theme="oceano"] .conta-content, html[data-theme="oceano"] .panel, html[data-theme="oceano"] .stat-card, html[data-theme="oceano"] .kpi, html[data-theme="oceano"] .pk, html[data-theme="oceano"] .det-item, html[data-theme="oceano"] .det-sec, html[data-theme="oceano"] .conta-tipo, html[data-theme="oceano"] .conta-sec, html[data-theme="oceano"] .tqr-card, html[data-theme="oceano"] .lista-wrap, html[data-theme="oceano"] .table-container, html[data-theme="oceano"] .rep-ext, html[data-theme="oceano"] .ck-item, html[data-theme="oceano"] .kpi-box { background: #12233a !important; color: #eef5ff !important; border-color: rgba(56,189,248,.24) !important; }
+html[data-theme="oceano"] .card h3, html[data-theme="oceano"] .card-text h3 { color: #eef5ff !important; }
+html[data-theme="oceano"] .card p, html[data-theme="oceano"] .card-text p { color: #8aa1b8 !important; }
+html[data-theme="oceano"] .card.active { border-color: #38bdf8 !important; background: linear-gradient(160deg, #183049, #12233a) !important; box-shadow: 0 0 30px rgba(56,189,248,.22) !important; }
+html[data-theme="oceano"] .form-modal, html[data-theme="oceano"] .modal-overlay, html[data-theme="oceano"] .rep-overlay { background: rgba(4,14,27,.74) !important; }
+html[data-theme="oceano"] input, html[data-theme="oceano"] select, html[data-theme="oceano"] textarea { background: #0d1b2e !important; color: #eef5ff !important; border-color: rgba(56,189,248,.22) !important; }
+html[data-theme="oceano"] label { color: #c5d8ed !important; }
+html[data-theme="oceano"] .lista-table th, html[data-theme="oceano"] .conta-table th { background: #12233a !important; color: #8aa1b8 !important; border-bottom-color: rgba(56,189,248,.22) !important; }
+html[data-theme="oceano"] .lista-table td, html[data-theme="oceano"] .conta-table td { color: #eef5ff !important; border-bottom-color: rgba(56,189,248,.13) !important; }
+html[data-theme="oceano"] .lista-table td b { color: #ffffff !important; }
+html[data-theme="oceano"] .vacio-box, html[data-theme="oceano"] .empty, html[data-theme="oceano"] .empty-state { background: #0d1b2e !important; color: #8aa1b8 !important; border-color: rgba(56,189,248,.22) !important; }
+html[data-theme="oceano"] .kpi span, html[data-theme="oceano"] .pk span, html[data-theme="oceano"] .pk-top span, html[data-theme="oceano"] .pk small, html[data-theme="oceano"] .kpi small { color: #8aa1b8 !important; }
+html[data-theme="oceano"] .kpi strong, html[data-theme="oceano"] .pk strong { color: #eef5ff !important; }
+html[data-theme="oceano"] .pk-top i { background: rgba(56,189,248,.14) !important; color: #38bdf8 !important; }
+html[data-theme="oceano"] .submit { background: linear-gradient(135deg, #38bdf8, #7dd3fc) !important; color: #0c1e3a !important; }
+html[data-theme="oceano"] .btn-contabilidad { border-color: rgba(56,189,248,.45) !important; background: rgba(56,189,248,.15) !important; color: #7dd3fc !important; }
+html[data-theme="oceano"] .btn-sesion { background: rgba(56,189,248,.16) !important; color: #7dd3fc !important; border-color: rgba(56,189,248,.42) !important; }
+html[data-theme="oceano"] .btn-add { background: linear-gradient(135deg, #38bdf8, #7dd3fc) !important; color: #0c1e3a !important; }
+html[data-theme="oceano"] .btn-excel { background: rgba(52,211,153,.13) !important; border-color: rgba(52,211,153,.38) !important; color: #6ee7b7 !important; }
+html[data-theme="oceano"] .conta-btn { background: rgba(56,189,248,.12) !important; color: #7dd3fc !important; border-color: rgba(56,189,248,.35) !important; }
+html[data-theme="oceano"] .conta-btn-pdf { background: #e11d48 !important; border-color: #e11d48 !important; color: #ffffff !important; }
+html[data-theme="oceano"] .conta-btn-wa { background: #15803d !important; border-color: #15803d !important; color: #ffffff !important; }
+html[data-theme="oceano"] .secondary-bill { background: rgba(56,189,248,.12) !important; color: #7dd3fc !important; border-color: rgba(56,189,248,.4) !important; }
+html[data-theme="oceano"] .conta-seg { background: #0d1b2e !important; border-color: rgba(56,189,248,.22) !important; }
+html[data-theme="oceano"] .conta-seg button { color: #8aa1b8 !important; }
+html[data-theme="oceano"] .conta-seg button.on { background: rgba(56,189,248,.22) !important; color: #7dd3fc !important; }
+html[data-theme="oceano"] .logo { background: #38bdf8 !important; color: #0c1e3a !important; box-shadow: 0 0 22px rgba(56,189,248,.45) !important; }
+html[data-theme="oceano"] .det-item strong { color: #eef5ff !important; }
+html[data-theme="oceano"] .det-item span { color: #8aa1b8 !important; }
+html[data-theme="oceano"] .stat-card .stat-value, html[data-theme="oceano"] .stat-value { color: #eef5ff !important; }
+html[data-theme="oceano"] .stat-card .stat-label, html[data-theme="oceano"] .stat-label, html[data-theme="oceano"] .stat-icon { color: #8aa1b8 !important; }
+html[data-theme="oceano"] .custom-alert-container { background: #12233a !important; color: #eef5ff !important; border-color: #38bdf8 !important; }
+html[data-theme="oceano"] .custom-alert-container p { color: #eef5ff !important; }
+html[data-theme="oceano"] .hm-panel { background: linear-gradient(170deg, #12233a 0%, #0d1b2e 60%) !important; border-color: rgba(56,189,248,.35) !important; box-shadow: 0 20px 50px rgba(0,0,0,.6) !important; color: #eef5ff !important; }
+html[data-theme="oceano"] .hm-item { background: rgba(56,189,248,.10) !important; border-color: rgba(56,189,248,.22) !important; color: #eef5ff !important; }
+html[data-theme="oceano"] .hm-item small { color: #8aa1b8 !important; }
+html[data-theme="oceano"] .hm-item i { color: #38bdf8 !important; }
+html[data-theme="oceano"] .hm-panel-title { color: #8aa1b8 !important; }
+html[data-theme="oceano"] .hm-btn { background: rgba(56,189,248,.12) !important; border-color: rgba(56,189,248,.4) !important; }
+html[data-theme="oceano"] .hm-btn span { background: #38bdf8 !important; }
+html[data-theme="oceano"] .hm-item:hover { border-color: rgba(56,189,248,.6) !important; background: rgba(56,189,248,.22) !important; }
+
+/* ========== LOCKSCREEN (todas las 5 paletas) ========== */
+.jk-lock { position: fixed; inset: 0; z-index: 15000; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(6,9,14,.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.jk-lock.show { display: flex; animation: jkLockIn .4s ease both; }
+@keyframes jkLockIn { from { opacity: 0; } to { opacity: 1; } }
+.jk-lock-box { width: 100%; max-width: 400px; padding: 30px 28px 26px; border-radius: 22px; background: #171a21; border: 1px solid rgba(18,216,196,.25); box-shadow: 0 30px 80px rgba(0,0,0,.55); text-align: center; animation: jkLockCard .5s cubic-bezier(.22,1.2,.36,1) both; }
+@keyframes jkLockCard { from { opacity: 0; transform: translateY(18px) scale(.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.jk-lock-logo { width: 76px; height: 76px; border-radius: 20px; background: linear-gradient(160deg, rgba(18,216,196,.18), rgba(18,216,196,.05)); border: 1px solid rgba(18,216,196,.35); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; overflow: hidden; }
+.jk-lock-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 20px; }
+.jk-lock-logo span { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: .06em; color: #12d8c4; }
+.jk-lock-title { color: #fff; font-size: 19px; font-weight: 600; margin: 0; letter-spacing: .02em; }
+.jk-lock-sub { color: #7d8594; font-size: 11.5px; margin: 6px 0 18px; line-height: 1.5; }
+.jk-lock-box input { width: 100%; height: 50px; border-radius: 13px; border: 1px solid rgba(255,255,255,.12); background: #101319; color: #fff; padding: 0 16px; font-family: 'Poppins', sans-serif; font-size: 14px; outline: none; text-align: center; letter-spacing: .12em; transition: border-color .2s, box-shadow .2s; }
+.jk-lock-box input:focus { border-color: #12d8c4; box-shadow: 0 0 14px rgba(18,216,196,.25); }
+.jk-lock-btn { width: 100%; height: 50px; margin-top: 12px; border: 0; border-radius: 13px; background: linear-gradient(135deg, #12d8c4, #22f5dd); color: #081014; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: transform .2s, box-shadow .2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.jk-lock-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(18,216,196,.25); }
+.jk-lock-btn:disabled { opacity: .65; cursor: not-allowed; transform: none; box-shadow: none; }
+.jk-lock-err { display: none; margin: 14px 0 0; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,94,94,.4); background: rgba(255,94,94,.12); color: #ff8d8d; font-size: 11.5px; font-weight: 600; }
+.jk-lock-warn { margin-top: 14px; padding: 10px 12px; border-radius: 12px; border: 1px dashed rgba(255,184,76,.4); background: rgba(255,184,76,.08); color: #ffcf7d; font-size: 10.5px; line-height: 1.55; text-align: center; display: flex; gap: 8px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
+.jk-lock-warn i { color: #ffb84d; line-height: 1; }
+.jk-lock-foot { margin-top: 14px; font-size: 10.5px; color: #7d8594; }
+.jk-lock-link { background: none; border: 0; color: #12d8c4; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 11px; cursor: pointer; text-decoration: underline; padding: 0; }
+.jk-lock-link:hover { color: #6ef3e6; }
+html[data-theme="claro"] .jk-lock { background: rgba(248, 250, 252, .88) !important; }
+html[data-theme="claro"] .jk-lock-box { background: #ffffff !important; border-color: rgba(20,30,50,.16) !important; box-shadow: 0 26px 70px rgba(20,30,50,.22) !important; }
+html[data-theme="claro"] .jk-lock-title { color: #1a1e28 !important; }
+html[data-theme="claro"] .jk-lock-sub { color: #5b6673 !important; }
+html[data-theme="claro"] .jk-lock-logo { background: #f1f4f8 !important; border-color: rgba(20,30,50,.12) !important; }
+html[data-theme="claro"] .jk-lock-logo span { color: #0d9488 !important; }
+html[data-theme="claro"] .jk-lock-box input { background: #f1f4f8 !important; color: #1a1e28 !important; border-color: rgba(20,30,50,.14) !important; }
+html[data-theme="claro"] .jk-lock-box input:focus { border-color: #0d9488 !important; box-shadow: 0 0 0 3px rgba(13,148,136,.25) !important; }
+html[data-theme="claro"] .jk-lock-btn { background: linear-gradient(135deg, #0d9488, #14b8a6) !important; color: #ffffff !important; }
+html[data-theme="claro"] .jk-lock-err { background: #fef2f2 !important; border-color: rgba(225,29,72,.4) !important; color: #b91c1c !important; }
+html[data-theme="claro"] .jk-lock-warn { border-color: rgba(180,83,9,.35) !important; background: #fffbeb !important; color: #92400e !important; }
+html[data-theme="claro"] .jk-lock-warn i { color: #b45309 !important; }
+html[data-theme="claro"] .jk-lock-foot { color: #6b7280 !important; }
+html[data-theme="claro"] .jk-lock-link { color: #0d9488 !important; }
+html[data-theme="gradiente"] .jk-lock { background: rgba(10,7,22,.78) !important; }
+html[data-theme="gradiente"] .jk-lock-box { background: #1a1330 !important; border-color: rgba(167,139,250,.35) !important; box-shadow: 0 26px 70px rgba(0,0,0,.6) !important; }
+html[data-theme="gradiente"] .jk-lock-title { color: #f5f3ff !important; }
+html[data-theme="gradiente"] .jk-lock-sub { color: #c7c2db !important; }
+html[data-theme="gradiente"] .jk-lock-logo { background: rgba(167,139,250,.12) !important; border-color: rgba(167,139,250,.35) !important; }
+html[data-theme="gradiente"] .jk-lock-logo span { color: #a78bfa !important; }
+html[data-theme="gradiente"] .jk-lock-box input { background: #120e24 !important; color: #f5f3ff !important; border-color: rgba(167,139,250,.3) !important; }
+html[data-theme="gradiente"] .jk-lock-box input:focus { border-color: #a78bfa !important; box-shadow: 0 0 0 3px rgba(167,139,250,.3) !important; }
+html[data-theme="gradiente"] .jk-lock-btn { background: linear-gradient(135deg, #a78bfa, #d8b4fe) !important; color: #1a1330 !important; }
+html[data-theme="gradiente"] .jk-lock-err { background: rgba(251,113,133,.14) !important; border-color: rgba(251,113,133,.4) !important; color: #fb7185 !important; }
+html[data-theme="gradiente"] .jk-lock-warn { border-color: rgba(253,224,71,.32) !important; background: rgba(253,224,71,.07) !important; color: #fde047 !important; }
+html[data-theme="gradiente"] .jk-lock-warn i { color: #fde047 !important; }
+html[data-theme="gradiente"] .jk-lock-foot { color: #c7c2db !important; }
+html[data-theme="gradiente"] .jk-lock-link { color: #a78bfa !important; }
+html[data-theme="esmeralda"] .jk-lock { background: rgba(3,16,13,.8) !important; }
+html[data-theme="esmeralda"] .jk-lock-box { background: #12251f !important; border-color: rgba(52,211,153,.35) !important; box-shadow: 0 26px 70px rgba(0,0,0,.6) !important; }
+html[data-theme="esmeralda"] .jk-lock-title { color: #f0fff9 !important; }
+html[data-theme="esmeralda"] .jk-lock-sub { color: #7ea69b !important; }
+html[data-theme="esmeralda"] .jk-lock-logo { background: rgba(52,211,153,.12) !important; border-color: rgba(52,211,153,.35) !important; }
+html[data-theme="esmeralda"] .jk-lock-logo span { color: #34d399 !important; }
+html[data-theme="esmeralda"] .jk-lock-box input { background: #0b1a16 !important; color: #f0fff9 !important; border-color: rgba(52,211,153,.3) !important; }
+html[data-theme="esmeralda"] .jk-lock-box input:focus { border-color: #34d399 !important; box-shadow: 0 0 0 3px rgba(52,211,153,.3) !important; }
+html[data-theme="esmeralda"] .jk-lock-btn { background: linear-gradient(135deg, #34d399, #6ee7b7) !important; color: #052e22 !important; }
+html[data-theme="esmeralda"] .jk-lock-err { background: rgba(251,113,133,.14) !important; border-color: rgba(251,113,133,.4) !important; color: #fb7185 !important; }
+html[data-theme="esmeralda"] .jk-lock-warn { border-color: rgba(253,224,71,.32) !important; background: rgba(253,224,71,.07) !important; color: #fde047 !important; }
+html[data-theme="esmeralda"] .jk-lock-warn i { color: #fde047 !important; }
+html[data-theme="esmeralda"] .jk-lock-foot { color: #7ea69b !important; }
+html[data-theme="esmeralda"] .jk-lock-link { color: #34d399 !important; }
+html[data-theme="oceano"] .jk-lock { background: rgba(4,14,27,.8) !important; }
+html[data-theme="oceano"] .jk-lock-box { background: #12233a !important; border-color: rgba(56,189,248,.35) !important; box-shadow: 0 26px 70px rgba(0,0,0,.6) !important; }
+html[data-theme="oceano"] .jk-lock-title { color: #eef5ff !important; }
+html[data-theme="oceano"] .jk-lock-sub { color: #8aa1b8 !important; }
+html[data-theme="oceano"] .jk-lock-logo { background: rgba(56,189,248,.12) !important; border-color: rgba(56,189,248,.35) !important; }
+html[data-theme="oceano"] .jk-lock-logo span { color: #38bdf8 !important; }
+html[data-theme="oceano"] .jk-lock-box input { background: #0d1b2e !important; color: #eef5ff !important; border-color: rgba(56,189,248,.3) !important; }
+html[data-theme="oceano"] .jk-lock-box input:focus { border-color: #38bdf8 !important; box-shadow: 0 0 0 3px rgba(56,189,248,.3) !important; }
+html[data-theme="oceano"] .jk-lock-btn { background: linear-gradient(135deg, #38bdf8, #7dd3fc) !important; color: #0c1e3a !important; }
+html[data-theme="oceano"] .jk-lock-err { background: rgba(251,113,133,.14) !important; border-color: rgba(251,113,133,.4) !important; color: #fb7185 !important; }
+html[data-theme="oceano"] .jk-lock-warn { border-color: rgba(253,224,71,.32) !important; background: rgba(253,224,71,.07) !important; color: #fde047 !important; }
+html[data-theme="oceano"] .jk-lock-warn i { color: #fde047 !important; }
+html[data-theme="oceano"] .jk-lock-foot { color: #8aa1b8 !important; }
+html[data-theme="oceano"] .jk-lock-link { color: #38bdf8 !important; }
+body.jk-locked { overflow: hidden !important; }
+
+</style>
+<style>
+/* ============ ESTILOS EDICIÓN DE COMERCIO ============ */
+.com-id-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 11px; border: 1px solid rgba(18,216,196,.22); background: rgba(18,216,196,.05); margin-bottom: 14px; flex-wrap: wrap; }
+.com-id-row span { color: #7d8594; font-size: 11px; letter-spacing: .5px; text-transform: uppercase; font-weight: 600; }
+.com-id-row strong { font-family: 'Poppins', sans-serif; font-size: 15px; color: #12d8c4; letter-spacing: .06em; }
+.com-id-row small { color: #7d8594; font-size: 10px; }
+.com-resultado { margin: 0 0 16px; padding: 16px; border-radius: 14px; border: 1px solid rgba(18,216,196,.35); background: rgba(18,216,196,.08); text-align: center; }
+.com-resultado h4 { display: flex; align-items: center; justify-content: center; gap: 8px; color: #12d8c4; font-size: 15px; margin: 0 0 12px; }
+.com-resultado-datos { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
+.com-resultado-datos div { flex: 1; min-width: 120px; background: #101319; border-radius: 11px; padding: 12px 14px; border: 1px solid rgba(18,216,196,.18); }
+.com-resultado-datos span { display: block; font-size: 9px; text-transform: uppercase; letter-spacing: 1.4px; color: #7d8594; margin-bottom: 5px; }
+.com-resultado-datos strong { font-size: 18px; color: #12d8c4; letter-spacing: .06em; word-break: break-all; }
+.com-resultado-warn { display: flex; align-items: center; justify-content: center; gap: 8px; color: #ffd60a; font-size: 10.5px; line-height: 1.5; margin: 0; text-align: center; }
+.com-resultado-warn i { color: #ffd60a; flex-shrink: 0; }
+.com-grupo { margin-bottom: 14px; }
+.com-grupo label { display: block; font-size: 11px; letter-spacing: .5px; text-transform: uppercase; color: #bfc6d2; font-weight: 600; margin-bottom: 7px; }
+.com-grupo input, .com-grupo select { width: 100%; height: 48px; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; background: #101319; color: #fff; padding: 0 14px; font-family: 'Poppins', sans-serif; font-size: 13px; outline: none; transition: .2s; }
+.com-grupo input:focus, .com-grupo select:focus { border-color: #12d8c4; box-shadow: 0 0 14px rgba(18,216,196,.15); }
+.com-logo-row { display: flex; align-items: center; gap: 14px; }
+.com-logo-preview { width: 78px; height: 78px; border-radius: 14px; border: 1px solid rgba(18,216,196,.25); background: #101319; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+.com-logo-preview img { width: 100%; height: 100%; object-fit: contain; }
+.com-logo-preview span { font-size: 30px; font-weight: 700; color: #12d8c4; font-family: 'Poppins', sans-serif; }
+.com-logo-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.com-password-row { display: flex; gap: 10px; }
+.com-password-row input { flex: 1; }
+.com-password-row .conta-btn { white-space: nowrap; }
+.com-cfg-titulo { display: flex; align-items: center; gap: 8px; margin: 18px 0 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.06); font-size: 14px; font-weight: 600; color: #e9f8f6; }
+.com-cfg-titulo i { color: #12d8c4; }
+</style>
 </head>
 <body>
+<!-- LOCKSCREEN: contraseña del comercio -->
+<div class="jk-lock show" id="jkLock">
+    <div class="jk-lock-box">
+        <div class="jk-lock-logo" id="jkLockLogo"><img id="jkLockLogoImg" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:20px;display:none"><span id="jkLockLogoText"><i class="fa-solid fa-lock"></i></span></div>
+        <h2 class="jk-lock-title">Acceso de comercio</h2>
+        <p class="jk-lock-sub">Ingresa la contraseña de tu comercio para continuar.</p>
+        <form id="jkLockForm" autocomplete="off">
+            <input type="password" id="jkLockPassword" placeholder="Contraseña..." autocomplete="current-password" />
+            <button type="submit" id="jkLockBtn" class="jk-lock-btn"><i class="fa-solid fa-lock"></i> Ingresar</button>
+        </form>
+        <div id="jkLockErr" class="jk-lock-err"></div>
+        <div class="jk-lock-warn"><i class="fa-solid fa-triangle-exclamation"></i> Apúntala y guárdala bien. Es única para tu comercio. Si la pierdes, contacta al administrador.</div>
+        <div class="jk-lock-foot">¿Primera vez? <button type="button" id="jkLockConfigurar" class="jk-lock-link">Crear mi comercio</button></div>
+    </div>
+</div>
 <div class="container">
     <header class="header">
         <div class="brand">
@@ -664,7 +1052,7 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
 <!-- NUEVO: BOTONES TECNICO Y EDICION DE FACTURAS -->
 <div class="btn-row2">
     <button type="button" class="btn-tec" onclick="abrirTecnico()"><i class="fa-solid fa-robot"></i> TÉCNICO</button>
-    <button type="button" class="btn-edi" onclick="abrirEdicionFacturas()"><i class="fa-solid fa-file-pen"></i> EDICIÓN DE FACTURAS</button>
+    <button type="button" class="btn-edi" onclick="abrirEdicionComercio()"><i class="fa-solid fa-store"></i> EDICIÓN DE COMERCIO</button>
 </div>
 <!-- NUEVO: KPIs TALLER -->
 <div class="panel-sec">
@@ -1160,7 +1548,6 @@ PART 2
     </div>
 </div>
 <div class="total-box"><div class="total-item"><span>Costo Total</span><strong id="tot_rep_general">$0</strong></div><div class="total-item pendiente"><span>Saldo Pendiente</span><strong id="tot_rep_pendiente">$0</strong></div></div>
-            <button type="button" class="secondary-bill" onclick="appCore.prepararFactura('rep')"><i class="fa-solid fa-file-invoice"></i> Crear Factura</button>
             <button type="button" class="secondary-bill" onclick="ftAbrirDesdeFormulario()"><i class="fa-solid fa-file-circle-check"></i> Factura final del taller (con PDF y envío al cliente)</button>
             <button type="submit" class="submit">Registrar reparación</button>
             <button type="button" class="secondary-bill" onclick="repEtiquetaFormulario()"><i class="fa-solid fa-tag"></i> Imprimir etiqueta con QR</button>
@@ -1224,20 +1611,74 @@ PART 2
         </div>
     </div>
 </div>
-<!-- NUEVO: MODAL EDICION DE FACTURAS -->
+<!-- MODAL EDICIÓN DE COMERCIO -->
 <div class="form-modal" id="modal_config">
     <div class="form-modal-content conta-content">
         <button type="button" class="modal-close" onclick="cerrarModalFormulario('modal_config')" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
         <div class="conta-wrap">
             <div class="form-header">
-                <div class="form-icon"><i class="fa-solid fa-file-pen"></i></div>
-                <div><h3>Edición de facturas</h3><p>Lo que guardes aquí reemplaza los datos de fábrica en facturas, órdenes de servicio, PDFs y mensajes de WhatsApp.</p></div>
+                <div class="form-icon"><i class="fa-solid fa-store"></i></div>
+                <div><h3>Edición de comercio</h3><p>Crea tu negocio desde cero y personaliza todo el sistema: encabezados, facturas, etiquetas, PDFs, paneles y el tema visual.</p></div>
             </div>
-            <div id="cfg_form" class="cfg-grid"></div>
-            <div class="cfg-acc">
-                <button type="button" class="conta-btn" onclick="cfgRestaurar()"><i class="fa-solid fa-rotate-left"></i> Restaurar datos de fábrica</button>
-                <button type="button" class="submit" onclick="cfgGuardar()"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
+            <div class="com-id-row">
+                <span>ID del comercio</span>
+                <strong id="com_id_actual">—</strong>
+                <small id="com_id_hint"></small>
             </div>
+            <div id="com_resultado" class="com-resultado" style="display:none">
+                <h4><i class="fa-solid fa-check-circle"></i> Tu comercio está listo</h4>
+                <div class="com-resultado-datos">
+                    <div><span>ID</span><strong id="com_resultado_id"></strong></div>
+                    <div><span>Contraseña</span><strong id="com_resultado_pwd"></strong></div>
+                </div>
+                <p class="com-resultado-warn"><i class="fa-solid fa-triangle-exclamation"></i> Apúntala y guárdala bien. Es la única autorización para tu comercio. Si la pierdes, contacta al administrador.</p>
+            </div>
+            <form id="form_comercio" onsubmit="event.preventDefault(); comGuardar();">
+                <div class="com-grupo">
+                    <label for="com_nombre">Nombre del comercio *</label>
+                    <input type="text" id="com_nombre" placeholder="Ej: Comercial XYZ" required>
+                </div>
+                <div class="com-grupo">
+                    <label>Logo del comercio</label>
+                    <div class="com-logo-row">
+                        <div class="com-logo-preview" id="com_logo_preview">
+                            <img id="com_logo_img" alt="Logo" style="display:none">
+                            <span id="com_logo_letra">JK</span>
+                        </div>
+                        <div class="com-logo-actions">
+                            <input type="file" id="com_logo_file" accept="image/*" style="display:none" onchange="comLogoElegida()">
+                            <button type="button" class="conta-btn" onclick="document.getElementById('com_logo_file').click()"><i class="fa-solid fa-image"></i> Subir logo</button>
+                            <button type="button" class="conta-btn" onclick="comQuitarLogo()"><i class="fa-solid fa-trash"></i> Quitar</button>
+                        </div>
+                    </div>
+                    <small class="asesor-hint">Se usa en el encabezado de la plataforma, las facturas, las etiquetas de taller y los PDFs. Se guarda en Supabase (bucket «logos»).</small>
+                </div>
+                <div class="com-grupo">
+                    <label for="com_tema">Tema de la plataforma</label>
+                    <select id="com_tema">
+                        <option value="oscuro">Oscuro</option>
+                        <option value="claro">Claro</option>
+                        <option value="gradiente">Gradiente</option>
+                        <option value="esmeralda">Esmeralda</option>
+                        <option value="oceano">Océano</option>
+                    </select>
+                    <small class="asesor-hint">Se aplica de inmediato y se recuerda en la próxima sesión.</small>
+                </div>
+                <div class="com-grupo">
+                    <label for="com_password">Contraseña del comercio</label>
+                    <div class="com-password-row">
+                        <input type="text" id="com_password" autocomplete="off" spellcheck="false" required>
+                        <button type="button" class="conta-btn" onclick="comGenerarPassword()"><i class="fa-solid fa-rotate"></i> Regenerar</button>
+                    </div>
+                    <small class="asesor-hint">Debe ser única para este comercio. Apúntala: es la llave de acceso del sistema. Si la pierdes, contacta al administrador.</small>
+                </div>
+                <label id="com_facturas_titulo">Detalles de la factura</label>
+                <div id="com_form" class="cfg-grid"></div>
+                <div class="cfg-acc">
+                    <button type="button" class="conta-btn" onclick="cerrarModalFormulario('modal_config')"><i class="fa-solid fa-xmark"></i> Cerrar</button>
+                    <button type="submit" class="submit" id="btnComercio"><i class="fa-solid fa-floppy-disk"></i> Guardar comercio</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -1285,19 +1726,46 @@ PART 2
 <!-- MODAL Y PDF -->
 <div id="modalFactura" class="modal-overlay"><div class="modal-content"><h3><i class="fa-solid fa-file-invoice"></i> Acciones de Factura</h3><p>Selecciona cómo deseas generar o enviar el comprobante:</p><div id="resumenFactura" class="resumen-box">Cargando datos...</div><div class="modal-buttons"><button type="button" class="btn-option btn-pdf" onclick="appCore.descargarPDF()"><i class="fa-solid fa-file-pdf"></i> Imprimir / Guardar PDF Blanco</button><button type="button" class="btn-option btn-whatsapp" onclick="appCore.enviarPorWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Enviar Texto por WhatsApp</button><button type="button" class="btn-option btn-cerrar" onclick="document.getElementById('modalFactura').style.display='none'"><i class="fa-solid fa-xmark"></i> Cancelar</button></div></div></div>
 <div class="pdf-container" id="pdf-invoice">
-    <div class="pdf-header"><h1 id="cfg-empresa">ACCESORIOS JK</h1><p id="cfg-linea">NIT:1005715210 Comprobante de Operación Comercial REGIMEN SIMPLIFICADO</p></div>
-    <div class="pdf-row"><div><strong>Cliente:</strong> <span id="pdf-cliente"></span></div><div><strong>Fecha:</strong> <span id="pdf-fecha"></span></div></div>
-    <div class="pdf-row"><div><strong>Teléfono:</strong> <span id="pdf-telefono"></span></div><div><strong>Factura N°:</strong> <span id="pdf-numero"></span></div></div>
-    <!-- NUEVO: IMEI en la factura -->
-    <div class="pdf-row" id="pdf-imei-row"><div><strong>IMEI / Serial:</strong> <span id="pdf-imei"></span></div></div>
-    <table class="pdf-table"><thead><tr><th>Descripción</th><th>Cant</th><th>V. Unitario</th><th>Total</th></tr></thead><tbody><tr><td id="pdf-desc"></td><td id="pdf-cant"></td><td id="pdf-vunit"></td><td id="pdf-vtotal"></td></tr></tbody></table>
-    <div class="pdf-totals"><div><span>Subtotal:</span><span id="pdf-subtotal"></span></div><div><span>Tipo de Pago:</span><span id="pdf-tipopago"></span></div><div><span>Valor Abonado:</span><span id="pdf-abono"></span></div><div class="neto"><span>SALDO PENDIENTE:</span><span id="pdf-pendiente"></span></div></div>
-    <div class="pdf-garantia"><p><strong>TÉRMINOS DE GARANTÍA:</strong> <span id="pdf-garantia-texto">La garantía de todo producto o reparación es de 30 días calendario contados a partir de la emisión de este comprobante. No cubre golpes directos, ingreso de humedad, manipulación de terceros ajenos a la tienda, sobrecargas eléctricas, ni remoción de sellos de seguridad instalados en los repuestos o equipos.</span></p><div style="margin-top: 8px; border-top: 1px dashed #ccc; padding-top: 6px;"><strong>DIRECCIÓN:</strong> <span id="cfg-direccion">Calle 14 # 2-67 Centro Ibagué-Tolima</span> | <strong>SERVICIOS:</strong> <span id="cfg-servicios">Técnico profesional y telefonía.</span></div></div>
-    <div class="pdf-signatures"><div class="signature-box">Recibí Conforme
-
-<span id="pdf-firma-cliente"></span></div><div class="signature-box">Autorizado
-
-<span id="cfg-firma">ACCESORIOS JK</span></div></div>
+    <div class="inv-band">
+        <div class="inv-crest">
+            <div class="inv-logo" id="inv-logo">JK</div>
+            <div class="inv-brand">
+                <h1 id="cfg-empresa">ACCESORIOS JK</h1>
+                <p id="cfg-linea">NIT:1005715210 Comprobante de Operación Comercial REGIMEN SIMPLIFICADO</p>
+            </div>
+        </div>
+        <div class="inv-meta">
+            <div class="inv-meta-cell"><span class="inv-meta-label">Factura N°</span><strong class="inv-meta-val" id="pdf-numero">—</strong></div>
+            <div class="inv-meta-cell"><span class="inv-meta-label">Fecha</span><strong class="inv-meta-val" id="pdf-fecha">—</strong></div>
+        </div>
+    </div>
+    <div class="inv-body">
+        <div class="inv-grid">
+            <div class="inv-meta-cell"><span class="inv-meta-label">Cliente</span><strong class="inv-meta-val" id="pdf-cliente"></strong></div>
+            <div class="inv-meta-cell"><span class="inv-meta-label">Teléfono</span><strong class="inv-meta-val" id="pdf-telefono"></strong></div>
+        </div>
+        <div class="inv-meta-cell inv-imei"><span class="inv-meta-label">IMEI / Serial</span><strong class="inv-meta-val" id="pdf-imei"></strong></div>
+        <table class="pdf-table">
+            <thead><tr><th>Descripción</th><th>Cant</th><th>V. Unitario</th><th>Total</th></tr></thead>
+            <tbody><tr><td id="pdf-desc"></td><td id="pdf-cant"></td><td id="pdf-vunit"></td><td id="pdf-vtotal"></td></tr></tbody>
+        </table>
+        <div class="pdf-totals">
+            <div class="inv-line"><span>Subtotal</span><strong id="pdf-subtotal"></strong></div>
+            <div class="inv-line"><span>Tipo de Pago</span><strong id="pdf-tipopago"></strong></div>
+            <div class="inv-line"><span>Valor Abonado</span><strong id="pdf-abono"></strong></div>
+            <div class="inv-line neto"><span>SALDO PENDIENTE</span><strong id="pdf-pendiente"></strong></div>
+        </div>
+        <div class="pdf-garantia">
+            <strong>TÉRMINOS DE GARANTÍA</strong>
+            <p id="pdf-garantia-texto">La garantía de todo producto o reparación es de 30 días calendario contados a partir de la emisión de este comprobante. No cubre golpes directos, ingreso de humedad, manipulación de terceros ajenos a la tienda, sobrecargas eléctricas, ni remoción de sellos de seguridad instalados en los repuestos o equipos.</p>
+            <div class="inv-direccion"><strong>DIRECCIÓN:</strong> <span id="cfg-direccion">Calle 14 # 2-67 Centro Ibagué-Tolima</span> &nbsp;·&nbsp; <strong>SERVICIOS:</strong> <span id="cfg-servicios">Técnico profesional y telefonía.</span></div>
+        </div>
+        <div class="pdf-signatures">
+            <div class="signature-box">Recibí Conforme<span id="pdf-firma-cliente"></span></div>
+            <div class="signature-box">Autorizado<span id="cfg-firma">ACCESORIOS JK</span></div>
+        </div>
+        <div class="inv-footer">Documento generado automáticamente por Sistema JK · ACCESORIOS JK</div>
+    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -1541,7 +2009,8 @@ async function registrarAsesor() {
             try {
                 const { error } = await window.jkSupabase.from(TABLA_ASESORES).insert([{
                     id: perfil.id, nombre: perfil.nombre, email: perfil.email,
-                    rol: perfil.rol, created_at: perfil.created_at, pin_hash: perfil.pin_hash
+                    rol: perfil.rol, created_at: perfil.created_at, pin_hash: perfil.pin_hash,
+                    comercio_id: window.JK_COMERCIO_ID || null
                 }]);
                 guardadoRemoto = !error;
             } catch (e) { guardadoRemoto = false; }
@@ -1617,7 +2086,7 @@ document.addEventListener('click', (e) => {
 });
 async function obtenerSiguienteNumeroFactura() {
     try {
-        const { data } = await window.jkSupabase.from(NOMBRE_TABLA).select('numero_factura').not('numero_factura', 'is', null).order('id', { ascending: false }).limit(1);
+        const { data } = await window.jkSupabase.from(NOMBRE_TABLA).select('numero_factura').not('numero_factura', 'is', null).eq('comercio_id', window.JK_COMERCIO_ID || '').order('id', { ascending: false }).limit(1);
         let siguienteNumero = 1;
         if (data && data.length > 0 && data[0].numero_factura) {
             const partes = data[0].numero_factura.split('/');
@@ -1658,8 +2127,6 @@ function obtenerTextoImei(prefijo) {
         if (i1) return `IMEI 1: ${i1}`;
         if (i2) return `IMEI 2: ${i2}`;
         return 'N/A';
-    } else if (prefijo === 'rep') {
-        return (document.getElementById('rep_imei')?.value || '').trim() || 'N/A';
     }
     return 'N/A';
 }
@@ -1670,7 +2137,7 @@ const appCore = {
         const textoBusqueda = input.value.trim();
         const lista = document.getElementById(listaId);
         if (textoBusqueda.length < 2) { lista.style.display = 'none'; return; }
-        const { data, error } = await window.jkSupabase.from('inventario').select('*').eq('categoria', categoria).ilike('nombre', `%${textoBusqueda}%`).gt('stock', 0).limit(5);
+        const { data, error } = await window.jkSupabase.from('inventario').select('*').eq('categoria', categoria).eq('comercio_id', window.JK_COMERCIO_ID || '').ilike('nombre', `%${textoBusqueda}%`).gt('stock', 0).limit(5);
         if (error || !data || data.length === 0) {
             lista.innerHTML = '<div style="padding: 10px 15px; color:#7d8594; font-size:12px;">No se encontraron productos en stock.</div>';
             lista.style.display = 'block'; return;
@@ -1744,11 +2211,6 @@ const appCore = {
             desc = document.getElementById('cel_modelo')?.value || "Celular";
             precioUnitario = parseFloat(document.getElementById('cel_precio')?.value) || 0;
             cantidadItems = parseFloat(document.getElementById('cel_cantidad')?.value) || 1;
-        } else if (prefijo === 'rep') {
-            desc = "Reparación: " + (document.getElementById('rep_equipo')?.value || "Equipo");
-            falla = document.getElementById('rep_falla')?.value || "";
-            precioUnitario = parseFloat(document.getElementById('rep_precio')?.value) || 0;
-            cantidadItems = 1;
         }
         const totalOperacion = precioUnitario * cantidadItems;
         const tipoPago = document.getElementById(`${prefijo}_tipo_pago`)?.value || 'Completo';
@@ -1781,7 +2243,7 @@ const appCore = {
         document.getElementById('pdf-firma-cliente').innerHTML = `${cliente}
 (Asesor: ${asesor})`;
         let msg = `*${encodeURIComponent(JK_CFG.empresa)}*%0A*NIT:* ${encodeURIComponent(JK_CFG.nit)}%0A*RÉGIMEN:* ${encodeURIComponent(JK_CFG.regimen)}%0A*${encodeURIComponent(JK_CFG.servicios)}*%0A*DIRECCIÓN:* ${encodeURIComponent(JK_CFG.direccion)}%0A%0A*COMPROBANTE DE COMPRA*%0A--------------------------------%0A*Comprobante N°:* ${numFactura}%0A*Fecha:* ${fechaStr}%0A*Hora:* ${horaStr}%0A%0A*DATOS DEL CLIENTE:*%0A*Cliente:* ${encodeURIComponent(cliente)}%0A*Teléfono:* ${encodeURIComponent(telefono)}%0A%0A*DETALLE DE LA OPERACIÓN:*%0A*Equipo:* ${encodeURIComponent(desc.replace("Reparación: ", ""))}%0A*IMEI / Serial:* ${encodeURIComponent(textoImei)}%0A`;
-        if (prefijo === 'rep') { msg += `*Descripción de la falla:*%0A${encodeURIComponent(falla)}%0A`; } else { msg += `*Cantidad:* ${cantidadItems}%0A`; }
+        msg += `*Cantidad:* ${cantidadItems}%0A`;
         msg += `%0A*TOTAL A PAGAR:* ${appCore.formatoMoneda(totalOperacion)}%0A`;
         if (tipoPago === 'Abono') { msg += `*Tipo de pago:* Abono%0A*Abono realizado:* ${appCore.formatoMoneda(abono)}%0A*Saldo pendiente:* ${appCore.formatoMoneda(pendiente)}%0A`; } else { msg += `*Tipo de pago:* Pago completo%0A*Total pagado:* ${appCore.formatoMoneda(totalOperacion)}%0A`; }
         msg += `*Método de pago:* ${encodeURIComponent(metodoPago)}%0A*Nombre de asesor:* ${encodeURIComponent(asesor)}%0A%0A--------------------------------%0A*${encodeURIComponent(JK_CFG.mensajeGracias)}*%0A%0A`;
@@ -1928,7 +2390,8 @@ async function guardarOperacion(prefijo, tipoOperacion) {
             imagen_url_2: urlImagen2 || null,
             imagen_url_3: urlImagen3 || null,
             estado: (abono < total) ? 'Pendiente' : 'Completado',
-            estado_taller: (prefijo === 'rep') ? document.getElementById('rep_estado_taller').value : 'N/A'
+            estado_taller: (prefijo === 'rep') ? document.getElementById('rep_estado_taller').value : 'N/A',
+            comercio_id: window.JK_COMERCIO_ID || null
         };
         // NUEVO: se intenta guardar las evidencias 2 y 3 en columnas propias;
         // si la tabla no tiene esas columnas, se guardan todas las URLs en imagen_url separadas por " | ".
@@ -1948,10 +2411,10 @@ async function guardarOperacion(prefijo, tipoOperacion) {
         if (error) throw error;
         if (inputProducto && inputProducto.dataset.idInventario) {
             const idInv = inputProducto.dataset.idInventario;
-            const { data: itemData } = await window.jkSupabase.from('inventario').select('stock').eq('id', idInv).single();
+            const { data: itemData } = await window.jkSupabase.from('inventario').select('stock').eq('id', idInv).eq('comercio_id', window.JK_COMERCIO_ID || '').single();
             if (itemData) {
                 const nuevoStock = itemData.stock - cant;
-                await window.jkSupabase.from('inventario').update({ stock: nuevoStock }).eq('id', idInv);
+                await window.jkSupabase.from('inventario').update({ stock: nuevoStock }).eq('id', idInv).eq('comercio_id', window.JK_COMERCIO_ID || '');
             }
             delete inputProducto.dataset.idInventario;
         }
@@ -2105,8 +2568,8 @@ async function contaCargar() {
     try {
         const sb = window.jkSupabase;
         const [rOps, rEgr] = await Promise.all([
-            sb.from(CONTA_TABLA_OPS).select('id, tipo_operacion, numero_factura, customer_name, total, amount_paid, payment_method, payment_type, created_at, asesor').order('created_at', { ascending: false }).limit(5000),
-            sb.from(CONTA_TABLA_EGR).select('*').order('fecha', { ascending: false }).limit(5000)
+            sb.from(CONTA_TABLA_OPS).select('id, tipo_operacion, numero_factura, customer_name, total, amount_paid, payment_method, payment_type, created_at, asesor').eq('comercio_id', window.JK_COMERCIO_ID || '').order('created_at', { ascending: false }).limit(5000),
+            sb.from(CONTA_TABLA_EGR).select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('fecha', { ascending: false }).limit(5000)
         ]);
         if (rOps.error) throw rOps.error;
         contaEstado.ops = rOps.data || [];
@@ -2147,7 +2610,8 @@ async function contaGuardarEgreso() {
         metodo_pago: document.getElementById('eg_metodo').value,
         fecha: fechaVal ? new Date(fechaVal + 'T12:00:00').toISOString() : new Date().toISOString(),
         notas: document.getElementById('eg_notas').value.trim() || null,
-        asesor: sesion.nombre || 'N/A'
+        asesor: sesion.nombre || 'N/A',
+        comercio_id: window.JK_COMERCIO_ID || null
     };
     const btn = document.getElementById('btnEgreso');
     btn.disabled = true;
@@ -2322,10 +2786,10 @@ async function panelCargarTodo() {
     if (!sb) return;
     try {
         const [o, i, p, c] = await Promise.all([
-            sb.from('operaciones').select('*').order('id', { ascending: false }).limit(5000),
-            sb.from('inventario').select('*').order('nombre').limit(5000),
-            sb.from('proveedores').select('*').order('nombre').limit(1000),
-            sb.from('cotizaciones').select('*').order('id', { ascending: false }).limit(500)
+            sb.from('operaciones').select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('id', { ascending: false }).limit(5000),
+            sb.from('inventario').select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('nombre').limit(5000),
+            sb.from('proveedores').select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('nombre').limit(1000),
+            sb.from('cotizaciones').select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('id', { ascending: false }).limit(500)
         ]);
         if (o.error) console.warn('operaciones:', o.error); else PANEL.ops = o.data || [];
         if (i.error) console.warn('inventario:', i.error); else PANEL.inv = i.data || [];
@@ -2513,7 +2977,7 @@ function abrirDetalleOperacion(id) {
 async function tallerActualizarEstado(id) {
     if (!obtenerSesion()) { mostrarAlertaError('Debes iniciar sesión para cambiar el estado.'); return; }
     const val = document.getElementById('det_estado').value;
-    const { error } = await window.jkSupabase.from(NOMBRE_TABLA).update({ estado_taller: val }).eq('id', id);
+    const { error } = await window.jkSupabase.from(NOMBRE_TABLA).update({ estado_taller: val }).eq('id', id).eq('comercio_id', window.JK_COMERCIO_ID || '');
     if (error) { mostrarAlertaError('No se pudo actualizar: ' + error.message); return; }
     mostrarAlertaExito('Estado actualizado a ' + val + '.');
     await panelCargarTodo();
@@ -2546,7 +3010,8 @@ async function panelGuardarProveedor() {
     const data = {
         nombre: nombre, nit: v('prov_nit') || null, contacto: v('prov_contacto') || null,
         telefono: telefono, email: v('prov_email') || null, tipo: v('prov_tipo') || 'Mixto',
-        direccion: v('prov_direccion') || null, notas: v('prov_notas') || null
+        direccion: v('prov_direccion') || null, notas: v('prov_notas') || null,
+        comercio_id: window.JK_COMERCIO_ID || null
     };
     const { error } = await window.jkSupabase.from('proveedores').insert([data]);
     if (error) { mostrarAlertaError('Error al guardar el proveedor: ' + error.message); return; }
@@ -2557,7 +3022,7 @@ async function panelGuardarProveedor() {
 async function eliminarProveedor(id) {
     if (!obtenerSesion()) { mostrarAlertaError('Debes iniciar sesión para eliminar proveedores.'); return; }
     if (!confirm('¿Eliminar este proveedor? Sus cotizaciones guardadas se conservan.')) return;
-    const { error } = await window.jkSupabase.from('proveedores').delete().eq('id', id);
+    const { error } = await window.jkSupabase.from('proveedores').delete().eq('id', id).eq('comercio_id', window.JK_COMERCIO_ID || '');
     if (error) { mostrarAlertaError('No se pudo eliminar: ' + error.message); return; }
     mostrarAlertaExito('Proveedor eliminado.');
     await panelCargarTodo();
@@ -2638,7 +3103,8 @@ function cotLeer() {
         notas: document.getElementById('cot_notas').value.trim() || null,
         asesor: sesion.nombre || 'N/A',
         estado: 'Generada',
-        created_at: ahora.toISOString()
+        created_at: ahora.toISOString(),
+        comercio_id: window.JK_COMERCIO_ID || null
     };
     return { datos: datos, prov: prov };
 }
@@ -2867,10 +3333,13 @@ function contaReportePDFv2_old() {
     h += repCierre(repFirmas('Elaborado por\n' + contaEsc(sesion.nombre || ''), 'Revisado / Gerencia\nACCESORIOS JK'));
     panelGenerarPDF(h, `Reporte_Contable_JK_${contaHoyISO()}.pdf`);
 }
-// ---------- INICIO ----------
-panelCargarTodo();
-setInterval(panelCargarTodo, 60000);
-window.addEventListener('focus', panelCargarTodo);
+// ---------- INICIO DE PANELES ----------
+// Los paneles se cargan tras ingresar la contraseña del comercio
+function cmdIniciar(c) {
+    panelCargarTodo();
+    window.addEventListener('focus', panelCargarTodo);
+    if (!window.__jkInterval) window.__jkInterval = setInterval(panelCargarTodo, 60000);
+}
 </script>
 <script>
 /* =====================================================================
@@ -3275,9 +3744,9 @@ async function repGuardarCompleto() {
         datosFacturaActual = { numeroFactura: num };
         await guardarOperacion('rep', 'Reparacion');
         if (Object.keys(datosFacturaActual).length) return; // no se guardó: no seguir
-        const { data } = await sb.from(NOMBRE_TABLA).select('id').eq('numero_factura', num).order('id', { ascending: false }).limit(1);
+        const { data } = await sb.from(NOMBRE_TABLA).select('id').eq('numero_factura', num).eq('comercio_id', window.JK_COMERCIO_ID || '').order('id', { ascending: false }).limit(1);
         if (data && data[0]) {
-            const { error } = await sb.from(NOMBRE_TABLA).update(extras).eq('id', data[0].id);
+            const { error } = await sb.from(NOMBRE_TABLA).update(extras).eq('id', data[0].id).eq('comercio_id', window.JK_COMERCIO_ID || '');
             if (error) mostrarAlertaError('La reparación se guardó, pero no se pudieron guardar los datos extra: ' + error.message);
         }
         ['4', '5'].forEach(n => {
@@ -3343,54 +3812,264 @@ function cfgAplicarDOM() {
     set('cfg-servicios', JK_CFG.servicios);
     set('cfg-firma', JK_CFG.firmaAutorizado);
 }
-async function cfgCargar() {
-    try {
-        const { data, error } = await window.jkSupabase.from('configuracion_factura').select('datos').eq('id', 1).maybeSingle();
-        if (error) throw error;
-        if (data && data.datos) Object.assign(JK_CFG, JK_CFG_DEFAULT, data.datos);
-    } catch (e) {
-        console.warn('Configuración no disponible; se usan los datos de fábrica.', e);
-    }
-    GARANTIA_POR_DEFECTO = JK_CFG.garantia;
+function cfgAplicarDOMCompleto() {
     cfgAplicarDOM();
+    // Renderiza el logo de la factura (inv-logo del comprobante)
+    var logoDiv = document.getElementById('inv-logo');
+    if (logoDiv) {
+        var c = window.JK_COMERCIO || {};
+        if (c.logo_url) {
+            logoDiv.innerHTML = '<img src="' + c.logo_url + '" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:50%;display:block">';
+        } else {
+            logoDiv.innerHTML = '<span>' + (JK_CFG.empresa || 'J').trim().charAt(0).toUpperCase() + '</span>';
+        }
+    }
 }
-function abrirEdicionFacturas() {
-    if (!obtenerSesion()) { mostrarAlertaError('Debes iniciar sesión para editar las facturas.'); abrirModalSesion(); return; }
-    document.getElementById('cfg_form').innerHTML = CFG_CAMPOS.map(([k, l, t]) => `
-        <div class="field ${t === 'area' ? 'full' : ''}"><label>${l}</label>
-        ${t === 'area' ? `<textarea id="cfg_${k}">${contaEsc(JK_CFG[k])}</textarea>` : `<input type="text" id="cfg_${k}" value="${contaEsc(JK_CFG[k])}">`}
-        </div>`).join('');
+
+// ============================================================================
+// COMERCIO — multi-tenant (ID + contraseña + tema + identidad)
+// ============================================================================
+window.JK_COMERCIO = null;
+window.JK_COMERCIO_ID = null;
+
+function jkCargarSesionLocal() {
+    try { return JSON.parse(localStorage.getItem('jk_comercio') || 'null'); } catch (e) { return null; }
+}
+function jkGuardarSesionLocal(c) {
+    try {
+        if (c) localStorage.setItem('jk_comercio', JSON.stringify(c));
+        else localStorage.removeItem('jk_comercio');
+    } catch (e) {}
+}
+function jkAplicarTema(t) {
+    try { document.documentElement.setAttribute('data-theme', t || 'oscuro'); } catch (e) {}
+}
+function generarIdComercio() {
+    var s = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', n = '';
+    for (var i = 0; i < 6; i++) n += s.charAt(Math.floor(Math.random() * s.length));
+    return 'JK-' + n;
+}
+function generarPasswordComercio() {
+    var l = 'ABCDEFGHJKLMNPQRSTUVWXYZ', d = '0123456789', n = '';
+    for (var i = 0; i < 4; i++) n += l.charAt(Math.floor(Math.random() * l.length));
+    for (var i = 0; i < 4; i++) n += d.charAt(Math.floor(Math.random() * d.length));
+    return n;
+}
+function jkRenderMarca(c) {
+    if (!c) return;
+    var name = c.name || '';
+    document.querySelectorAll('.logo').forEach(function(el) {
+        if (c.logo_url) {
+            el.innerHTML = '<img src="' + c.logo_url + '" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:50%">';
+        } else {
+            el.innerHTML = '<span>' + (name.trim().charAt(0) || 'J').toUpperCase() + '</span>';
+        }
+    });
+    var h1 = document.querySelector('.header h1');
+    if (h1) h1.textContent = name;
+    var h2 = document.querySelector('.header .title h2');
+    if (h2) h2.textContent = name;
+}
+function jkActualizarLockLogo(c) {
+    var logo = document.getElementById('jkLockLogo');
+    if (!logo) return;
+    var img = document.getElementById('jkLockLogoImg');
+    var txt = document.getElementById('jkLockLogoText');
+    if (c && c.logo_url) {
+        img.src = c.logo_url; img.style.display = 'block'; txt.style.display = 'none';
+    } else {
+        img.style.display = 'none'; txt.style.display = 'block';
+        if (c && c.name) {
+            txt.innerHTML = '<span>' + (c.name || 'J').trim().charAt(0).toUpperCase() + '</span>';
+        } else {
+            txt.innerHTML = '<i class="fa-solid fa-lock"></i>';
+        }
+    }
+}
+function jkEsconderLockscreen() {
+    var lock = document.getElementById('jkLock');
+    if (lock) lock.classList.remove('show');
+    document.body.classList.remove('jk-locked');
+}
+function jkMostrarLockscreen() {
+    document.body.classList.add('jk-locked');
+    var lock = document.getElementById('jkLock');
+    if (lock) lock.classList.add('show');
+}
+function jkCargarConfigDesdeComercio(c) {
+    var data = (c && c.data) || {};
+    Object.assign(JK_CFG, JK_CFG_DEFAULT, data);
+    GARANTIA_POR_DEFECTO = JK_CFG.garantia;
+    return JK_CFG;
+}
+function jkActivarSesion(c) {
+    window.JK_COMERCIO = c;
+    window.JK_COMERCIO_ID = c.id;
+    jkGuardarSesionLocal(c);
+    jkAplicarTema(c.theme || 'oscuro');
+    jkRenderMarca(c);
+    jkCargarConfigDesdeComercio(c);
+    cfgAplicarDOMCompleto();
+    jkActualizarLockLogo(c);
+}
+async function jkValidarPassword(pwd) {
+    if (!window.jkSupabase) return null;
+    const { data, error } = await window.jkSupabase.from('comercio')
+        .select('id, name, logo_url, theme, password, data').eq('password', pwd).limit(1);
+    if (error) throw error;
+    return (data && data[0]) ? data[0] : null;
+}
+function jkCargarConComercio() {
+    var idActual = document.getElementById('com_id_actual');
+    var hint = document.getElementById('com_id_hint');
+    var nombre = document.getElementById('com_nombre');
+    if (idActual) idActual.textContent = (window.JK_COMERCIO && window.JK_COMERCIO.id) || 'COM-?????? (se generará al guardar)';
+    if (hint) hint.textContent = (window.JK_COMERCIO && window.JK_COMERCIO.id) ? '(ID actual del comercio)' : '';
+    (document.getElementById('btnComercio') || { innerHTML: '' }).innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar comercio';
+    (document.getElementById('btnComercio') || { disabled: false }).disabled = false;
+}
+function jkRenderCfgForm() {
+    var sesion = jkCargarSesionLocal();
+    var data = (sesion && sesion.data) || {};
+    var cfg = Object.assign({}, JK_CFG_DEFAULT, data);
+    var nombre = (document.getElementById('com_nombre').value || '').trim();
+    if (nombre) cfg.empresa = nombre;
+    if (nombre && !data.firmaAutorizado) cfg.firmaAutorizado = nombre;
+    document.getElementById('com_form').innerHTML = CFG_CAMPOS.map(function(x) {
+        var k = x[0], l = x[1], t = x[2], val = (cfg[k] || '');
+        var content = t === 'area' ? '<textarea id="cfg_' + k + '">' + contaEsc(val) + '</textarea>' : '<input type="text" id="cfg_' + k + '" value="' + contaEsc(val) + '">';
+        return '<div class="field ' + (t === 'area' ? 'full' : '') + '"><label>' + l + '</label>' + content + '</div>';
+    }).join('');
+}
+function jkActualizarLogoPreview() {
+    var img = document.getElementById('com_logo_img');
+    var letra = document.getElementById('com_logo_letra');
+    var nombre = (document.getElementById('com_nombre').value || '').trim();
+    var url = window._comLogoUrl || '';
+    if (url) {
+        img.src = url; img.style.display = 'block'; letra.style.display = 'none';
+    } else {
+        img.style.display = 'none'; letra.style.display = 'block';
+        letra.textContent = (nombre.charAt(0) || 'J').toUpperCase();
+    }
+}
+function comLogoElegida() {
+    var f = (document.getElementById('com_logo_file') || {}).files;
+    if (!f || !f[0]) return;
+    var file = f[0];
+    window._comLogoData = file;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        window._comLogoPreviewData = e.target.result;
+        window._comLogoUrl = e.target.result;
+        jkActualizarLogoPreview();
+        var img = document.getElementById('com_logo_img');
+        if (img) img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+function comQuitarLogo() {
+    window._comLogoUrl = '';
+    window._comLogoData = null;
+    window._comLogoPreviewData = null;
+    var file = document.getElementById('com_logo_file'); if (file) file.value = '';
+    jkActualizarLogoPreview();
+}
+function comGenerarPassword() {
+    document.getElementById('com_password').value = generarPasswordComercio();
+}
+async function comLogoSubir() {
+    var f = window._comLogoData;
+    if (!f) return window._comLogoUrl || null;
+    var ext = (f.name.split('.').pop() || 'png').toLowerCase();
+    var name = 'logo_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7) + '.' + ext;
+    var uploadRes = await window.jkSupabase.storage.from('logos').upload(name, f);
+    if (uploadRes.error) throw uploadRes.error;
+    var urlData = window.jkSupabase.storage.from('logos').getPublicUrl(name);
+    return urlData.data.publicUrl;
+}
+function abrirEdicionComercio() {
+    var sesion = jkCargarSesionLocal();
+    jkRenderCfgForm();
+    document.getElementById('com_nombre').value = (sesion && sesion.name) || '';
+    document.getElementById('com_tema').value = (sesion && sesion.theme) || 'oscuro';
+    document.getElementById('com_password').value = (sesion && sesion.password) || generarPasswordComercio();
+    window._comLogoUrl = (sesion && sesion.logo_url) || '';
+    window._comLogoPreviewData = window._comLogoUrl || null;
+    window._comLogoData = null;
+    jkActualizarLogoPreview();
+    var res = document.getElementById('com_resultado'); if (res) res.style.display = 'none';
+    jkCargarConComercio();
     abrirModalFormulario('modal_config');
 }
-async function cfgGuardar() {
-    if (!obtenerSesion()) { mostrarAlertaError('Debes iniciar sesión para guardar cambios.'); return; }
-    const datos = {};
-    CFG_CAMPOS.forEach(([k]) => { datos[k] = (document.getElementById('cfg_' + k).value || '').trim() || JK_CFG_DEFAULT[k]; });
-    const { error } = await window.jkSupabase.from('configuracion_factura').upsert([{ id: 1, datos: datos, updated_at: new Date().toISOString() }], { onConflict: 'id' });
-    if (error) { mostrarAlertaError('No se pudo guardar: ' + error.message); return; }
-    Object.assign(JK_CFG, datos);
-    GARANTIA_POR_DEFECTO = JK_CFG.garantia;
-    cfgAplicarDOM();
-    mostrarAlertaExito('Facturas actualizadas. Los nuevos datos se usarán en PDFs y mensajes.');
-    cerrarModalFormulario('modal_config');
+async function comGuardar() {
+    var nombre = (document.getElementById('com_nombre').value || '').trim();
+    if (!nombre) { mostrarAlertaError('Ingresa el nombre del comercio.'); return; }
+    var password = (document.getElementById('com_password').value || '').trim();
+    if (!password) { mostrarAlertaError('Genera o ingresa una contraseña.'); return; }
+    var tema = document.getElementById('com_tema').value || 'oscuro';
+    var sesion = jkCargarSesionLocal();
+    var id = (sesion && sesion.id) || generarIdComercio();
+    var btn = document.getElementById('btnComercio');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+    try {
+        window._comLogoUrl = window._comLogoUrl || '';
+        var logoUrl = await comLogoSubir();
+        var config = {};
+        CFG_CAMPOS.forEach(function(x) {
+            var k = x[0];
+            var el = document.getElementById('cfg_' + k);
+            config[k] = el ? (el.value || '').trim() : '';
+        });
+        if (nombre && !config.firmaAutorizado) config.firmaAutorizado = nombre;
+        if (nombre) config.empresa = nombre;
+        var record = {
+            id: id,
+            name: nombre,
+            logo_url: logoUrl || null,
+            theme: tema,
+            password: password,
+            data: config,
+            updated_at: new Date().toISOString()
+        };
+        var error = null;
+        if (sesion && sesion.id) {
+            var up = await window.jkSupabase.from('comercio').upsert([record], { onConflict: 'id' });
+            if (up.error) error = up.error;
+        } else {
+            var ins = await window.jkSupabase.from('comercio').insert([record]);
+            if (ins.error) error = ins.error;
+        }
+        if (error) throw error;
+        jkActivarSesion(record);
+        jkEsconderLockscreen();
+        var res = document.getElementById('com_resultado');
+        if (res) {
+            res.style.display = 'block';
+            document.getElementById('com_resultado_id').textContent = id;
+            document.getElementById('com_resultado_pwd').textContent = password;
+        }
+        mostrarAlertaExito('Comercio guardado correctamente.');
+    } catch (e) {
+        mostrarAlertaError('No se pudo guardar: ' + (e.message || 'error'));
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar comercio';
+    }
 }
-async function cfgRestaurar() {
-    if (!obtenerSesion()) { mostrarAlertaError('Debes iniciar sesión para restaurar.'); return; }
-    if (!confirm('¿Restaurar los datos de fábrica de las facturas?')) return;
-    const { error } = await window.jkSupabase.from('configuracion_factura').upsert([{ id: 1, datos: JK_CFG_DEFAULT, updated_at: new Date().toISOString() }], { onConflict: 'id' });
-    if (error) { mostrarAlertaError('No se pudo restaurar: ' + error.message); return; }
-    Object.assign(JK_CFG, JK_CFG_DEFAULT);
-    GARANTIA_POR_DEFECTO = JK_CFG.garantia;
-    cfgAplicarDOM();
-    abrirEdicionFacturas();
-    mostrarAlertaExito('Datos de fábrica restaurados.');
-}
+
 // Versiones que usan la configuración editable
+function repRenderLogo() {
+    var c = window.JK_COMERCIO || {};
+    if (c.logo_url) return '<img src="' + c.logo_url + '" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:50%;display:block">';
+    return '<span>' + (JK_CFG.empresa || 'J').trim().charAt(0).toUpperCase() + '</span>';
+}
 function repMembrete(titulo, subtitulo, meta) {
     const c = JK_CFG;
     return `
     <div class="rep-band">
-        <div class="rep-logo">JK</div>
+        <div class="rep-logo">${repRenderLogo()}</div>
         <div class="rep-brand">
             <h1>${contaEsc(c.empresa)}</h1>
             <p>NIT: ${contaEsc(c.nit)} · ${contaEsc(c.regimen)}</p>
@@ -3768,7 +4447,7 @@ function contaReportePDFv2() {
     panelGenerarPDF(h, `Reporte_Contable_JK_${contaHoyISO()}.pdf`);
 }
 // ---------- INICIO ----------
-cfgCargar();
+
 </script>
 <script>
 /* =====================================================================
@@ -3884,6 +4563,53 @@ function tallerQRRender() {
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') { toggle(false); }
     });
+})();
+</script>
+<script>
+/* =====================================================================
+   COMERCIO — lockscreen + multi-tenant bootstrap
+   ===================================================================== */
+(function () {
+    var configurar = /configurar=1/.test(window.location.search);
+    var cached = jkCargarSesionLocal();
+    jkAplicarTema((cached && cached.theme) || 'oscuro');
+    if (cached) { jkRenderMarca(cached); jkActualizarLockLogo(cached); }
+    var form = document.getElementById('jkLockForm');
+    var input = document.getElementById('jkLockPassword');
+    var btn = document.getElementById('jkLockBtn');
+    var err = document.getElementById('jkLockErr');
+    var configurarBtn = document.getElementById('jkLockConfigurar');
+    var lock = document.getElementById('jkLock');
+
+    if (configurar) {
+        // Modo crear comercio desde cero: sin lockscreen
+        if (lock) lock.classList.remove('show');
+        document.body.classList.remove('jk-locked');
+        setTimeout(function () { abrirEdicionComercio(); }, 250);
+        return;
+    }
+
+    function entrar() {
+        var pwd = (input.value || '').trim();
+        err.style.display = 'none'; err.textContent = '';
+        if (!pwd) { err.textContent = 'Ingresa la contraseña de tu comercio.'; err.style.display = 'block'; return; }
+        btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando...';
+        jkValidarPassword(pwd).then(function (c) {
+            if (!c) { err.textContent = 'Contraseña incorrecta o no registrada.'; err.style.display = 'block'; return; }
+            jkActivarSesion(c);
+            jkEsconderLockscreen();
+            if (typeof cmdIniciar === 'function') cmdIniciar(c);
+        }).catch(function (e) {
+            err.textContent = 'Error: ' + (e && e.message ? e.message : 'no se pudo validar');
+            err.style.display = 'block';
+        }).finally(function () {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-lock"></i> Ingresar';
+        });
+    }
+    if (form) form.addEventListener('submit', function (e) { e.preventDefault(); entrar(); });
+    if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
+    if (configurarBtn) configurarBtn.addEventListener('click', function () { window.location.href = 'index.html?configurar=1'; });
 })();
 </script>
 </body>
