@@ -4026,7 +4026,7 @@ function jkRenderCfgForm() {
     }).join('');
     document.getElementById('com_firma_text').value = has ? (cfg.firmaAutorizado || '') : '';
     // Firma canvas y sello
-    firmaCanvasReiniciar();
+    firmaCanvasLimpiar();
     var firmaUrl = has ? (data.firma_url || '') : '';
     var selloUrl = has ? (data.sello_url || '') : '';
     window._firmaTrazos = false;
