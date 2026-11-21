@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Dashboard - Sistema JK</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- SUPABASE (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- SHEETJS PARA EXPORTAR A EXCEL (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <!-- JSPDF PARA GENERAR TICKETS PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        overflow-x: hidden;
+        width: 100%;
+      }
+      body {
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh;
+        color: #fff;
+        background: radial-gradient(circle at top left, #12353a 0%, #0d1117 40%, #090b10 100%);
+      }
+      .container {
+        width: 100%;
+        max-width: 1250px;
+        margin: auto;
+        padding: 20px;
+      }
+      /* HEADER */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        flex-wrap: nowrap;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+      }
+      .logo {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #12d8c4;
+        color: #101319;
+        font-weight: 700;
+        font-size: 14px;
+        box-shadow: 0 0 22px rgba(18, 216, 196, 0.2);
+        flex-shrink: 0;
+      }
+      .brand h1 {
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.1;
+        white-space: nowrap;
+      }
+      .brand span {
+        color: #7d8594;
+        font-size: 10px;
+      }
+      .user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+      }
+      .user-info strong {
+        display: block;
+        font-size: 12px;
+      }
+      .user-info span {
+        color: #7d8594;
+        font-size: 10px;
+      }
+      .avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        overflow: hidden;
+        flex-shrink: 0;
+        border: 1px solid rgba(18, 216, 196, 0.35);
+        box-shadow: 0 0 10px rgba(18, 216, 196, 0.18), 0 0 20px rgba(18, 216, 196, 0.08);
+      }
+      .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 50%;
+      }
+      /* TITLE CONTAINER */
+      .title-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 20px;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+      .title {
+        flex: 1;
+        min-width: 200px;
+      }
+      .title h2 {
+        font-size: 24px;
+        font-weight: 600;
+      }
+      .title p {
+        color: #7d8594;
+        font-size: 12px;
+        margin-top: 4px;
+      }
+      .filter-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+      .filter-select {
+        background: #101319;
+        color: #12d8c4;
+        border: 1px solid rgba(18, 216, 196, 0.2);
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        outline: none;
+        cursor: pointer;
+        transition: 0.2s ease;
+        appearance: none;
+        -webkit-appearance: none;
+        white-space: nowrap;
+      }
+      .filter-select:hover, .filter-select:focus {
+        border-color: #12d8c4;
+        background: rgba(18, 216, 196, 0.05);
+      }
+      .btn-excel {
+        background: rgba(18, 216, 196, 0.12);
+        color: #12d8c4;
+        border: 1px solid rgba(18, 216, 196, 0.25);
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: 0.2s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .btn-excel:hover {
+        background: #12d8c4;
+        color: #101319;
+        box-shadow: 0 0 15px rgba(18, 216, 196, 0.3);
+      }
+      .btn-excel svg {
+        width: 14px;
+        height: 14px;
+      }
+      /* DASHBOARD */
+      .dashboard {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        width: 100%;
+      }
+      /* PANEL */
+      .panel {
+        min-height: 280px;
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid rgba(18, 216, 196, 0.1);
+        background: #171a21;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        display: flex;
+        flex-direction: column;
+      }
+      .panel-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .panel-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(18, 216, 196, 0.1);
+        color: #12d8c4;
+        flex-shrink: 0;
+      }
+      .panel-icon svg {
+        width: 20px;
+        height: 20px;
+      }
+      .panel-header h3 {
+        font-size: 17px;
+        font-weight: 600;
+      }
+      .panel-header p {
+        margin-top: 2px;
+        color: #7d8594;
+        font-size: 10px;
+      }
+      .panel-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+        min-height: 0;
+      }
+      /* CAJA TOTAL */
+      .caja-total {
+        padding: 16px;
+        border-radius: 12px;
+        background: #101319;
+        border: 1px solid rgba(18, 216, 196, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .caja-total span {
+        color: #8d95a5;
+        font-size: 12px;
+      }
+      .caja-total strong {
+        color: #12d8c4;
+        font-size: 24px;
+      }
+      /* ESTADO CONEXIÓN */
+      .estado-conexion {
+        margin-top: 8px;
+        padding: 10px;
+        border-radius: 8px;
+        background: #101319;
+        color: #12d8c4;
+        font-size: 10px;
+        text-align: center;
+        border: 1px solid rgba(18, 216, 196, 0.1);
+      }
+      .estado-conexion.activo {
+        animation: estadoDestello 2.2s ease-in-out infinite;
+        text-shadow: 0 0 8px rgba(18, 216, 196, 0.45);
+      }
+      @keyframes estadoDestello {
+        0%, 100% {
+          box-shadow: 0 0 0 rgba(18, 216, 196, 0), inset 0 0 0 rgba(18, 216, 196, 0);
+          border-color: rgba(18, 216, 196, 0.1);
+        }
+        50% {
+          box-shadow: 0 0 10px rgba(18, 216, 196, 0.35), 0 0 25px rgba(18, 216, 196, 0.18), inset 0 0 8px rgba(18, 216, 196, 0.04);
+          border-color: rgba(18, 216, 196, 0.45);
+        }
+      }
+      /* EMPTY STATE */
+      .empty {
+        min-height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #596170;
+        font-size: 12px;
+        border: 1px dashed rgba(18, 216, 196, 0.15);
+        border-radius: 12px;
+        padding: 20px;
+        background: #101319;
+      }
+      /* OPERATIONS LIST */
+      .ops-scroll {
+        width: 100%;
+        max-height: 450px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 6px;
+      }
+      .ops-scroll::-webkit-scrollbar {
+        width: 5px;
+      }
+      .ops-scroll::-webkit-scrollbar-thumb {
+        background: rgba(18, 216, 196, 0.6);
+        border-radius: 10px;
+      }
+      .ops-scroll::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 10px;
+      }
+      .ops-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      /* OPERATION CARD */
+      .op-row {
+        width: 100%;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-left: 3px solid #12d8c4;
+        transition: 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .op-row:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(18, 216, 196, 0.18);
+      }
+      .op-grid {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+      }
+      .op-seg {
+        padding: 14px;
+        flex: 1;
+        min-width: 0;
+        word-break: normal;
+        overflow-wrap: break-word;
+      }
+      .op-seg:nth-child(1) { flex: 1.5; }
+      .op-seg:nth-child(2) { flex: 1; }
+      .op-seg:nth-child(3) { flex: 0.8; }
+      .op-seg:not(:last-child) {
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .op-label {
+        font-size: 9px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #7d8594;
+        margin-bottom: 5px;
+      }
+      .op-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #ffffff;
+        line-height: 1.3;
+      }
+      .op-sub {
+        margin-top: 3px;
+        font-size: 11px;
+        color: #c7cbd4;
+        line-height: 1.3;
+      }
+      .op-price {
+        font-weight: 700;
+        color: #12d8c4;
+        font-size: 14px;
+        text-align: right;
+      }
+      .op-img-thumb {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        object-fit: cover;
+        border: 1px solid rgba(18, 216, 196, 0.4);
+        cursor: pointer;
+        transition: transform 0.2s;
+        display: inline-block;
+        margin-top: 5px;
+      }
+      .op-img-thumb:hover {
+        transform: scale(1.1);
+      }
+      /* OPERATIONS BUTTONS */
+      .op-actions {
+        padding: 8px 12px;
+        background: rgba(18, 216, 196, 0.04);
+        border-top: 1px solid rgba(18, 216, 196, 0.08);
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+      .ticket-print-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 8px;
+        border-radius: 5px;
+        background: rgba(18, 216, 196, 0.1);
+        border: 1px solid rgba(18, 216, 196, 0.25);
+        color: #12d8c4;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        outline: none;
+      }
+      .ticket-print-btn svg {
+        width: 13px;
+        height: 13px;
+      }
+      .ticket-print-btn:hover {
+        background: #12d8c4;
+        border-color: #12d8c4;
+        color: #101319;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(18, 216, 196, 0.2);
+      }
+      .ticket-print-btn:active {
+        transform: scale(0.96);
+      }
+      /* DESKTOP - 1024px y superior */
+      @media (min-width: 1024px) {
+        .container {
+          padding: 30px;
+        }
+        .header {
+          margin-bottom: 35px;
+        }
+        .brand h1 {
+          font-size: 20px;
+        }
+        .logo {
+          width: 48px;
+          height: 48px;
+        }
+        .avatar {
+          width: 43px;
+          height: 43px;
+        }
+        .title h2 {
+          font-size: 27px;
+        }
+        .dashboard {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 20px;
+        }
+        .panel {
+          padding: 25px;
+        }
+        .op-grid {
+          flex-direction: row;
+        }
+        .op-seg:nth-child(1) { flex: 1.6; }
+        .op-seg:nth-child(2) { flex: 1; }
+        .op-seg:nth-child(3) { flex: 0.85; }
+        .op-seg {
+          padding: 16px;
+        }
+        .op-seg:not(:last-child) {
+          border-right: 1px solid rgba(255, 255, 255, 0.08);
+          border-bottom: none;
+        }
+        .op-price {
+          text-align: right;
+        }
+      }
+      /* TABLET - 768px a 1023px */
+      @media (max-width: 1023px) and (min-width: 768px) {
+        .dashboard {
+          grid-template-columns: 1fr;
+        }
+        .op-grid {
+          flex-direction: row;
+        }
+        .op-seg {
+          padding: 12px;
+        }
+        .op-seg:nth-child(1) { flex: 1.8; }
+        .op-seg:nth-child(2) { flex: 1.2; }
+        .op-seg:nth-child(3) { flex: 1; }
+        .op-seg:not(:last-child) {
+          border-right: 1px solid rgba(255, 255, 255, 0.08);
+          border-bottom: none;
+        }
+        .op-title {
+          font-size: 13px;
+        }
+        .op-sub {
+          font-size: 11px;
+        }
+        .op-price {
+          font-size: 14px;
+        }
+        .op-label {
+          font-size: 9px;
+        }
+        .op-img-thumb {
+          width: 34px;
+          height: 34px;
+        }
+      }
+      /* MOBILE - Menos de 768px */
+      @media (max-width: 767px) {
+        .container {
+          padding: 14px;
+        }
+        .header {
+          margin-bottom: 20px;
+          flex-direction: row;
+          flex-wrap: nowrap;
+        }
+        .brand {
+          gap: 8px;
+        }
+        .logo {
+          width: 36px;
+          height: 36px;
+          font-size: 12px;
+        }
+        .brand h1 {
+          font-size: 16px;
+        }
+        .brand span {
+          font-size: 9px;
+        }
+        .avatar {
+          width: 34px;
+          height: 34px;
+        }
+        .user-info {
+          display: block;
+        }
+        .user-info strong {
+          font-size: 11px;
+        }
+        .user-info span {
+          font-size: 9px;
+        }
+        .title-container {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+          margin-bottom: 16px;
+        }
+        .title {
+          width: 100%;
+        }
+        .title h2 {
+          font-size: 20px;
+        }
+        .filter-actions {
+          width: 100%;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+        .filter-select, .btn-excel {
+          flex: 1;
+          justify-content: center;
+          padding: 8px 10px;
+        }
+        .dashboard {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .panel {
+          padding: 16px;
+        }
+        .panel-header {
+          flex-direction: row;
+          gap: 10px;
+        }
+        .panel-icon {
+          width: 36px;
+          height: 36px;
+        }
+        .panel-icon svg {
+          width: 18px;
+          height: 18px;
+        }
+        .panel-header h3 {
+          font-size: 15px;
+        }
+        .panel-header p {
+          font-size: 9px;
+        }
+        .caja-total {
+          padding: 14px;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+        .caja-total span {
+          font-size: 11px;
+        }
+        .caja-total strong {
+          font-size: 22px;
+        }
+        /* TARJETA DE OPERACIÓN EN MOBILE - MANTENER HORIZONTAL */
+        .op-row {
+          border-left: 3px solid #12d8c4;
+        }
+        .op-grid {
+          flex-direction: row;
+        }
+        .op-seg {
+          padding: 10px 8px;
+          flex: 1;
+          min-width: 0;
+        }
+        .op-seg:nth-child(1) { flex: 1.4; }
+        .op-seg:nth-child(2) { flex: 1; }
+        .op-seg:nth-child(3) { flex: 0.9; }
+        .op-seg:not(:last-child) {
+          border-right: 1px solid rgba(255, 255, 255, 0.08);
+          border-bottom: none;
+        }
+        .op-label {
+          font-size: 8px;
+          margin-bottom: 4px;
+        }
+        .op-title {
+          font-size: 12px;
+        }
+        .op-sub {
+          font-size: 10px;
+        }
+        .op-price {
+          font-size: 13px;
+          text-align: right;
+        }
+        .op-img-thumb {
+          width: 30px;
+          height: 30px;
+          margin-top: 4px;
+        }
+        .op-actions {
+          padding: 8px;
+        }
+        .ticket-print-btn {
+          padding: 6px 8px;
+        }
+        .ticket-print-btn svg {
+          width: 12px;
+          height: 12px;
+        }
+      }
+      /* MOBILE MUY PEQUEÑO - Menos de 480px */
+      @media (max-width: 479px) {
+        .container {
+          padding: 12px;
+        }
+        .header {
+          gap: 8px;
+        }
+        .brand h1 {
+          font-size: 15px;
+        }
+        .title h2 {
+          font-size: 18px;
+        }
+        .panel {
+          padding: 14px;
+        }
+        .op-seg {
+          padding: 8px 6px;
+        }
+        .op-title {
+          font-size: 11px;
+        }
+        .op-sub {
+          font-size: 9px;
+        }
+        .op-price {
+          font-size: 12px;
+        }
+        .caja-total strong {
+          font-size: 20px;
+        }
+        .panel-header h3 {
+          font-size: 14px;
+        }
+        .filter-select, .btn-excel {
+          font-size: 11px;
+          padding: 7px 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- HEADER -->
+      <header class="header">
+        <div class="brand">
+          <div class="logo">JK</div>
+          <div>
+            <h1>Sistema JK</h1>
+            <span>Dashboard</span>
+          </div>
+        </div>
+        <div class="user">
+          <div class="user-info">
+            <strong>Administrador</strong>
+            <span>Panel Central</span>
+          </div>
+          <div class="avatar">
+            <img src="https://i.imgur.com/Tmnm46H.gif" alt="Avatar" />
+          </div>
+        </div>
+      </header>
+      <!-- TITULO Y FILTROS -->
+      <div class="title-container">
+        <div class="title">
+          <h2>Dashboard General</h2>
+          <p>Resumen en tiempo real de operaciones y caja del sistema.</p>
+        </div>
+        <div class="filter-actions">
+          <select id="filtroPeriodo" class="filter-select">
+            <option value="este_mes">Este Mes</option>
+            <option value="hoy">Hoy</option>
+            <option value="mes_pasado">Mes Anterior</option>
+            <option value="todo">Histórico</option>
+          </select>
+          <button id="btnExcel" class="btn-excel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Descargar
+          </button>
+        </div>
+      </div>
+      <!-- DASHBOARD -->
+      <main class="dashboard">
+        <!-- CAJA PANEL -->
+        <section class="panel">
+          <div class="panel-header">
+            <div class="panel-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1v22" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+            </div>
+            <div>
+              <h3>Caja General</h3>
+              <p>Total de ingresos según filtro.</p>
+            </div>
+          </div>
+          <div class="panel-content">
+            <div class="caja-total">
+              <span>Dinero total ingresado</span>
+              <strong id="totalCaja">$0</strong>
+            </div>
+            <div id="supabaseEstado" class="estado-conexion">Conectando...</div>
+          </div>
+        </section>
+        <!-- INFO PANEL -->
+        <section class="panel">
+          <div class="panel-header">
+            <div class="panel-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 3-6.7" />
+                <path d="M3 4v6h6" />
+                <path d="M12 7v5l3 3" />
+              </svg>
+            </div>
+            <div>
+              <h3>Últimas Operaciones</h3>
+              <p>Historial reciente (Tiempo real).</p>
+            </div>
+          </div>
+          <div class="panel-content">
+            <div id="infoContenido">
+              <div class="empty">Cargando información...</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      (function () {
+        const supabaseUrl = "https://scippqgodwvbopslwxdf.supabase.co";
+        const supabaseKey = "sb_publishable_sakCK5FcUzB3ZmfwNKt4cw_AJi2Nw95";
+        if (!window.supabaseApp) {
+          window.supabaseApp = window.supabase.createClient(supabaseUrl, supabaseKey);
+        }
+        const supabase = window.supabaseApp;
+        const NOMBRE_TABLA = "operaciones";
+        const totalCajaEl = document.getElementById("totalCaja");
+        const infoContenidoEl = document.getElementById("infoContenido");
+        const estadoEl = document.getElementById("supabaseEstado");
+        const filtroPeriodoEl = document.getElementById("filtroPeriodo");
+        const btnExcelEl = document.getElementById("btnExcel");
+        const formatoMoneda = new Intl.NumberFormat("es-CO", {
+          style: "currency",
+          currency: "COP",
+          minimumFractionDigits: 0,
+        });
+        function obtenerValorNumerico(val) {
+          if (val === null || val === undefined) return 0;
+          const str = String(val).replace(/[^0-9.-]+/g, "");
+          return Number(str) || 0;
+        }
+        function construirConsultaBase() {
+          let query = supabase
+            .from(NOMBRE_TABLA)
+            .select("*")
+            .order("created_at", { ascending: false });
+          const valorFiltro = filtroPeriodoEl.value;
+          const ahora = new Date();
+          
+          if (valorFiltro === "este_mes") {
+  const primerDiaMes = new Date(
+    ahora.getFullYear(),
+    ahora.getMonth(),
+    1
+  ).toISOString();
+  query = query.gte("created_at", primerDiaMes);
+} else if (valorFiltro === "hoy") {
+  const inicioHoy = new Date(
+    ahora.getFullYear(),
+    ahora.getMonth(),
+    ahora.getDate()
+  ).toISOString();
+  const finHoy = new Date(
+    ahora.getFullYear(),
+    ahora.getMonth(),
+    ahora.getDate() + 1
+  ).toISOString();
+  query = query
+    .gte("created_at", inicioHoy)
+    .lt("created_at", finHoy);
+          } else if (valorFiltro === "mes_pasado") {
+            const primerDiaMesPasado = new Date(ahora.getFullYear(), ahora.getMonth() - 1, 1).toISOString();
+            const ultimoDiaMesPasado = new Date(ahora.getFullYear(), ahora.getMonth(), 0, 23, 59, 59).toISOString();
+            query = query.gte("created_at", primerDiaMesPasado).lte("created_at", ultimoDiaMesPasado);
+          }
+          return query;
+        }
+        async function cargarDashboard() {
+          if (!estadoEl || !infoContenidoEl || !totalCajaEl) return;
+          estadoEl.textContent = "Sincronizando...";
+          try {
+            const { data, error } = await construirConsultaBase().limit(1000);
+            if (error) {
+              console.error("Error al cargar de Supabase:", error);
+              estadoEl.textContent = "❌ Error: " + error.message;
+              infoContenidoEl.innerHTML = `<div class="empty">Error al cargar datos</div>`;
+              totalCajaEl.textContent = formatoMoneda.format(0);
+              return;
+            }
+            if (!data || data.length === 0) {
+              totalCajaEl.textContent = formatoMoneda.format(0);
+              estadoEl.textContent = "✅ En línea | 0 operaciones";
+              infoContenidoEl.innerHTML = `<div class="empty">No hay operaciones en este periodo.</div>`;
+              return;
+            }
+            let totalCaja = 0;
+            data.forEach((item) => {
+              totalCaja += obtenerValorNumerico(item.amount_paid);
+            });
+            const dataToDisplay = data.slice(0, 50); 
+            let html = '<div class="ops-scroll"><ul class="ops-list">';
+            dataToDisplay.forEach((item) => {
+              const montoRecibido = obtenerValorNumerico(item.amount_paid);
+              const totalOperacion = obtenerValorNumerico(item.total);
+              let saldoPendiente = Math.max(0, totalOperacion - montoRecibido);
+              
+              const tipo = item.tipo_operacion ?? item.tipo_registro ?? item.tipo ?? item.concepto ?? "OPERACIÓN";
+              const cliente = item.customer_name ?? item.cliente ?? "Sin nombre";
+              const telefono = item.telefono ?? item.telefono_cliente ?? item.phone ?? item.customer_phone ?? "Sin teléfono";
+              const detalle = item.descripcion ?? item.producto ?? item.modelo ?? item.detalle ?? item.equipo ?? "Artículo";
+              const falla = item.falla ?? item.descripcion_falla ?? item.problema ?? item.observacion ?? null;
+              const cantidad = item.quantity ?? 1;
+              const metodoPago = item.payment_method ?? "Efectivo";
+              const imei1 = item.imei_serial ?? null;
+              const imei2 = item.imei_serial_2 ?? null;
+              const urlsImagenes = [];
+if (item.imagen_url) {
+  String(item.imagen_url)
+    .split("|")
+    .map(url => url.trim())
+    .filter(Boolean)
+    .forEach(url => urlsImagenes.push(url));
+}
+if (item.imagen_url_2) {
+  String(item.imagen_url_2)
+    .split("|")
+    .map(url => url.trim())
+    .filter(Boolean)
+    .forEach(url => urlsImagenes.push(url));
+}
+if (item.imagen_url_3) {
+  String(item.imagen_url_3)
+    .split("|")
+    .map(url => url.trim())
+    .filter(Boolean)
+    .forEach(url => urlsImagenes.push(url));
+}
+              const tipoTexto = String(tipo).toLowerCase();
+              const mostrarCantidad = tipoTexto.includes("accesorio") || cantidad;
+              const tipoPago = String(item.payment_type ?? "").toLowerCase();
+              const esAbono = tipoPago === "abono" || tipoPago === "parcial" || saldoPendiente > 0;
+              let htmlImei = '';
+              if (imei1 || imei2) {
+                htmlImei = `<div class="op-sub" style="color:#7d8594;">`;
+                if (imei1) htmlImei += `◦ IMEI1: ${imei1}
+`;
+                if (imei2) htmlImei += `◦ IMEI2: ${imei2}`;
+                htmlImei += `</div>`;
+              }
+              let htmlFalla = falla ? `<div class="op-sub" style="color:#ff9d00;">⚠️ ${falla}</div>` : '';
+              let htmlCantidad = (mostrarCantidad) ? `<div class="op-sub" style="color:#12d8c4;">● Cant: ${cantidad} ud.</div>` : '';
+              let htmlImagen = '';if (urlsImagenes.length > 0) {
+  htmlImagen = `
+    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:5px;">
+      ${urlsImagenes.map((url, index) => `
+        <img 
+          src="${url}" 
+          alt="Evidencia ${index + 1}" 
+          class="op-img-thumb"
+          onclick="abrirImagenGrande('${url.replace(/'/g, "'")}')"
+        />
+      `).join('')}
+    </div>
+  `;
+}
+              const datosTicket = encodeURIComponent(JSON.stringify({
+                tipo, cliente, telefono, detalle, falla, cantidad, metodoPago,
+                imei1, imei2, asesor: item.asesor ?? "N/A",
+                montoRecibido, totalOperacion, saldoPendiente, fecha: item.created_at
+              }));
+              html += `
+                <li class="op-row">
+                  <div class="op-grid">
+                    <div class="op-seg">
+                      <div class="op-label">Operación</div>
+                      <div class="op-title">${tipo}</div>
+                      <div class="op-sub">${detalle}</div>
+                      ${htmlCantidad}${htmlImei}${htmlFalla}${htmlImagen}
+                    </div>
+                    <div class="op-seg">
+                      <div class="op-label">Cliente</div>
+                      <div class="op-title">${cliente}</div>
+                      <div class="op-sub">☎ ${telefono}</div>
+                      <div class="op-sub" style="color:#12d8c4;">◦ ${item.asesor ?? "N/A"}</div>
+                    </div>
+                    <div class="op-seg">
+                      <div class="op-label">Finanzas</div>
+                      <div class="op-price">${formatoMoneda.format(montoRecibido)}</div>
+                      ${esAbono ? '<div class="op-sub" style="color:#12d8c4;">Abonado</div>' : ''}
+                      <div class="op-sub" style="color:#8d95a5;">Total: ${formatoMoneda.format(totalOperacion)}</div>
+                      <div class="op-sub" style="color:${saldoPendiente > 0 ? '#ff4c4c' : '#7d8594'};">Pend: ${formatoMoneda.format(saldoPendiente)}</div>
+                      <div class="op-sub" style="color:#12d8c4;">◊ ${metodoPago}</div>
+                    </div>
+                  </div>
+                  <div class="op-actions">
+                    <button type="button" class="ticket-print-btn" data-ticket="${datosTicket}" title="Imprimir ticket">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                      </svg>
+                    </button>
+                    <span style="margin-left:10px; font-size:11px; color:#12d8c4; font-weight:500; white-space:nowrap;">${item.created_at ? new Date(item.created_at).toLocaleString("es-CO", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}) : '-'}</span>
+                  </div>
+                </li>
+              `;
+            });
+            html += "</ul></div>";
+            totalCajaEl.textContent = formatoMoneda.format(totalCaja);
+            estadoEl.classList.add("activo");
+            estadoEl.textContent = `✅ En línea | ${dataToDisplay.length} de ${data.length} ops.`;
+            infoContenidoEl.innerHTML = html;
+          } catch (err) {
+            console.error("Error:", err);
+            estadoEl.textContent = "❌ Error crítico";
+          }
+        }
+        async function descargarExcel() {
+          if (typeof XLSX === "undefined") {
+            alert("Cargando Excel... reintenta.");
+            return;
+          }
+          btnExcelEl.innerHTML = "Cargando...";
+          btnExcelEl.style.opacity = "0.7";
+          try {
+            const { data, error } = await construirConsultaBase();
+            if (error || !data || data.length === 0) {
+              alert("No hay datos para exportar.");
+              btnExcelEl.innerHTML = "Excel";
+              btnExcelEl.style.opacity = "1";
+              return;
+            }
+            const filasExcel = data.map((item) => {
+              const montoRecibido = obtenerValorNumerico(item.amount_paid);
+              const totalOperacion = obtenerValorNumerico(item.total);
+              const saldoPendiente = Math.max(0, totalOperacion - montoRecibido);
+              const tipoPago = String(item.payment_type ?? "").toLowerCase();
+              const esAbono = tipoPago === "abono" || tipoPago === "parcial" || saldoPendiente > 0;
+              return {
+                "Tipo": item.tipo_operacion ?? item.tipo ?? "OPERACIÓN",
+                "Cliente": item.customer_name ?? item.cliente ?? "N/A",
+                "Detalle": item.descripcion ?? item.producto ?? item.detalle ?? "N/A",
+                "Cantidad": item.quantity ?? 1,
+                "Teléfono": item.telefono ?? item.telefono_cliente ?? item.phone ?? item.customer_phone ?? "N/A",
+                "Asesor": item.asesor ?? "N/A",
+                "Método Pago": item.payment_method ?? "Efectivo",
+                "Tipo Pago": esAbono ? "ABONO" : "PAGO COMPLETO",
+                "Monto Recibido": montoRecibido,
+                "Total Operación": totalOperacion,
+                "Saldo Pendiente": saldoPendiente,
+                "IMEI 1": item.imei_serial ?? "N/A",
+                "IMEI 2": item.imei_serial_2 ?? "N/A",
+                "Falla / Observación": (String(item.tipo_operacion ?? item.tipo ?? "").toLowerCase().includes("reparacion")) ? (item.falla ?? item.descripcion_falla ?? item.problema ?? item.observacion ?? "N/A") : "N/A",
+                "Fecha": item.created_at ? new Date(item.created_at).toLocaleString("es-CO") : "N/A"
+              };
+            });
+            const hoja = XLSX.utils.json_to_sheet(filasExcel);
+            const libro = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(libro, hoja, "Operaciones");
+            XLSX.writeFile(libro, `Reporte_JK_${new Date().toISOString().slice(0,10)}.xlsx`);
+          } catch (err) {
+            console.error("Error exportar:", err);
+            alert("Error al exportar.");
+          } finally {
+            btnExcelEl.innerHTML = "Excel";
+            btnExcelEl.style.opacity = "1";
+          }
+        }
+        infoContenidoEl.addEventListener("click", function (event) {
+          const boton = event.target.closest(".ticket-print-btn");
+          if (!boton) return;
+          try {
+            const datos = JSON.parse(decodeURIComponent(boton.dataset.ticket));
+            
+            if (!window.jspdf || !window.jspdf.jsPDF) {
+              alert("PDF no disponible aún.");
+              return;
+            }
+            const { jsPDF } = window.jspdf;
+            let consecutivo = parseInt(localStorage.getItem("jk_ticket_consecutivo") || "0", 10) + 1;
+            localStorage.setItem("jk_ticket_consecutivo", String(consecutivo));
+            const numeroTicket = `JK-${consecutivo}`;
+            const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: [80, 220] });
+            const margen = 5;
+            const centro = 40;
+            let y = 7;
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(13);
+            doc.text("ACCESORIOS JK", centro, y, { align: "center" });
+            y += 5;
+            doc.setFontSize(8);
+            doc.text("NIT: 1005715210 (Régimen simplificado)", centro, y, { align: "center" });
+            y += 4;
+            doc.text("SERVICIO TECNICO & TELEFONIA", centro, y, { align: "center" });
+            y += 4;
+            doc.text("calle 14 # 2-67 centro IBAGUE - TOLIMA", centro, y, { align: "center" });
+            y += 3;
+            doc.setDrawColor(170);
+            doc.line(margen, y, 75, y);
+            y += 4;
+            doc.setFontSize(10);
+            doc.text("COMPROBANTE DE COMPRA", centro, y, { align: "center" });
+            y += 4;
+            doc.setFontSize(9);
+            doc.text(numeroTicket, centro, y, { align: "center" });
+            y += 5;
+            doc.setFontSize(8);
+            doc.setFont("helvetica", "bold");
+            doc.text("Tipo:", margen, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(String(datos.tipo ?? "N/A"), margen + 15, y);
+            y += 4;
+            doc.setFont("helvetica", "bold");
+            doc.text("Cliente:", margen, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(String(datos.cliente ?? "N/A"), margen + 15, y);
+            y += 4;
+            doc.setFont("helvetica", "bold");
+            doc.text("Tel:", margen, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(String(datos.telefono ?? "N/A"), margen + 15, y);
+            y += 4;
+            doc.setFont("helvetica", "bold");
+            doc.text("Detalle:", margen, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(String(datos.detalle ?? "N/A"), margen + 15, y);
+            y += 4;
+            if (datos.imei1) {
+              doc.setFont("helvetica", "bold");
+              doc.text("IMEI1:", margen, y);
+              doc.setFont("helvetica", "normal");
+              doc.text(String(datos.imei1), margen + 15, y);
+              y += 4;
+            }
+            if (datos.falla) {
+              doc.setFont("helvetica", "bold");
+              doc.text("Falla:", margen, y);
+              doc.setFont("helvetica", "normal");
+              doc.text(String(datos.falla), margen + 15, y);
+              y += 4;
+            }
+            y += 2;
+            doc.setDrawColor(170);
+            doc.line(margen, y, 75, y);
+            y += 4;
+            doc.setFont("helvetica", "bold");
+            doc.text("RESUMEN", centro, y, { align: "center" });
+            y += 4;
+            const moneda = (v) => new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(Number(v) || 0);
+            doc.setFont("helvetica", "bold");
+            doc.text("Total:", margen, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(moneda(datos.totalOperacion), 60, y, { align: "right" });
+            y += 4;
+            doc.setFont("helvetica", "bold");
+            doc.text("Recibido:", margen, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(moneda(datos.montoRecibido), 60, y, { align: "right" });
+            y += 4;
+            doc.setFont("helvetica", "bold");
+            doc.text("Pendiente:", margen, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(moneda(datos.saldoPendiente), 60, y, { align: "right" });
+            y += 5;
+            doc.setDrawColor(170);
+            doc.line(margen, y, 75, y);
+            y += 4;
+doc.setFont("helvetica", "bold");
+doc.setFontSize(9);
+doc.text("¡GRACIAS POR SU COMPRA!", centro, y, { align: "center" });
+y += 4;
+// Información adicional
+doc.setFont("helvetica", "italic");
+doc.setFontSize(7);
+doc.text("ACCESORIOS JK - TECNOLOGIA EN TUS MANOS.", centro, y, { align: "center" });
+y += 3.5;
+doc.text("Conserva este recibo y el producto con sellos intactos, para asuntos de garantia.", centro, y, { align: "center" });
+            doc.save(`${numeroTicket}.pdf`);
+          } catch (error) {
+            console.error("Error ticket:", error);
+            alert("No fue posible generar el ticket.");
+          }
+        });
+        // VISOR DE EVIDENCIA EN GRANDE
+window.abrirImagenGrande = function(url) {
+  const visorExistente = document.getElementById("visorImagenGrande");
+  if (visorExistente) {
+    visorExistente.remove();
+  }
+  const visor = document.createElement("div");
+  visor.id = "visorImagenGrande";
+  visor.innerHTML = `
+    <div style="
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.90);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:99999;
+      padding:20px;
+      cursor:pointer;
+    ">
+      <img 
+        src="${url}" 
+        alt="Evidencia"
+        style="
+          max-width:95vw;
+          max-height:90vh;
+          object-fit:contain;
+          border-radius:10px;
+          box-shadow:0 0 35px rgba(18,216,196,0.25);
+          cursor:default;
+        "
+      />
+      <button 
+        type="button"
+        onclick="document.getElementById('visorImagenGrande').remove()"
+        style="
+          position:absolute;
+          top:20px;
+          right:20px;
+          width:40px;
+          height:40px;
+          border:none;
+          border-radius:50%;
+          background:#12d8c4;
+          color:#101319;
+          font-size:22px;
+          font-weight:700;
+          cursor:pointer;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+        "
+      >
+        ×
+      </button>
+    </div>
+  `;
+  visor.addEventListener("click", function(e) {
+    if (e.target === visor.firstElementChild) {
+      visor.remove();
+    }
+  });
+  document.body.appendChild(visor);
+};
+        filtroPeriodoEl.addEventListener("change", cargarDashboard);
+        btnExcelEl.addEventListener("click", descargarExcel);
+        cargarDashboard();
+        supabase
+          .channel("cambios-operaciones")
+          .on("postgres_changes", { event: "*", schema: "public", table: NOMBRE_TABLA }, () => {
+            cargarDashboard();
+          })
+          .subscribe();
+      })();
+    </script>
+  </body>
+</html>
