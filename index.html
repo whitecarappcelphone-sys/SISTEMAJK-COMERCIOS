@@ -653,7 +653,7 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
 
 <!-- Script de inicialización temprana de tema -->
 <script>
-(function(){try{var c=JSON.parse(localStorage.getItem('jk_comercio')||'null');if(c&&c.theme){document.documentElement.setAttribute('data-theme',c.theme);}else{document.documentElement.setAttribute('data-theme','oscuro');}}catch(e){document.documentElement.setAttribute('data-theme','oscuro');}})();
+(function(){try{var c=null;var s=sessionStorage.getItem('jk_session');if(s){try{c=JSON.parse(s)}catch(e){}}if(!c){c=JSON.parse(localStorage.getItem('jk_comercio')||'null');}document.documentElement.setAttribute('data-theme',(c&&c.theme)||'oscuro');}catch(e){document.documentElement.setAttribute('data-theme','oscuro');}})();
 </script>
 <style>
 /* ============================================================
@@ -3898,6 +3898,16 @@ function cfgAplicarDOMCompleto() {
 window.JK_COMERCIO = null;
 window.JK_COMERCIO_ID = null;
 
+function jkSesionActiva() {
+    try { var s = sessionStorage.getItem('jk_session'); if (s) return JSON.parse(s); } catch (e) {}
+    return null;
+}
+function jkGuardarSesionSesion(c) {
+    try {
+        if (c) sessionStorage.setItem('jk_session', JSON.stringify(c));
+        else sessionStorage.removeItem('jk_session');
+    } catch (e) {}
+}
 function jkCargarSesionLocal() {
     try { return JSON.parse(localStorage.getItem('jk_comercio') || 'null'); } catch (e) { return null; }
 }
@@ -3906,6 +3916,7 @@ function jkGuardarSesionLocal(c) {
         if (c) localStorage.setItem('jk_comercio', JSON.stringify(c));
         else localStorage.removeItem('jk_comercio');
     } catch (e) {}
+    jkGuardarSesionSesion(c);
 }
 function jkAplicarTema(t) {
     try { document.documentElement.setAttribute('data-theme', t || 'oscuro'); } catch (e) {}
@@ -4805,9 +4816,12 @@ function tallerQRRender() {
    ===================================================================== */
 (function () {
     var configurar = /configurar=1/.test(window.location.search);
+    var sess = jkSesionActiva();
     var cached = jkCargarSesionLocal();
-    jkAplicarTema((cached && cached.theme) || 'oscuro');
-    if (cached) { jkRenderMarca(cached); jkActualizarLockLogo(cached); }
+    var active = sess || cached;
+    jkAplicarTema((active && active.theme) || 'oscuro');
+    jkRenderMarca(active);
+    jkActualizarLockLogo(active);
     var form = document.getElementById('jkLockForm');
     var input = document.getElementById('jkLockPassword');
     var btn = document.getElementById('jkLockBtn');
@@ -4820,6 +4834,14 @@ function tallerQRRender() {
         if (lock) lock.classList.remove('show');
         document.body.classList.remove('jk-locked');
         setTimeout(function () { abrirEdicionComercio(); }, 250);
+        return;
+    }
+
+    // Sesión activa — no volver a pedir la contraseña
+    if (active) {
+        jkActivarSesion(active);
+        jkEsconderLockscreen();
+        if (typeof cmdIniciar === 'function') cmdIniciar(active);
         return;
     }
 
