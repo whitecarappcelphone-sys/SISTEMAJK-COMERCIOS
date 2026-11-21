@@ -986,6 +986,33 @@ body.jk-locked { overflow: hidden !important; }
 .com-cfg-titulo { display: flex; align-items: center; gap: 8px; margin: 18px 0 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.06); font-size: 14px; font-weight: 600; color: #e9f8f6; }
 .com-cfg-titulo i { color: #12d8c4; }
 
+/* ============ POPUP INSTALACIÓN ============ */
+.jk-install { position: fixed; inset: 0; z-index: 15500; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(6,12,16,.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.jk-install.show { display: flex; animation: jkLockIn .4s ease both; }
+.jk-install-box { width: 100%; max-width: 400px; padding: 32px 28px 26px; border-radius: 24px; background: linear-gradient(165deg, #0d1c20 0%, #101319 60%); border: 1px solid rgba(18,216,196,.3); box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 50px rgba(18,216,196,.08); text-align: center; }
+.jk-install-logo { width: 104px; height: 104px; border-radius: 30px; background: linear-gradient(160deg, rgba(18,216,196,.22), rgba(18,216,196,.04)); border: 1px solid rgba(18,216,196,.35); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; overflow: hidden; box-shadow: 0 0 36px rgba(18,216,196,.25); }
+.jk-install-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 30px; }
+.jk-install-logo span, .jk-install-logo i { font-size: 42px; color: #12d8c4; }
+.jk-install-title { color: #fff; font-size: 21px; font-weight: 700; margin: 0; letter-spacing: .02em; }
+.jk-install-sub { color: #9fb6b2; font-size: 12.5px; line-height: 1.6; margin: 10px 0 22px; }
+.jk-install-buttons { display: flex; gap: 10px; justify-content: center; }
+.jk-install-btn { flex: 1; height: 50px; border-radius: 14px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform .2s, box-shadow .2s, background .2s; border: 0; }
+.jk-install-primary { background: linear-gradient(135deg, #12d8c4, #22f5dd); color: #081014; }
+.jk-install-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(18,216,196,.28); }
+.jk-install-ghost { background: rgba(255,255,255,.06); color: #c9d5d1; border: 1px solid rgba(255,255,255,.14); }
+.jk-install-ghost:hover { background: rgba(255,255,255,.12); }
+.jk-install-hint { margin-top: 14px; font-size: 10.5px; color: #7b9c99; line-height: 1.5; display: none; }
+html[data-theme="claro"] .jk-install { background: rgba(248,250,252,.92) !important; }
+html[data-theme="claro"] .jk-install-box { background: #ffffff !important; border-color: rgba(20,30,50,.16) !important; box-shadow: 0 26px 70px rgba(20,30,50,.22) !important; }
+html[data-theme="claro"] .jk-install-title { color: #1a1e28 !important; }
+html[data-theme="claro"] .jk-install-sub { color: #5b6673 !important; }
+html[data-theme="claro"] .jk-install-logo { background: #f1f4f8 !important; border-color: rgba(20,30,50,.14) !important; }
+html[data-theme="claro"] .jk-install-logo i { color: #0d9488 !important; }
+html[data-theme="claro"] .jk-install-primary { background: linear-gradient(135deg, #0d9488, #14b8a6) !important; color: #ffffff !important; }
+html[data-theme="claro"] .jk-install-ghost { background: #f1f4f8 !important; color: #1a1e28 !important; border-color: rgba(20,30,50,.14) !important; }
+html[data-theme="claro"] .jk-install-hint { color: #5b6673 !important; }
+body.jk-install-open { overflow: hidden !important; }
+
 /* ============ FIRMA / SELLO ============ */
 .firma-canvas { width: 100%; height: 170px; max-width: 800px; background: #ffffff; border-radius: 12px; border: 1px dashed rgba(18,216,196,.45); touch-action: none; cursor: crosshair; display: block; }
 .firma-wrap, .com-sello-wrap { margin-bottom: 14px; }
@@ -998,9 +1025,44 @@ body.jk-locked { overflow: hidden !important; }
 .cfg-grid .field.firma-full { grid-column: 1 / -1 !important; }
 .firma-wrap { margin-top: 8px; }
 </style>
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_MX">
+<meta property="og:site_name" content="Sistema JK">
+<meta property="og:title" content="Sistema JK — Operaciones">
+<meta property="og:description" content="Operaciones multi-tenant: ventas de accesorios y celulares, registro de reparaciones, contabilidad, técnico IA y configuración del negocio.">
+<meta property="og:url" content="https://whitecarappcelphone-sys.github.io/SISTEMAJK-COMERCIOS/">
+<meta property="og:image" content="https://whitecarappcelphone-sys.github.io/SISTEMAJK-COMERCIOS/icon-512.png">
+<meta property="og:image:secure_url" content="https://whitecarappcelphone-sys.github.io/SISTEMAJK-COMERCIOS/icon-512.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="Logo de Sistema JK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sistema JK — Operaciones">
+<meta name="twitter:description" content="Operaciones multi-tenant: ventas de accesorios y celulares, registro de reparaciones, contabilidad, técnico IA y configuración del negocio.">
+<meta name="twitter:image" content="https://whitecarappcelphone-sys.github.io/SISTEMAJK-COMERCIOS/icon-512.png">
+<meta name="theme-color" content="#071316">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sistema JK">
+
 </head>
 <body>
+<!-- POPUP INSTALACIÓN -->
+<div class="jk-install" id="jkInstall" role="dialog" aria-modal="true" aria-label="Instalar aplicación">
+    <div class="jk-install-box">
+        <div class="jk-install-logo" id="jkInstallLogoWrap"><img id="jkInstallLogo" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:30px;display:none"><span id="jkInstallLogoText"><i class="fa-solid fa-mobile-screen-button"></i></span></div>
+        <h3 class="jk-install-title">Instalar Sistema JK</h3>
+        <p class="jk-install-sub" id="jkInstallText">Instala la app en tu teléfono para acceso rápido desde la pantalla de inicio. Funciona en Android e iPhone.</p>
+        <div class="jk-install-buttons">
+            <button type="button" class="jk-install-btn jk-install-primary" id="jkInstallBtn" onclick="jkInstallInstalar()"><i class="fa-solid fa-download"></i> Instalar</button>
+            <button type="button" class="jk-install-btn jk-install-ghost" id="jkInstallNoBtn" onclick="jkInstallAhoraNo()">Ahora no</button>
+        </div>
+        <p class="jk-install-hint" id="jkInstallHint"></p>
+    </div>
+</div>
 <!-- LOCKSCREEN: contraseña del comercio -->
+
 <div class="jk-lock show" id="jkLock">
     <div class="jk-lock-box">
         <div class="jk-lock-logo" id="jkLockLogo"><img id="jkLockLogoImg" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:20px;display:none"><span id="jkLockLogoText"><i class="fa-solid fa-lock"></i></span></div>
@@ -4845,6 +4907,11 @@ function tallerQRRender() {
         return;
     }
 
+    // Primera apertura (sin sesión activa): mostrar popup de instalación
+    if (!jkInstallDetected()) {
+        jkShowInstallPopup();
+    }
+
     function entrar() {
         var pwd = (input.value || '').trim();
         err.style.display = 'none'; err.textContent = '';
@@ -4867,6 +4934,72 @@ function tallerQRRender() {
     if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
     if (configurarBtn) configurarBtn.addEventListener('click', function () { window.location.href = 'index.html?configurar=1'; });
 })();
+</script>
+<script>
+/* =====================================================================
+   POPUP DE INSTALACIÓN (primera apertura)
+   ===================================================================== */
+var jkInstallEvent = null;
+window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    jkInstallEvent = e;
+});
+window.addEventListener('appinstalled', function () {
+    try { localStorage.removeItem('jk_install_dismissed'); localStorage.setItem('jk_install_ok', '1'); } catch (e) {}
+    jkHideInstallPopup();
+});
+function jkInstallDetected() {
+    try {
+        if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
+        if (window.matchMedia && window.matchMedia('(display-mode: fullscreen)').matches) return true;
+        if (window.navigator && window.navigator.standalone === true) return true;
+        if (localStorage.getItem('jk_install_ok') === '1') return true;
+        if (localStorage.getItem('jk_install_dismissed') === '1') return true;
+    } catch (e) {}
+    return false;
+}
+function jkShowInstallPopup() {
+    var cached = jkCargarSesionLocal();
+    var img = document.getElementById('jkInstallLogo');
+    var txt = document.getElementById('jkInstallLogoText');
+    if (img && txt) {
+        if (cached && cached.logo_url) {
+            img.src = cached.logo_url; img.style.display = 'block'; txt.style.display = 'none';
+        } else if (cached && cached.name) {
+            img.style.display = 'none'; txt.style.display = 'block';
+            txt.innerHTML = '<span>' + (cached.name || 'J').trim().charAt(0).toUpperCase() + '</span>';
+        }
+    }
+    var popup = document.getElementById('jkInstall');
+    if (popup) popup.classList.add('show');
+    document.body.classList.add('jk-install-open');
+}
+function jkHideInstallPopup() {
+    var popup = document.getElementById('jkInstall');
+    if (popup) popup.classList.remove('show');
+    document.body.classList.remove('jk-install-open');
+}
+function jkInstallInstalar() {
+    if (jkInstallEvent) {
+        jkInstallEvent.prompt().then(function () {
+            jkHideInstallPopup();
+        }).catch(function () { jkHideInstallPopup(); });
+        return;
+    }
+    var text = document.getElementById('jkInstallText');
+    var hint = document.getElementById('jkInstallHint');
+    var btn = document.getElementById('jkInstallBtn');
+    if (text) text.textContent = 'Para instalar en iOS: pulsa el botón «Compartir» y luego «Añadir a pantalla de inicio». En Android, usa el menú del navegador.';
+    if (hint) { hint.style.display = 'block'; hint.textContent = 'En iPhone (Safari): abre el botón Compartir → «Añadir a pantalla de inicio».'; }
+    if (btn) {
+        btn.onclick = function () { jkHideInstallPopup(); };
+        btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Entendido';
+    }
+}
+function jkInstallAhoraNo() {
+    try { localStorage.setItem('jk_install_dismissed', '1'); } catch (e) {}
+    jkHideInstallPopup();
+}
 </script>
 </body>
 </html>
