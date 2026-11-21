@@ -1046,6 +1046,7 @@ body.jk-install-open { overflow: hidden !important; }
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sistema JK">
 
+<link rel="manifest" href="manifest.json">
 </head>
 <body>
 <!-- POPUP INSTALACIÓN -->
@@ -1688,7 +1689,6 @@ PART 2
 <!-- MODAL EDICIÓN DE COMERCIO -->
 <div class="form-modal" id="modal_config">
     <div class="form-modal-content conta-content">
-        <button type="button" class="modal-close" onclick="comCerrarModal()" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
         <div class="conta-wrap">
             <div class="form-header">
                 <div class="form-icon"><i class="fa-solid fa-store"></i></div>
@@ -1775,7 +1775,6 @@ PART 2
                     </div>
                 </div>
                 <div class="cfg-acc">
-                    <button type="button" class="conta-btn" onclick="comCerrarModal()"><i class="fa-solid fa-xmark"></i> Cerrar</button>
                     <button type="submit" class="submit" id="btnComercio"><i class="fa-solid fa-floppy-disk"></i> Guardar comercio</button>
                 </div>
             </form>
@@ -2172,13 +2171,17 @@ function cerrarModalFormulario(modalId) {
 // Cerrar modal al hacer clic en el fondo oscuro
 document.querySelectorAll('.form-modal').forEach(modal => {
     modal.addEventListener('click', (e) => {
+        if (modal.id === 'modal_config') return;
         if (e.target === modal) cerrarModalFormulario(modal.id);
     });
 });
 // Cerrar modal con la tecla Escape
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        document.querySelectorAll('.form-modal.show').forEach(m => cerrarModalFormulario(m.id));
+        document.querySelectorAll('.form-modal.show').forEach(m => {
+            if (m.id === 'modal_config') return;
+            cerrarModalFormulario(m.id);
+        });
     }
 });
 // Cerrar listas de autocompletado si se hace clic afuera
@@ -4895,16 +4898,12 @@ function jkInstallDetected() {
     return false;
 }
 function jkShowInstallPopup() {
-    var cached = jkCargarSesionLocal();
     var img = document.getElementById('jkInstallLogo');
     var txt = document.getElementById('jkInstallLogoText');
     if (img && txt) {
-        if (cached && cached.logo_url) {
-            img.src = cached.logo_url; img.style.display = 'block'; txt.style.display = 'none';
-        } else if (cached && cached.name) {
-            img.style.display = 'none'; txt.style.display = 'block';
-            txt.innerHTML = '<span>' + (cached.name || 'J').trim().charAt(0).toUpperCase() + '</span>';
-        }
+        img.src = 'icon-512.png';
+        img.style.display = 'block';
+        txt.style.display = 'none';
     }
     var popup = document.getElementById('jkInstall');
     if (popup) popup.classList.add('show');
@@ -5022,5 +5021,12 @@ function jkInstallAhoraNo() {
 })();
 </script>
 
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+}
+</script>
 </body>
 </html>
