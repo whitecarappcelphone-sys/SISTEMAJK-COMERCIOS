@@ -186,6 +186,30 @@ body { font-family: 'Poppins', sans-serif; min-height: 100vh; color: #fff; backg
     .action-buttons { justify-content: stretch; }
     .action-buttons .btn-action { flex: 1; justify-content: center; }
 }
+/* ============ BOTÓN REGRESAR A OPERACIONES ============ */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #12d8c4;
+    background: rgba(18,216,196,.08);
+    border: 1px solid rgba(18,216,196,.3);
+    padding: 8px 13px;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .4px;
+    white-space: nowrap;
+    transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.btn-back:hover { background: rgba(18,216,196,.18); box-shadow: 0 0 14px rgba(18,216,196,.3); transform: translateX(-3px); }
+.btn-back i { font-size: 11px; }
+@media (max-width: 480px) {
+    .btn-back span { display: none; }
+    .btn-back { padding: 8px 9px; }
+}
 </style>
 </head>
 <body>
@@ -193,6 +217,7 @@ body { font-family: 'Poppins', sans-serif; min-height: 100vh; color: #fff; backg
     <!-- HEADER -->
     <header class="header">
         <div class="brand">
+            <a class="btn-back" href="index.html" aria-label="Regresar a Operaciones"><i class="fa-solid fa-arrow-left"></i><span>Regresar</span></a>
             <div class="logo">JK</div>
             <div class="brand-text"><h1>Gestión de Taller</h1><span>Control de reparaciones en tiempo real</span></div>
         </div>        
