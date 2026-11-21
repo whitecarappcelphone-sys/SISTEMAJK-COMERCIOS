@@ -136,7 +136,7 @@ input:focus, select:focus, textarea:focus { border-color: #12d8c4; box-shadow: 0
 <div id="modalInventario" class="modal-overlay">
     <div class="modal-content">
         <button class="close-modal" onclick="cerrarModal()"><i class="fa-solid fa-xmark"></i></button>
-        
+
         <div class="modal-header">
             <h3><i class="fa-solid fa-box-open"></i> Nuevo Producto</h3>
             <p style="color:#7d8594; font-size:12px; margin-top:5px;">Ingresa los datos para agregarlo a la base de datos real.</p>
@@ -153,15 +153,15 @@ input:focus, select:focus, textarea:focus { border-color: #12d8c4; box-shadow: 0
                     </select>
                 </div>
                 <div class="field"><label>Código / SKU (Opcional)</label><input type="text" id="inv_sku" placeholder="Ej: ACC-001"></div>
-                
+
                 <div class="field"><label>Precio de Venta ($) *</label><input type="number" id="inv_precio_venta" placeholder="Ej: 50000" required></div>
                 <div class="field"><label>Precio de Compra / Costo ($)</label><input type="number" id="inv_precio_compra" value="0"></div>
                 <div class="field"><label>Stock Inicial (Cantidad) *</label><input type="number" id="inv_stock" placeholder="Ej: 10" required></div>
-                
+
                 <div class="field full"><label>Descripción / Detalles</label><textarea id="inv_descripcion" style="min-height: 80px;" placeholder="Características del producto..."></textarea></div>
                 <div class="field full"><label>Foto del Producto *</label><input type="file" id="inv_imagen" accept="image/*" required></div>
             </div>
-            
+
             <button type="button" class="submit" id="btnSubmit" onclick="guardarProducto()">
                 <i class="fa-solid fa-cloud-arrow-up"></i> Guardar en Inventario
             </button>
@@ -194,17 +194,17 @@ function cerrarModal() {
 async function subirImagen(file) {
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-    
+
     const { data, error } = await window.invSupabase.storage.from('productos').upload(fileName, file);
     if (error) throw error;
-    
+
     const { data: publicUrlData } = window.invSupabase.storage.from('productos').getPublicUrl(fileName);
     return publicUrlData.publicUrl;
 }
 // NUEVA FUNCIÓN GUARDAR PRODUCTO
 async function guardarProducto() {
     const form = document.getElementById('formInventario');
-    
+
     // Forzar validación HTML5
     if (!form.checkValidity()) {
         form.reportValidity();
@@ -249,7 +249,7 @@ async function cargarInventario() {
     const { data, error } = await window.invSupabase.from('inventario').select('*').order('created_at', { ascending: false });
     window.productosInventario = data || [];
     const tbody = document.getElementById('tablaProductos');
-    
+
     if (error) {
         tbody.innerHTML = `<tr><td colspan="6" style="color:#ff4757; text-align:center; padding: 20px;">Error cargando datos: ${error.message}</td></tr>`;
         return;
@@ -262,7 +262,7 @@ async function cargarInventario() {
     data.forEach(prod => {
         const estadoClase = prod.stock <= prod.stock_minimo ? 'stock-low' : '';
         const imgHtml = prod.imagen_url ? `<img src="${prod.imagen_url}" class="prod-img">` : '<div class="prod-img" style="display:flex;align-items:center;justify-content:center;font-size:10px;color:#7d8594;">N/A</div>';
-        
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${imgHtml}</td>
