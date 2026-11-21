@@ -9,10 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <!-- SUPABASE (CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+
     <!-- SHEETJS PARA EXPORTAR A EXCEL (CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    
+
     <!-- JSPDF PARA GENERAR TICKETS PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -817,7 +817,7 @@
             .order("created_at", { ascending: false });
           const valorFiltro = filtroPeriodoEl.value;
           const ahora = new Date();
-          
+
           if (valorFiltro === "este_mes") {
   const primerDiaMes = new Date(
     ahora.getFullYear(),
@@ -920,7 +920,8 @@ if (item.imagen_url_3) {
               }
               let htmlFalla = falla ? `<div class="op-sub" style="color:#ff9d00;">⚠️ ${falla}</div>` : '';
               let htmlCantidad = (mostrarCantidad) ? `<div class="op-sub" style="color:#12d8c4;">● Cant: ${cantidad} ud.</div>` : '';
-              let htmlImagen = '';if (urlsImagenes.length > 0) {
+              let htmlImagen = '';
+if (urlsImagenes.length > 0) {
   htmlImagen = `
     <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:5px;">
       ${urlsImagenes.map((url, index) => `
@@ -1042,7 +1043,7 @@ if (item.imagen_url_3) {
           if (!boton) return;
           try {
             const datos = JSON.parse(decodeURIComponent(boton.dataset.ticket));
-            
+
             if (!window.jspdf || !window.jspdf.jsPDF) {
               alert("PDF no disponible aún.");
               return;
