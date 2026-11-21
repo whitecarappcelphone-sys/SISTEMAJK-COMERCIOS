@@ -4874,6 +4874,72 @@ function tallerQRRender() {
 </script>
 <script>
 /* =====================================================================
+   POPUP DE INSTALACIÓN (primera apertura)
+   ===================================================================== */
+var jkInstallEvent = null;
+window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    jkInstallEvent = e;
+});
+window.addEventListener('appinstalled', function () {
+    try { sessionStorage.removeItem('jk_install_dismissed'); } catch (e) {}
+    jkHideInstallPopup();
+});
+function jkInstallDetected() {
+    try {
+        if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
+        if (window.matchMedia && window.matchMedia('(display-mode: fullscreen)').matches) return true;
+        if (window.navigator && window.navigator.standalone === true) return true;
+        if (sessionStorage.getItem('jk_install_dismissed') === '1') return true;
+    } catch (e) {}
+    return false;
+}
+function jkShowInstallPopup() {
+    var cached = jkCargarSesionLocal();
+    var img = document.getElementById('jkInstallLogo');
+    var txt = document.getElementById('jkInstallLogoText');
+    if (img && txt) {
+        if (cached && cached.logo_url) {
+            img.src = cached.logo_url; img.style.display = 'block'; txt.style.display = 'none';
+        } else if (cached && cached.name) {
+            img.style.display = 'none'; txt.style.display = 'block';
+            txt.innerHTML = '<span>' + (cached.name || 'J').trim().charAt(0).toUpperCase() + '</span>';
+        }
+    }
+    var popup = document.getElementById('jkInstall');
+    if (popup) popup.classList.add('show');
+    document.body.classList.add('jk-install-open');
+}
+function jkHideInstallPopup() {
+    var popup = document.getElementById('jkInstall');
+    if (popup) popup.classList.remove('show');
+    document.body.classList.remove('jk-install-open');
+    try { window.dispatchEvent(new CustomEvent('jk-install-closed')); } catch (e) {}
+}
+function jkInstallInstalar() {
+    if (jkInstallEvent) {
+        jkInstallEvent.prompt().then(function () {
+            jkHideInstallPopup();
+        }).catch(function () { jkHideInstallPopup(); });
+        return;
+    }
+    var text = document.getElementById('jkInstallText');
+    var hint = document.getElementById('jkInstallHint');
+    var btn = document.getElementById('jkInstallBtn');
+    if (text) text.textContent = 'Para instalar en iOS: pulsa el botón «Compartir» y luego «Añadir a pantalla de inicio». En Android, usa el menú del navegador.';
+    if (hint) { hint.style.display = 'block'; hint.textContent = 'En iPhone (Safari): abre el botón Compartir → «Añadir a pantalla de inicio».'; }
+    if (btn) {
+        btn.onclick = function () { jkHideInstallPopup(); };
+        btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Entendido';
+    }
+}
+function jkInstallAhoraNo() {
+    try { sessionStorage.setItem('jk_install_dismissed', '1'); } catch (e) {}
+    jkHideInstallPopup();
+}
+</script>
+<script>
+/* =====================================================================
    COMERCIO — lockscreen + multi-tenant bootstrap
    ===================================================================== */
 (function () {
@@ -4955,71 +5021,6 @@ function tallerQRRender() {
     jkMostrarLockscreen();
 })();
 </script>
-<script>
-/* =====================================================================
-   POPUP DE INSTALACIÓN (primera apertura)
-   ===================================================================== */
-var jkInstallEvent = null;
-window.addEventListener('beforeinstallprompt', function (e) {
-    e.preventDefault();
-    jkInstallEvent = e;
-});
-window.addEventListener('appinstalled', function () {
-    try { sessionStorage.removeItem('jk_install_dismissed'); } catch (e) {}
-    jkHideInstallPopup();
-});
-function jkInstallDetected() {
-    try {
-        if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
-        if (window.matchMedia && window.matchMedia('(display-mode: fullscreen)').matches) return true;
-        if (window.navigator && window.navigator.standalone === true) return true;
-        if (sessionStorage.getItem('jk_install_dismissed') === '1') return true;
-    } catch (e) {}
-    return false;
-}
-function jkShowInstallPopup() {
-    var cached = jkCargarSesionLocal();
-    var img = document.getElementById('jkInstallLogo');
-    var txt = document.getElementById('jkInstallLogoText');
-    if (img && txt) {
-        if (cached && cached.logo_url) {
-            img.src = cached.logo_url; img.style.display = 'block'; txt.style.display = 'none';
-        } else if (cached && cached.name) {
-            img.style.display = 'none'; txt.style.display = 'block';
-            txt.innerHTML = '<span>' + (cached.name || 'J').trim().charAt(0).toUpperCase() + '</span>';
-        }
-    }
-    var popup = document.getElementById('jkInstall');
-    if (popup) popup.classList.add('show');
-    document.body.classList.add('jk-install-open');
-}
-function jkHideInstallPopup() {
-    var popup = document.getElementById('jkInstall');
-    if (popup) popup.classList.remove('show');
-    document.body.classList.remove('jk-install-open');
-    try { window.dispatchEvent(new CustomEvent('jk-install-closed')); } catch (e) {}
-}
-function jkInstallInstalar() {
-    if (jkInstallEvent) {
-        jkInstallEvent.prompt().then(function () {
-            jkHideInstallPopup();
-        }).catch(function () { jkHideInstallPopup(); });
-        return;
-    }
-    var text = document.getElementById('jkInstallText');
-    var hint = document.getElementById('jkInstallHint');
-    var btn = document.getElementById('jkInstallBtn');
-    if (text) text.textContent = 'Para instalar en iOS: pulsa el botón «Compartir» y luego «Añadir a pantalla de inicio». En Android, usa el menú del navegador.';
-    if (hint) { hint.style.display = 'block'; hint.textContent = 'En iPhone (Safari): abre el botón Compartir → «Añadir a pantalla de inicio».'; }
-    if (btn) {
-        btn.onclick = function () { jkHideInstallPopup(); };
-        btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Entendido';
-    }
-}
-function jkInstallAhoraNo() {
-    try { sessionStorage.setItem('jk_install_dismissed', '1'); } catch (e) {}
-    jkHideInstallPopup();
-}
-</script>
+
 </body>
 </html>
