@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Inventario - JK</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', sans-serif; min-height: 100vh; color: #fff; background: radial-gradient(circle at top left, #12353a 0%, #0d1117 40%, #090b10 100%); padding: 30px; }
+.container { width: 100%; max-width: 1200px; margin: auto; }
+/* HEADER */
+.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 35px; flex-wrap: wrap; gap: 15px; }
+.brand { display: flex; align-items: center; gap: 15px; }
+.logo { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #12d8c4; color: #101319; font-weight: 700; font-size: 18px; box-shadow: 0 0 20px rgba(18,216,196,.3); }
+.title h2 { font-size: 24px; font-weight: 600; color: #fff; }
+.title p { color: #12d8c4; font-size: 12px; font-weight: 500; }
+/* BOTÓN AGREGAR */
+.btn-add { background: linear-gradient(135deg, #12d8c4, #22f5dd); color: #081014; border: none; padding: 12px 24px; border-radius: 14px; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: .3s; box-shadow: 0 10px 20px rgba(18,216,196,.15); }
+.btn-add:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(18,216,196,.3); }
+.btn-add i { font-size: 16px; }
+.btn-excel {
+    background: rgba(37, 211, 102, 0.12);
+    color: #25D366;
+    border: 1px solid rgba(37, 211, 102, 0.25);
+    padding: 12px 24px;
+    border-radius: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: .3s;
+}
+.btn-excel:hover {
+    background: rgba(37, 211, 102, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(37, 211, 102, 0.15);
+}
+.btn-excel i {
+    font-size: 16px;
+}
+/* TABLA DE INVENTARIO */
+.table-container { background: #171a21; padding: 25px; border-radius: 20px; border: 1px solid rgba(18,216,196,.10); overflow-x: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+table { width: 100%; border-collapse: collapse; text-align: left; }
+th, td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,.05); font-size: 13px; }
+th:nth-child(5),
+td:nth-child(5) {
+    min-width: 100px;
+    white-space: nowrap;
+}  
+th { color: #12d8c4; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+.prod-img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(18,216,196,.3); }
+.stock-badge {
+    background: rgba(18,216,196,.1);
+    color: #12d8c4;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    display: inline-block;
+    min-width: 75px;
+    text-align: center;
+    white-space: nowrap;
+}
+.stock-low { background: rgba(255,71,87,.1); color: #ff4757; border: 1px solid rgba(255,71,87,.2); }
+/* MODAL PROFESIONAL */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-content { background: #171a21; border: 1px solid rgba(18,216,196,.2); border-radius: 24px; padding: 35px; width: 100%; max-width: 800px; position: relative; transform: scale(0.9); transition: transform 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
+.modal-overlay.active .modal-content { transform: scale(1); }
+.close-modal { position: absolute; top: 25px; right: 25px; background: rgba(255,255,255,.05); border: none; color: #fff; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: .2s; font-size: 16px; }
+.close-modal:hover { background: #ff4757; transform: rotate(90deg); }
+/* FORMULARIO DENTRO DEL MODAL */
+.modal-header { margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; }
+.modal-header h3 { color: #12d8c4; font-size: 22px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 15px; }
+.field { display: flex; flex-direction: column; }
+.field.full { grid-column: 1 / -1; }
+label { color: #bfc6d2; font-size: 12px; margin-bottom: 8px; font-weight: 500; }
+input, select, textarea { width: 100%; border: 1px solid rgba(255,255,255,.08); outline: none; border-radius: 12px; background: #101319; color: #fff; padding: 14px 16px; font-family: 'Poppins', sans-serif; font-size: 13px; transition: .3s; }
+input:focus, select:focus, textarea:focus { border-color: #12d8c4; box-shadow: 0 0 15px rgba(18,216,196,.1); }
+.submit { width: 100%; height: 54px; border: 0; border-radius: 14px; background: linear-gradient(135deg, #12d8c4, #22f5dd); color: #081014; font-weight: 700; cursor: pointer; transition: .25s; margin-top: 15px; font-size: 15px; }
+.submit:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(18,216,196,.25); }
+.submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
+/* Custom Scrollbar for Modal */
+.modal-content::-webkit-scrollbar { width: 8px; }
+.modal-content::-webkit-scrollbar-track { background: #101319; border-radius: 10px; }
+.modal-content::-webkit-scrollbar-thumb { background: rgba(18,216,196,.3); border-radius: 10px; }
+.modal-content::-webkit-scrollbar-thumb:hover { background: #12d8c4; }
+@media(max-width: 800px) { .grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width: 500px) { .grid { grid-template-columns: 1fr; } .header { flex-direction: column; align-items: flex-start; } .btn-add { width: 100%; justify-content: center; } }
+</style>
+</head>
+<body>
+<div class="container">
+    <!-- CABECERA PRINCIPAL -->
+    <div class="header">
+        <div class="brand">
+            <div class="logo"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div class="title">
+                <h2>Inventario General</h2>
+                <p>Gestión de Stock y Productos en Tiempo Real</p>
+            </div>
+        </div>
+        <!-- BOTÓN PARA ABRIR EL MODAL -->
+        <button class="btn-add" onclick="abrirModal()">
+            <i class="fa-solid fa-plus"></i> Registrar Producto
+        </button>
+      <button class="btn-excel" onclick="exportarExcel()">
+    <i class="fa-solid fa-file-excel"></i> Exportar inventario
+</button>
+    </div>
+    <!-- TABLA DE PRODUCTOS -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Detalle del Producto</th>
+                    <th>Categoría</th>
+                    <th>Precio Venta</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="tablaProductos">
+                <tr><td colspan="6" style="text-align:center; padding: 30px;">Cargando inventario...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- MODAL INDEPENDIENTE PARA AGREGAR PRODUCTOS -->
+<div id="modalInventario" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-modal" onclick="cerrarModal()"><i class="fa-solid fa-xmark"></i></button>
+        
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-box-open"></i> Nuevo Producto</h3>
+            <p style="color:#7d8594; font-size:12px; margin-top:5px;">Ingresa los datos para agregarlo a la base de datos real.</p>
+        </div>
+        <form id="formInventario">
+            <div class="grid">
+                <div class="field"><label>Nombre del Producto *</label><input type="text" id="inv_nombre" placeholder="Ej: Audífonos Bluetooth" required></div>
+                <div class="field">
+                    <label>Categoría *</label>
+                    <select id="inv_categoria" required>
+                        <option value="Accesorio">Accesorio</option>
+                        <option value="Celular">Celular</option>
+                        <option value="Repuesto">Repuesto</option>
+                    </select>
+                </div>
+                <div class="field"><label>Código / SKU (Opcional)</label><input type="text" id="inv_sku" placeholder="Ej: ACC-001"></div>
+                
+                <div class="field"><label>Precio de Venta ($) *</label><input type="number" id="inv_precio_venta" placeholder="Ej: 50000" required></div>
+                <div class="field"><label>Precio de Compra / Costo ($)</label><input type="number" id="inv_precio_compra" value="0"></div>
+                <div class="field"><label>Stock Inicial (Cantidad) *</label><input type="number" id="inv_stock" placeholder="Ej: 10" required></div>
+                
+                <div class="field full"><label>Descripción / Detalles</label><textarea id="inv_descripcion" style="min-height: 80px;" placeholder="Características del producto..."></textarea></div>
+                <div class="field full"><label>Foto del Producto *</label><input type="file" id="inv_imagen" accept="image/*" required></div>
+            </div>
+            
+            <button type="button" class="submit" id="btnSubmit" onclick="guardarProducto()">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Guardar en Inventario
+            </button>
+        </form>
+    </div>
+</div>
+<!-- Librería de Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Librería para exportar a Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script>
+// CONEXIÓN A SUPABASE (Con nombre protegido invSupabase)
+window.invSupabase = window.invSupabase || window.supabase.createClient(
+    "https://scippqgodwvbopslwxdf.supabase.co",
+    "sb_publishable_sakCK5FcUzB3ZmfwNKt4cw_AJi2Nw95"
+);
+const formatoMoneda = (num) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(num);
+// Funciones para el Modal
+function abrirModal() {
+    const modal = document.getElementById('modalInventario');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('active'), 10);
+}
+function cerrarModal() {
+    const modal = document.getElementById('modalInventario');
+    modal.classList.remove('active');
+    setTimeout(() => modal.style.display = 'none', 300);
+}
+// Subir Imagen
+async function subirImagen(file) {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+    
+    const { data, error } = await window.invSupabase.storage.from('productos').upload(fileName, file);
+    if (error) throw error;
+    
+    const { data: publicUrlData } = window.invSupabase.storage.from('productos').getPublicUrl(fileName);
+    return publicUrlData.publicUrl;
+}
+// NUEVA FUNCIÓN GUARDAR PRODUCTO
+async function guardarProducto() {
+    const form = document.getElementById('formInventario');
+    
+    // Forzar validación HTML5
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    const btn = document.getElementById('btnSubmit');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Subiendo imagen y guardando...';
+    btn.disabled = true;
+    try {
+        const fileInput = document.getElementById('inv_imagen');
+        let imageUrl = null;
+        if (fileInput.files.length > 0) {
+            imageUrl = await subirImagen(fileInput.files[0]);
+        }
+        const nuevoProducto = {
+            nombre: document.getElementById('inv_nombre').value,
+            categoria: document.getElementById('inv_categoria').value,
+            sku: document.getElementById('inv_sku').value || null,
+            precio_venta: parseFloat(document.getElementById('inv_precio_venta').value),
+            precio_compra: parseFloat(document.getElementById('inv_precio_compra').value) || 0,
+            stock: parseInt(document.getElementById('inv_stock').value),
+            stock_minimo: 3,
+            descripcion: document.getElementById('inv_descripcion').value,
+            imagen_url: imageUrl
+        };
+        const { error } = await window.invSupabase.from('inventario').insert([nuevoProducto]);
+        if (error) throw error;
+        alert("¡Producto agregado con éxito al inventario!");
+        form.reset();
+        cerrarModal(); // Cierra el modal automáticamente al tener éxito
+        cargarInventario(); // Recarga la tabla de atrás
+    } catch (error) {
+        console.error("Error detallado:", error);
+        alert("Ocurrió un error: " + error.message);
+    } finally {
+        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Guardar en Inventario';
+        btn.disabled = false;
+    }
+}
+// Cargar Datos en la Tabla
+async function cargarInventario() {
+    const { data, error } = await window.invSupabase.from('inventario').select('*').order('created_at', { ascending: false });
+    window.productosInventario = data || [];
+    const tbody = document.getElementById('tablaProductos');
+    
+    if (error) {
+        tbody.innerHTML = `<tr><td colspan="6" style="color:#ff4757; text-align:center; padding: 20px;">Error cargando datos: ${error.message}</td></tr>`;
+        return;
+    }
+    if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 30px; color:#7d8594;">No hay productos registrados aún. Presiona "Registrar Producto" para comenzar.</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = '';
+    data.forEach(prod => {
+        const estadoClase = prod.stock <= prod.stock_minimo ? 'stock-low' : '';
+        const imgHtml = prod.imagen_url ? `<img src="${prod.imagen_url}" class="prod-img">` : '<div class="prod-img" style="display:flex;align-items:center;justify-content:center;font-size:10px;color:#7d8594;">N/A</div>';
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${imgHtml}</td>
+            <td>
+                <strong style="font-size:14px; color:#fff;">${prod.nombre}</strong>
+
+                <small style="color:#7d8594"><i class="fa-solid fa-barcode"></i> ${prod.sku || 'Sin SKU'}</small>
+            </td>
+            <td><span style="background:rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${prod.categoria}</span></td>
+            <td style="color:#12d8c4; font-weight:600;">${formatoMoneda(prod.precio_venta)}</td>
+            <td><span class="stock-badge ${estadoClase}">${prod.stock} un.</span></td>
+            <td>${prod.stock > 0 ? '<span style="color:#25D366; font-weight:600;"><i class="fa-solid fa-check"></i> Disponible</span>' : '<span style="color:#ff4757; font-weight:600;"><i class="fa-solid fa-xmark"></i> Agotado</span>'}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+function exportarExcel() {
+    const productos = window.productosInventario || [];
+    if (productos.length === 0) {
+        alert("No hay productos para exportar.");
+        return;
+    }
+    const datos = productos.map(prod => ({
+        "Producto": prod.nombre || "",
+        "SKU": prod.sku || "Sin SKU",
+        "Categoría": prod.categoria || "",
+        "Precio Venta": Number(prod.precio_venta) || 0,
+        "Stock": Number(prod.stock) || 0,
+        "Estado": Number(prod.stock) > 0 ? "Disponible" : "Agotado"
+    }));
+    const ws = XLSX.utils.json_to_sheet(datos);
+    ws["!cols"] = [
+        { wch: 30 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 18 },
+        { wch: 12 },
+        { wch: 15 }
+    ];
+    for (let fila = 2; fila <= productos.length + 1; fila++) {
+        const celdaPrecio = ws[`D${fila}`];
+        if (celdaPrecio) {
+            celdaPrecio.t = "n";
+            celdaPrecio.z = '$#,##0';
+        }
+    }
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Inventario");
+    XLSX.writeFile(wb, "Inventario_JK.xlsx");
+}
+// Iniciar cargando la tabla
+cargarInventario();
+</script>
+</body>
+</html>
