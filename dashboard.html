@@ -1706,9 +1706,22 @@ function jkAplicarMarca() {
 async function jkValidarPassword(pwd) {
     var sg = jkS();
     if (!sg) return null;
-    var res = await sg.from('comercio').select('id, name, logo_url, theme, password, data').eq('password', pwd).limit(1);
-    if (res.error) throw res.error;
-    return (res.data && res.data[0]) ? res.data[0] : null;
+    try {
+        var res = await sg.from('comercio').select('id, name, logo_url, theme, password, data, bloqueado').eq('password', pwd).limit(1);
+        if (res.error) {
+            if (/bloqueado/i.test(res.error.message || '')) {
+                var res2 = await sg.from('comercio').select('id, name, logo_url, theme, password, data').eq('password', pwd).limit(1);
+                if (res2.error) throw res2.error;
+                var row = (res2.data && res2.data[0]) ? res2.data[0] : null;
+                if (row) row.bloqueado = false;
+                return row;
+            }
+            throw res.error;
+        }
+        return (res.data && res.data[0]) ? res.data[0] : null;
+    } catch (e) {
+        throw e;
+    }
 }
 function jkActivarSesion(c) {
     window.JK_COMERCIO = c;
@@ -1757,6 +1770,7 @@ function jkInicializar() {
         btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando...';
         jkValidarPassword(pwd).then(function (c) {
             if (!c) { err.textContent = 'Contraseña incorrecta o no registrada.'; err.style.display = 'block'; return; }
+            if (c.bloqueado) { err.textContent = '⛔ ' + (c.name || 'Este comercio') + ' está bloqueado. Contacta al administrador.'; err.style.display = 'block'; return; }
             jkActivarSesion(c);
             jkEsconderLockscreen();
             if (cmd) cmd(c);
