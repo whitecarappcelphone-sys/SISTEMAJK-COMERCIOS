@@ -1924,13 +1924,15 @@ function obtenerAsesoresLocales() {
     try { return JSON.parse(localStorage.getItem(CLAVE_ASESORES_LOCAL) || '[]'); } catch (e) { return []; }
 }
 function guardarAsesorLocal(asesor) {
-    const lista = obtenerAsesoresLocales().filter(a => a.email !== asesor.email);
+    const comercioId = asesor.comercio_id || window.JK_COMERCIO_ID || null;
+    const lista = obtenerAsesoresLocales().filter(a => !(normalizarTexto(a.email) === normalizarTexto(asesor.email) && (a.comercio_id || null) === comercioId));
+    asesor.comercio_id = comercioId;
     lista.push(asesor);
     try { localStorage.setItem(CLAVE_ASESORES_LOCAL, JSON.stringify(lista)); } catch (e) {}
 }
 async function obtenerAsesoresRemotos() {
     if (!cacheAsesores) {
-        const { data, error } = await window.jkSupabase.from(TABLA_ASESORES).select('id, nombre, email, rol, pin_hash');
+        const { data, error } = await window.jkSupabase.from(TABLA_ASESORES).select('id, nombre, email, rol, pin_hash, comercio_id').eq('comercio_id', window.JK_COMERCIO_ID || '');
         if (error) { console.warn('Tabla asesores no disponible, se usará el registro local.', error); cacheAsesores = []; }
         else { cacheAsesores = data || []; }
     }
@@ -1944,7 +1946,7 @@ async function buscarAsesorPorPin(pin) {
         if (encontrado) return encontrado;
     } catch (e) {}
     const locales = obtenerAsesoresLocales();
-    return locales.find(a => a.pin_hash === hash) || null;
+    return locales.find(a => a.pin_hash === hash && a.comercio_id === window.JK_COMERCIO_ID) || null;
 }
 // NUEVO: utilidades para comparar nombre/correo y mostrar el rol
 function normalizarTexto(t) { return String(t || '').trim().toLowerCase(); }
@@ -1957,7 +1959,7 @@ async function buscarAsesorRegistrado(nombre, email) {
     const n = normalizarTexto(nombre), e = normalizarTexto(email);
     let lista = [];
     try { cacheAsesores = null; lista = lista.concat((await obtenerAsesoresRemotos()) || []); } catch (err) {}
-    lista = lista.concat(obtenerAsesoresLocales());
+    lista = lista.concat(obtenerAsesoresLocales().filter(a => a.comercio_id === window.JK_COMERCIO_ID));
     return {
         porEmail: lista.find(a => normalizarTexto(a.email) === e) || null,
         porNombre: lista.find(a => normalizarTexto(a.nombre) === n) || null
@@ -2082,7 +2084,7 @@ async function registrarAsesor() {
     btn.innerText = 'Procesando...';
     try {
         const pinHash = await hashPin(pin);
-        const perfil = { id: generarUUID(), nombre: nombre, email: email, rol: rol, pin_hash: pinHash, created_at: new Date().toISOString() };
+        const perfil = { id: generarUUID(), nombre: nombre, email: email, rol: rol, pin_hash: pinHash, comercio_id: window.JK_COMERCIO_ID || null, created_at: new Date().toISOString() };
         let guardadoRemoto = false;
         let esInicioSesion = false;
         // NUEVO: verifica si el nombre o el correo ya tienen un PIN asignado (Supabase + respaldo local)
@@ -2094,6 +2096,7 @@ async function registrarAsesor() {
                 perfil.nombre = porEmail.nombre || nombre;
                 perfil.email = porEmail.email || email;
                 perfil.rol = porEmail.rol || rol;
+                perfil.comercio_id = porEmail.comercio_id || window.JK_COMERCIO_ID || null;
                 esInicioSesion = true;
             } else {
                 mostrarAlertaError('Este correo ya tiene un PIN asignado y solo puedes iniciar sesión con ese PIN. Si deseas crear otra cuenta, usa un nombre y un correo diferentes.');
@@ -2516,12 +2519,10 @@ async function guardarOperacion(prefijo, tipoOperacion) {
             const idInv = inputProducto.dataset.idInventario;
             const { data: itemData } = await window.jkSupabase.from('inventario').select('stock, nombre').eq('id', idInv).eq('comercio_id', window.JK_COMERCIO_ID || '').single();
             if (itemData) {
-                const nuevoStock = itemData.stock - cant;
+                const stockAnterior = Number(itemData.stock) || 0;
+                const nuevoStock = stockAnterior - cant;
                 await window.jkSupabase.from('inventario').update({ stock: nuevoStock }).eq('id', idInv).eq('comercio_id', window.JK_COMERCIO_ID || '');
-                if (nuevoStock <= 3) {
-                    const nombreProducto = itemData.nombre || descripcion || 'Producto';
-                    enviarAvisoStockBajo(nombreProducto, nuevoStock);
-                }
+                await enviarAvisosStockCruce(itemData.nombre || descripcion || 'Producto', stockAnterior, nuevoStock, idInv);
             }
             delete inputProducto.dataset.idInventario;
         }
@@ -3458,6 +3459,7 @@ function contaReportePDFv2_old() {
 // Los paneles se cargan tras ingresar la contraseña del comercio
 function cmdIniciar(c) {
     panelCargarTodo();
+    actualizarEstadoNotificacionesPush();
     window.addEventListener('focus', panelCargarTodo);
     if (!window.__jkInterval) window.__jkInterval = setInterval(panelCargarTodo, 60000);
 }
@@ -4969,67 +4971,129 @@ function urlBase64ToUint8Array(base64String) {
     for (let i = 0; i < rawData.length; i++) outputArray[i] = rawData.charCodeAt(i);
     return outputArray;
 }
-async function activarNotificacionesPush() {
-    if (!('Notification' in window) || !('PushManager' in window)) {
-        mostrarAlertaError('Web Push no soportado en tu navegador (Safari iOS 16.4+ o Chrome/Edge).');
-        return;
-    }
-    if (!VAPID_PUBLIC_KEY) {
-        mostrarAlertaError('Falta la clave VAPID pública (VAPID_PUBLIC_KEY).');
-        return;
-    }
-    var perm = await Notification.requestPermission();
-    if (perm !== 'granted') { mostrarAlertaError('Permiso de notificaciones denegado. Actívalo en la configuración del navegador.'); return; }
-    try {
-        var reg = await navigator.serviceWorker.ready;
-        var sub = await reg.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-        });
-        var json = sub.toJSON ? sub.toJSON() : sub;
-        var sg = window.jkSupabase;
-        if (!sg) { mostrarAlertaError('Cliente Supabase no disponible.'); return; }
-        var res = await sg.from('push_subscriptions').upsert([{
-            comercio_id: window.JK_COMERCIO_ID || null,
-            endpoint: json.endpoint,
-            p256dh: json.keys.p256dh,
-            auth: json.keys.auth,
-            user_agent: (navigator.userAgent || '').substring(0, 200)
-        }], { onConflict: 'endpoint' });
-        if (res.error) { mostrarAlertaError('No se pudo guardar la suscripción: ' + res.error.message); return; }
-        mostrarAlertaExito('✅ Notificaciones activadas — recibirás avisos de stock bajo en este dispositivo.');
-        var btn = document.getElementById('btnNotificar');
-        if (btn) { btn.innerHTML = '<i class="fa-solid fa-bell"></i> NOTIFICACIONES ACTIVADAS'; btn.disabled = true; }
-    } catch (e) {
-        mostrarAlertaError('Error: ' + (e && e.message ? e.message : 'fallo al activar notificaciones'));
-    }
-}
-async function enviarAvisoStockBajo(nombreProducto, nuevoStock) {
-    var sg = window.jkSupabase;
-    if (!sg || !window.JK_COMERCIO_ID) return;
-    if (nuevoStock > 3) return;
-    var title, body;
-    if (nuevoStock === 3) {
-        title = '⚠ Stock bajo';
-        body = 'Producto «' + nombreProducto + '» está por agotarse — solo quedan 3 unidades.';
-    } else if (nuevoStock === 2) {
-        title = '⚠⚠ Stock crítico';
-        body = 'Producto «' + nombreProducto + '» — ¡CUIDADO! Solo quedan 2 unidades.';
-    } else if (nuevoStock === 1) {
-        title = '🚨 Stock crítico';
-        body = 'Producto «' + nombreProducto + '» — ¡ÚLTIMA UNIDAD!';
+function pushBotonEstado(estado) {
+    var btn = document.getElementById('btnNotificar');
+    if (!btn) return;
+    if (estado === 'active') {
+        btn.innerHTML = '<i class="fa-solid fa-bell"></i> NOTIFICACIONES ACTIVADAS';
+        btn.disabled = true;
+        btn.title = 'Este dispositivo ya está suscrito a notificaciones.';
     } else {
-        title = '🚨 Agotado';
-        body = 'Producto «' + nombreProducto + '» está AGOTADO TOTALMENTE.';
-    }
-    try {
-        await sg.functions.invoke('send-push', {
-            body: { comercio_id: window.JK_COMERCIO_ID, title: title, body: body, url: 'index.html' }
-        });
-    } catch (e) {
-        console.warn('notificación falló:', e);
+        btn.innerHTML = '<i class="fa-solid fa-bell"></i> NOTIFICAR STOCK';
+        btn.disabled = false;
+        btn.title = 'Activar notificaciones de stock en este dispositivo.';
     }
 }
+async function guardarPushSubscription(sub) {
+    var sg = window.jkSupabase;
+    if (!sg || !window.JK_COMERCIO_ID) throw new Error('No se identificó el comercio activo.');
+    var json = sub.toJSON ? sub.toJSON() : sub;
+    if (!json.endpoint || !json.keys || !json.keys.p256dh || !json.keys.auth) throw new Error('La suscripción push del navegador está incompleta.');
+    var res = await sg.from('push_subscriptions').upsert([{
+        comercio_id: window.JK_COMERCIO_ID,
+        endpoint: json.endpoint,
+        p256dh: json.keys.p256dh,
+        auth: json.keys.auth,
+        user_agent: (navigator.userAgent || '').substring(0, 200)
+    }], { onConflict: 'endpoint' });
+    if (res.error) throw res.error;
+}
+async function escanearStockBajoPush() {
+    if (!window.JK_COMERCIO_ID || !window.jkSupabase) return;
+    try {
+        var result = await window.jkSupabase.functions.invoke('send-push', { body: { action: 'scan', comercio_id: window.JK_COMERCIO_ID, url: 'inventario.html' } });
+        if (result.error) console.warn('Escaneo de stock push:', result.error);
+        else if (result.data && result.data.sent) console.info('Avisos de stock enviados:', result.data);
+    } catch (e) { console.warn('No se pudo escanear stock bajo:', e); }
+}
+async function actualizarEstadoNotificacionesPush() {
+    var btn = document.getElementById('btnNotificar');
+    if (!btn) return;
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+        pushBotonEstado('inactive');
+        btn.disabled = true;
+        return;
+    }
+    try {
+        var registration = await navigator.serviceWorker.ready;
+        var subscription = await registration.pushManager.getSubscription();
+        if (subscription && Notification.permission === 'granted') {
+            pushBotonEstado('active');
+            try { await guardarPushSubscription(subscription); await escanearStockBajoPush(); }
+            catch (e) { console.warn('No se pudo sincronizar la suscripción push:', e); }
+        } else {
+            pushBotonEstado('inactive');
+        }
+    } catch (e) {
+        pushBotonEstado('inactive');
+        console.warn('No se pudo comprobar la suscripción push:', e);
+    }
+}
+async function activarNotificacionesPush() {
+    if (!('Notification' in window) || !('PushManager' in window) || !('serviceWorker' in navigator)) {
+        mostrarAlertaError('Web Push no soportado. En iPhone requiere iOS 16.4+ y que la app esté instalada en la pantalla de inicio.');
+        return;
+    }
+    if (!VAPID_PUBLIC_KEY) { mostrarAlertaError('Falta la clave VAPID pública.'); return; }
+    try {
+        var permission = Notification.permission;
+        if (permission === 'default') permission = await Notification.requestPermission();
+        if (permission !== 'granted') { mostrarAlertaError('Permiso de notificaciones denegado. Actívalo en la configuración del navegador.'); return; }
+        var registration = await navigator.serviceWorker.ready;
+        var subscription = await registration.pushManager.getSubscription();
+        if (!subscription) {
+            subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+            });
+        }
+        await guardarPushSubscription(subscription);
+        pushBotonEstado('active');
+        await escanearStockBajoPush();
+        mostrarAlertaExito('✅ Notificaciones activadas en este dispositivo.');
+    } catch (e) {
+        pushBotonEstado('inactive');
+        mostrarAlertaError('No se pudo activar el push: ' + (e && e.message ? e.message : 'revisa permiso, HTTPS, Service Worker y VAPID.'));
+        console.error('activarNotificacionesPush:', e);
+    }
+}
+
+function textoAvisoStock(nivel, nombreProducto) {
+    if (nivel === 3) return { title: '⚠ Stock bajo', body: '«' + nombreProducto + '»: quedan solo 3 unidades. Programa reposición.' };
+    if (nivel === 2) return { title: '⚠⚠ Stock crítico', body: '«' + nombreProducto + '»: quedan solo 2 unidades. Repón pronto.' };
+    if (nivel === 1) return { title: '🚨 Última unidad', body: '«' + nombreProducto + '»: queda 1 unidad. ¡Repón ahora!' };
+    return { title: '🚨 Producto agotado', body: '«' + nombreProducto + '» está agotado (0 unidades). Repón el producto.' };
+}
+async function enviarAvisoStockBajo(nombreProducto, nivel, productoId) {
+    var sg = window.jkSupabase;
+    if (!sg || !window.JK_COMERCIO_ID || nivel > 3) return;
+    var aviso = textoAvisoStock(nivel, nombreProducto);
+    try {
+        var result = await sg.functions.invoke('send-push', {
+            body: {
+                comercio_id: window.JK_COMERCIO_ID,
+                producto_id: String(productoId || nombreProducto),
+                nombre: nombreProducto,
+                stock: nivel,
+                title: aviso.title,
+                body: aviso.body,
+                url: 'inventario.html',
+                tag: 'jk-stock-' + window.JK_COMERCIO_ID + '-' + String(productoId || nombreProducto) + '-' + nivel
+            }
+        });
+        if (result.error) console.warn('Edge Function send-push:', result.error);
+        else console.info('Stock push', nivel, result.data);
+    } catch (e) {
+        console.warn('Notificación push falló:', e);
+    }
+}
+async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo, productoId) {
+    var anterior = Number(stockAnterior) || 0;
+    var nuevo = Number(stockNuevo) || 0;
+    var niveles = [3, 2, 1, 0].filter(function (nivel) { return anterior > nivel && nuevo <= nivel; });
+    for (const nivel of niveles) await enviarAvisoStockBajo(nombreProducto, nivel, productoId);
+}
+
 </script>
 <script>
 /* =====================================================================
