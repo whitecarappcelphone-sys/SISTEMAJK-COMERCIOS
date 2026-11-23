@@ -449,6 +449,37 @@ body.jk-locked { overflow: hidden !important; }
 <meta name="apple-mobile-web-app-title" content="Sistema JK">
 
 <link rel="manifest" href="manifest.json">
+
+/* ============ ADMIN GATE ============ */
+.admin-gate { position: fixed; inset: 0; z-index: 14900; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(6,9,14,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: 0; transition: opacity .35s ease; }
+.admin-gate.show { display: flex; opacity: 1; }
+.admin-gate-box { width: 100%; max-width: 380px; padding: 32px 28px 26px; border-radius: 22px; background: #171a21; border: 1px solid rgba(18,216,196,.25); box-shadow: 0 30px 80px rgba(0,0,0,.6); text-align: center; }
+.admin-gate-icon { width: 76px; height: 76px; border-radius: 22px; background: linear-gradient(160deg, rgba(18,216,196,.18), rgba(18,216,196,.04)); border: 1px solid rgba(18,216,196,.35); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 32px; color: #12d8c4; }
+.admin-gate-title { color: #fff; font-size: 19px; font-weight: 600; margin: 0; }
+.admin-gate-sub { color: #7d8594; font-size: 11.5px; margin: 8px 0 18px; line-height: 1.5; }
+.admin-gate-box input { width: 100%; height: 50px; border-radius: 13px; border: 1px solid rgba(255,255,255,.12); background: #101319; color: #fff; padding: 0 16px; font-family: 'Poppins', sans-serif; font-size: 14px; outline: none; text-align: center; letter-spacing: .12em; transition: border-color .2s, box-shadow .2s; }
+.admin-gate-box input:focus { border-color: #12d8c4; box-shadow: 0 0 14px rgba(18,216,196,.25); }
+.admin-gate-btn { width: 100%; height: 50px; margin-top: 12px; border: 0; border-radius: 13px; background: linear-gradient(135deg, #12d8c4, #22f5dd); color: #081014; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: transform .2s, box-shadow .2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.admin-gate-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(18,216,196,.25); }
+.admin-gate-err { display: none; margin-top: 14px; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,94,94,.4); background: rgba(255,94,94,.12); color: #ff8d8d; font-size: 11.5px; font-weight: 600; line-height: 1.45; }
+.admin-gate-foot { display: block; margin-top: 14px; font-size: 10.5px; color: #7d8594; }
+.admin-gate-foot a { color: #12d8c4; text-decoration: none; font-weight: 700; }
+.admin-gate-foot a:hover { text-decoration: underline; }
+.btn-notif { height: 46px; padding: 0 18px; border-radius: 12px; border: 1px solid rgba(18,216,196,.3); background: rgba(18,216,196,.10); color: #12d8c4; font-family: 'Poppins', sans-serif; font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: .2s; }
+.btn-notif:hover { background: rgba(18,216,196,.22); }
+.btn-notif:disabled { opacity: .55; cursor: not-allowed; }
+html[data-theme="claro"] .admin-gate { background: rgba(248,250,252,.92) !important; }
+html[data-theme="claro"] .admin-gate-box { background: #ffffff !important; border-color: rgba(20,30,50,.16) !important; box-shadow: 0 26px 70px rgba(20,30,50,.22) !important; }
+html[data-theme="claro"] .admin-gate-title { color: #1a1e28 !important; }
+html[data-theme="claro"] .admin-gate-sub { color: #5b6673 !important; }
+html[data-theme="claro"] .admin-gate-icon { background: #f1f4f8 !important; border-color: rgba(20,30,50,.14) !important; color: #0d9488 !important; }
+html[data-theme="claro"] .admin-gate-box input { background: #f1f4f8 !important; color: #1a1e28 !important; border-color: rgba(20,30,50,.14) !important; }
+html[data-theme="claro"] .admin-gate-btn { background: linear-gradient(135deg, #0d9488, #14b8a6) !important; color: #ffffff !important; }
+html[data-theme="claro"] .admin-gate-err { background: #fef2f2 !important; border-color: rgba(225,29,72,.4) !important; color: #b91c1c !important; }
+html[data-theme="claro"] .admin-gate-foot { color: #5b6673 !important; }
+html[data-theme="claro"] .admin-gate-foot a { color: #0d9488 !important; }
+html[data-theme="claro"] .btn-notif { color: #0d9488 !important; background: rgba(13,148,136,.10) !important; border-color: rgba(13,148,136,.35) !important; }
+/* ============ / ADMIN GATE ============ */
 </head>
 <body>
 <!-- LOCKSCREEN: contraseña del comercio -->
@@ -467,6 +498,21 @@ body.jk-locked { overflow: hidden !important; }
     </div>
 </div>
 
+<!-- GATE ADMINISTRADOR (PIN de asesor) -->
+<div class="admin-gate" id="adminGate">
+    <div class="admin-gate-box">
+        <div class="admin-gate-icon"><i class="fa-solid fa-user-shield"></i></div>
+        <h3 class="admin-gate-title">Acceso de administrador</h3>
+        <p class="admin-gate-sub">Este panel está restringido. Solo el administrador puede ingresar al inventario.</p>
+        <form id="adminGateForm" onsubmit="event.preventDefault(); validarPinAdmin();">
+            <input type="password" id="adminGatePin" placeholder="PIN de administrador" autocomplete="off" />
+            <button type="submit" class="admin-gate-btn"><i class="fa-solid fa-lock"></i> Entrar</button>
+        </form>
+        <div id="adminGateErr" class="admin-gate-err"></div>
+        <small class="admin-gate-foot">¿No tienes acceso? <a href="index.html">Volver a Operaciones</a></small>
+    </div>
+</div>
+
 <div class="container">
     <!-- CABECERA PRINCIPAL -->
     <div class="header">
@@ -482,6 +528,7 @@ body.jk-locked { overflow: hidden !important; }
         <button class="btn-add" onclick="abrirModal()">
             <i class="fa-solid fa-plus"></i> Registrar Producto
         </button>
+      <button class="btn-notif" id="btnNotificar" onclick="activarNotificacionesPush()"><i class="fa-solid fa-bell"></i> Activar notificaciones</button>
       <button class="btn-excel" onclick="exportarExcel()">
     <i class="fa-solid fa-file-excel"></i> Exportar inventario
 </button>
@@ -707,7 +754,115 @@ function exportarExcel() {
     XLSX.writeFile(wb, "Inventario_JK.xlsx");
 }
 // Iniciar cargando la tabla (tras validar la contraseña)
-window.cmdIniciar = function () { cargarInventario(); };
+window.cmdIniciar = function () { inventarioCheckRol(); };
+</script>
+<script>
+/* =====================================================================
+   ADMIN GATE + PUSH NOTIFICATIONS (Inventario)
+   ===================================================================== */
+const VAPID_PUBLIC_KEY = 'BH33bOLS6dkjLcJ13YNrH1RoIcw5tQ-ViYdhmpk-_NckxbpLodetnGpevX0otS1RzrrfA4jWgShNVu5Cj2OgwAc';
+
+async function hashPinAdmin(pin) {
+    const texto = 'JK-SEGURO-' + String(pin);
+    try {
+        if (window.crypto && window.crypto.subtle) {
+            const buf = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(texto));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+    } catch (e) {}
+    let h = 0x811c9dc5;
+    for (let i = 0; i < texto.length; i++) { h ^= texto.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+    return 'fnv_' + (h >>> 0).toString(16);
+}
+function inventarioOcultarGate() {
+    var gate = document.getElementById('adminGate');
+    if (gate) gate.classList.remove('show');
+}
+function inventarioMostrarGate() {
+    var gate = document.getElementById('adminGate');
+    if (gate) gate.classList.add('show');
+}
+async function validarPinAdmin() {
+    var pinInput = document.getElementById('adminGatePin');
+    var pin = (pinInput && pinInput.value || '').trim();
+    var err = document.getElementById('adminGateErr');
+    err.style.display = 'none'; err.textContent = '';
+    if (pin.length < 4 || pin.length > 6) {
+        err.textContent = 'El PIN debe tener entre 4 y 6 caracteres.';
+        err.style.display = 'block'; return;
+    }
+    try {
+        var hash = await hashPinAdmin(pin);
+        var res = await window.invSupabase.from('asesores').select('nombre, rol, pin_hash').eq('pin_hash', hash).limit(1);
+        var asesor = res.data && res.data[0];
+        if (!asesor) {
+            err.textContent = 'PIN no registrado. Verifica el PIN o registra tu cuenta en Operaciones.';
+            err.style.display = 'block'; return;
+        }
+        if (asesor.rol !== 'Administrador') {
+            err.textContent = 'Tu rol (' + (asesor.rol || '?') + ') no tiene acceso al inventario. Solo el administrador.';
+            err.style.display = 'block'; return;
+        }
+        try { localStorage.setItem('jk_sesion_actual', JSON.stringify({ nombre: asesor.nombre, rol: asesor.rol })); } catch (e) {}
+        inventarioOcultarGate();
+        cargarInventario();
+    } catch (e) {
+        err.textContent = 'Error: ' + (e && e.message ? e.message : 'no se pudo validar');
+        err.style.display = 'block';
+    }
+}
+function inventarioCheckRol() {
+    try {
+        var sesion = JSON.parse(localStorage.getItem('jk_sesion_actual') || 'null');
+        if (sesion && sesion.rol === 'Administrador') {
+            inventarioOcultarGate();
+            cargarInventario();
+            return;
+        }
+    } catch (e) {}
+    inventarioMostrarGate();
+}
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; i++) outputArray[i] = rawData.charCodeAt(i);
+    return outputArray;
+}
+async function activarNotificacionesPush() {
+    if (!('Notification' in window) || !('PushManager' in window)) {
+        mostrarAlertaError('Web Push no soportado en tu navegador (Safari iOS 16.4+ o Chrome/Edge).');
+        return;
+    }
+    if (!VAPID_PUBLIC_KEY) {
+        mostrarAlertaError('Falta la clave VAPID pública (VAPID_PUBLIC_KEY).');
+        return;
+    }
+    var perm = await Notification.requestPermission();
+    if (perm !== 'granted') { mostrarAlertaError('Permiso de notificaciones denegado. Actívalo en la configuración del navegador.'); return; }
+    try {
+        var reg = await navigator.serviceWorker.ready;
+        var sub = await reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+        });
+        var json = sub.toJSON ? sub.toJSON() : sub;
+        var res = await window.invSupabase.from('push_subscriptions').upsert([{
+            comercio_id: window.JK_COMERCIO_ID || null,
+            endpoint: json.endpoint,
+            p256dh: json.keys.p256dh,
+            auth: json.keys.auth,
+            user_agent: (navigator.userAgent || '').substring(0, 200)
+        }], { onConflict: 'endpoint' });
+        if (res.error) { mostrarAlertaError('No se pudo guardar la suscripción: ' + res.error.message); return; }
+        mostrarAlertaExito('✅ Notificaciones activadas — recibirás avisos de stock bajo en este dispositivo.');
+        var btn = document.getElementById('btnNotificar');
+        if (btn) { btn.innerHTML = '<i class="fa-solid fa-bell"></i> Notificaciones activadas'; btn.disabled = true; }
+    } catch (e) {
+        mostrarAlertaError('Error: ' + (e && e.message ? e.message : 'fallo al activar notificaciones'));
+    }
+}
 </script>
 <script>
 /* ===== COMERCIO (multi-tenant bootstrap) ===== */
@@ -778,9 +933,22 @@ function jkAplicarMarca() {
 async function jkValidarPassword(pwd) {
     var sg = jkS();
     if (!sg) return null;
-    var res = await sg.from('comercio').select('id, name, logo_url, theme, password, data').eq('password', pwd).limit(1);
-    if (res.error) throw res.error;
-    return (res.data && res.data[0]) ? res.data[0] : null;
+    try {
+        var res = await sg.from('comercio').select('id, name, logo_url, theme, password, data, bloqueado').eq('password', pwd).limit(1);
+        if (res.error) {
+            if (/bloqueado/i.test(res.error.message || '')) {
+                var res2 = await sg.from('comercio').select('id, name, logo_url, theme, password, data').eq('password', pwd).limit(1);
+                if (res2.error) throw res2.error;
+                var row = (res2.data && res2.data[0]) ? res2.data[0] : null;
+                if (row) row.bloqueado = false;
+                return row;
+            }
+            throw res.error;
+        }
+        return (res.data && res.data[0]) ? res.data[0] : null;
+    } catch (e) {
+        throw e;
+    }
 }
 function jkActivarSesion(c) {
     window.JK_COMERCIO = c;
@@ -829,6 +997,7 @@ function jkInicializar() {
         btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando...';
         jkValidarPassword(pwd).then(function (c) {
             if (!c) { err.textContent = 'Contraseña incorrecta o no registrada.'; err.style.display = 'block'; return; }
+            if (c.bloqueado) { err.textContent = '⛔ ' + (c.name || 'Este comercio') + ' está bloqueado. Contacta al administrador.'; err.style.display = 'block'; return; }
             jkActivarSesion(c);
             jkEsconderLockscreen();
             if (cmd) cmd(c);
