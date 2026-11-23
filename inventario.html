@@ -672,8 +672,10 @@ async function guardarProducto() {
             imagen_url: imageUrl,
             comercio_id: window.JK_COMERCIO_ID || null
         };
-        const { error } = await window.invSupabase.from('inventario').insert([nuevoProducto]);
+        const { data: productoCreado, error } = await window.invSupabase.from('inventario').insert([nuevoProducto]).select('id').single();
         if (error) throw error;
+        nuevoProducto.id = productoCreado && productoCreado.id;
+        if (Number(nuevoProducto.stock) <= 3) await enviarAvisoStockInicial(nuevoProducto);
         mostrarAlertaExito("¡Producto agregado con éxito al inventario!");
         form.reset();
         cerrarModal(); // Cierra el modal automáticamente al tener éxito
@@ -795,7 +797,7 @@ async function validarPinAdmin() {
     }
     try {
         var hash = await hashPinAdmin(pin);
-        var res = await window.invSupabase.from('asesores').select('nombre, rol, pin_hash').eq('pin_hash', hash).limit(1);
+        var res = await window.invSupabase.from('asesores').select('nombre, rol, pin_hash, comercio_id').eq('pin_hash', hash).eq('comercio_id', window.JK_COMERCIO_ID || '').limit(1);
         var asesor = res.data && res.data[0];
         if (!asesor) {
             err.textContent = 'PIN no registrado. Verifica el PIN o registra tu cuenta en Operaciones.';
@@ -805,9 +807,10 @@ async function validarPinAdmin() {
             err.textContent = 'Tu rol (' + (asesor.rol || '?') + ') no tiene acceso al inventario. Solo el administrador.';
             err.style.display = 'block'; return;
         }
-        try { localStorage.setItem('jk_sesion_actual', JSON.stringify({ nombre: asesor.nombre, rol: asesor.rol })); } catch (e) {}
+        try { localStorage.setItem('jk_sesion_actual', JSON.stringify({ nombre: asesor.nombre, rol: asesor.rol, comercio_id: window.JK_COMERCIO_ID || null })); } catch (e) {}
         inventarioOcultarGate();
         cargarInventario();
+        actualizarEstadoNotificacionesInventario();
     } catch (e) {
         err.textContent = 'Error: ' + (e && e.message ? e.message : 'no se pudo validar');
         err.style.display = 'block';
@@ -816,9 +819,10 @@ async function validarPinAdmin() {
 function inventarioCheckRol() {
     try {
         var sesion = JSON.parse(localStorage.getItem('jk_sesion_actual') || 'null');
-        if (sesion && sesion.rol === 'Administrador') {
+        if (sesion && sesion.rol === 'Administrador' && sesion.comercio_id === window.JK_COMERCIO_ID) {
             inventarioOcultarGate();
             cargarInventario();
+            actualizarEstadoNotificacionesInventario();
             return;
         }
     } catch (e) {}
@@ -832,39 +836,117 @@ function urlBase64ToUint8Array(base64String) {
     for (let i = 0; i < rawData.length; i++) outputArray[i] = rawData.charCodeAt(i);
     return outputArray;
 }
-async function activarNotificacionesPush() {
-    if (!('Notification' in window) || !('PushManager' in window)) {
-        mostrarAlertaError('Web Push no soportado en tu navegador (Safari iOS 16.4+ o Chrome/Edge).');
-        return;
-    }
-    if (!VAPID_PUBLIC_KEY) {
-        mostrarAlertaError('Falta la clave VAPID pública (VAPID_PUBLIC_KEY).');
-        return;
-    }
-    var perm = await Notification.requestPermission();
-    if (perm !== 'granted') { mostrarAlertaError('Permiso de notificaciones denegado. Actívalo en la configuración del navegador.'); return; }
-    try {
-        var reg = await navigator.serviceWorker.ready;
-        var sub = await reg.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-        });
-        var json = sub.toJSON ? sub.toJSON() : sub;
-        var res = await window.invSupabase.from('push_subscriptions').upsert([{
-            comercio_id: window.JK_COMERCIO_ID || null,
-            endpoint: json.endpoint,
-            p256dh: json.keys.p256dh,
-            auth: json.keys.auth,
-            user_agent: (navigator.userAgent || '').substring(0, 200)
-        }], { onConflict: 'endpoint' });
-        if (res.error) { mostrarAlertaError('No se pudo guardar la suscripción: ' + res.error.message); return; }
-        mostrarAlertaExito('✅ Notificaciones activadas — recibirás avisos de stock bajo en este dispositivo.');
-        var btn = document.getElementById('btnNotificar');
-        if (btn) { btn.innerHTML = '<i class="fa-solid fa-bell"></i> Notificaciones activadas'; btn.disabled = true; }
-    } catch (e) {
-        mostrarAlertaError('Error: ' + (e && e.message ? e.message : 'fallo al activar notificaciones'));
+function inventarioPushBotonEstado(estado) {
+    var btn = document.getElementById('btnNotificar');
+    if (!btn) return;
+    if (estado === 'active') {
+        btn.innerHTML = '<i class="fa-solid fa-bell"></i> Notificaciones activadas';
+        btn.disabled = true;
+        btn.title = 'Este dispositivo ya está suscrito a notificaciones.';
+    } else {
+        btn.innerHTML = '<i class="fa-solid fa-bell"></i> Activar notificaciones';
+        btn.disabled = false;
+        btn.title = 'Activar notificaciones push en este dispositivo.';
     }
 }
+async function guardarPushSubscriptionInventario(sub) {
+    if (!window.JK_COMERCIO_ID) throw new Error('No se identificó el comercio activo.');
+    var json = sub.toJSON ? sub.toJSON() : sub;
+    if (!json.endpoint || !json.keys || !json.keys.p256dh || !json.keys.auth) throw new Error('La suscripción push está incompleta.');
+    var res = await window.invSupabase.from('push_subscriptions').upsert([{
+        comercio_id: window.JK_COMERCIO_ID,
+        endpoint: json.endpoint,
+        p256dh: json.keys.p256dh,
+        auth: json.keys.auth,
+        user_agent: (navigator.userAgent || '').substring(0, 200)
+    }], { onConflict: 'endpoint' });
+    if (res.error) throw res.error;
+}
+async function escanearStockBajoPush() {
+    if (!window.JK_COMERCIO_ID || !window.invSupabase) return;
+    try {
+        var result = await window.invSupabase.functions.invoke('send-push', { body: { action: 'scan', comercio_id: window.JK_COMERCIO_ID, url: 'inventario.html' } });
+        if (result.error) console.warn('Escaneo de stock push:', result.error);
+        else if (result.data && result.data.sent) console.info('Avisos de stock enviados:', result.data);
+    } catch (e) { console.warn('No se pudo escanear stock bajo:', e); }
+}
+async function actualizarEstadoNotificacionesInventario() {
+    var btn = document.getElementById('btnNotificar');
+    if (!btn) return;
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+        inventarioPushBotonEstado('inactive');
+        btn.disabled = true;
+        return;
+    }
+    try {
+        var registration = await navigator.serviceWorker.ready;
+        var subscription = await registration.pushManager.getSubscription();
+        if (subscription && Notification.permission === 'granted') {
+            inventarioPushBotonEstado('active');
+            // Conserva la suscripción en Supabase y la asigna al comercio actual.
+            try { await guardarPushSubscriptionInventario(subscription); await escanearStockBajoPush(); }
+            catch (e) { console.warn('No se pudo sincronizar suscripción push:', e); }
+        } else {
+            inventarioPushBotonEstado('inactive');
+        }
+    } catch (e) {
+        inventarioPushBotonEstado('inactive');
+        console.warn('No se pudo comprobar la suscripción push:', e);
+    }
+}
+async function activarNotificacionesPush() {
+    if (!('Notification' in window) || !('PushManager' in window) || !('serviceWorker' in navigator)) {
+        mostrarAlertaError('Web Push no soportado. En iPhone requiere iOS 16.4+ y que la app esté instalada en la pantalla de inicio.');
+        return;
+    }
+    if (!VAPID_PUBLIC_KEY) { mostrarAlertaError('Falta la clave VAPID pública.'); return; }
+    try {
+        var permission = Notification.permission;
+        if (permission === 'default') permission = await Notification.requestPermission();
+        if (permission !== 'granted') { mostrarAlertaError('Permiso de notificaciones denegado. Actívalo en los ajustes del navegador.'); return; }
+        var registration = await navigator.serviceWorker.ready;
+        var subscription = await registration.pushManager.getSubscription();
+        if (!subscription) {
+            subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+            });
+        }
+        await guardarPushSubscriptionInventario(subscription);
+        inventarioPushBotonEstado('active');
+        await escanearStockBajoPush();
+        mostrarAlertaExito('✅ Notificaciones activadas en este dispositivo.');
+    } catch (e) {
+        mostrarAlertaError('No se pudo activar el push: ' + (e && e.message ? e.message : 'revisa permiso, HTTPS y VAPID.'));
+        console.error('activarNotificacionesPush:', e);
+    }
+}
+async function enviarAvisoStockInicial(prod) {
+    var stock = Number(prod.stock) || 0;
+    if (stock > 3 || !window.JK_COMERCIO_ID) return;
+    var nivel = stock < 0 ? 0 : stock;
+    var title = nivel === 3 ? '⚠ Stock bajo' : nivel === 2 ? '⚠⚠ Stock crítico' : nivel === 1 ? '🚨 Última unidad' : '🚨 Producto agotado';
+    var mensajes = {
+        3: '«' + prod.nombre + '»: quedan solo 3 unidades. Programa reposición.',
+        2: '«' + prod.nombre + '»: quedan solo 2 unidades. Repón pronto.',
+        1: '«' + prod.nombre + '»: queda 1 unidad. ¡Repón ahora!',
+        0: '«' + prod.nombre + '» está agotado (0 unidades). Repón el producto.'
+    };
+    try {
+        var res = await window.invSupabase.functions.invoke('send-push', { body: {
+            comercio_id: window.JK_COMERCIO_ID,
+            producto_id: String(prod.id || prod.sku || prod.nombre),
+            nombre: prod.nombre,
+            stock: nivel,
+            title: title,
+            body: mensajes[nivel],
+            url: 'inventario.html',
+            tag: 'jk-stock-' + window.JK_COMERCIO_ID + '-' + String(prod.id || prod.sku || prod.nombre) + '-' + nivel
+        }});
+        if (res.error) console.warn('send-push:', res.error);
+    } catch (e) { console.warn('Stock push:', e); }
+}
+
 </script>
 <script>
 /* ===== COMERCIO (multi-tenant bootstrap) ===== */
