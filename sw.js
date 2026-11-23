@@ -1,14 +1,13 @@
 /* =========================================================================
-   Sistema JK — Servicio Trabajador (Service Worker)
+   Sistema JK — Service Worker
    Repo: https://whitecarappcelphone-sys.github.io/SISTEMAJK-COMERCIOS/
    =========================================================================
-   - Estáticas del shell: cache-first con fallback a red.
-   - HTML navegación: network-first (siempre trae la última versión).
-   - Otras peticiones (Supabase, CDNs): pasan a la red sin interferir.
+   - Navegación HTML: network-first.
+   - Otros GET same-origin: cache-first con fallback de red.
+   - Web Push: muestra avisos y abre el módulo al pulsarlos.
    ========================================================================= */
 
-const CACHE_NAME = 'sistema-jk-v1';
-
+const CACHE_NAME = 'sistema-jk-v4';
 const SHELL = [
   './index.html',
   './dashboard.html',
@@ -19,9 +18,6 @@ const SHELL = [
   './icon-512.png'
 ];
 
-/* ------------------------------------------------------------------
-   INSTALACIÓN
-   ------------------------------------------------------------------ */
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -30,41 +26,71 @@ self.addEventListener('install', (event) => {
   );
 });
 
-/* ------------------------------------------------------------------
-   ACTIVACIÓN — limpiar caches antiguos
-   ------------------------------------------------------------------ */
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
 
-/* ------------------------------------------------------------------
-   FETCH — manejo de estrategias
-   ------------------------------------------------------------------ */
+// Web Push: el payload incluye { title, body, url, tag }
+self.addEventListener('push', (event) => {
+  let payload = {};
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch (_) {
+    try { payload = { body: event.data ? event.data.text() : '' }; } catch (_) {}
+  }
+
+  const title = payload.title || 'Sistema JK';
+  const options = {
+    body: payload.body || 'Tienes una actualización de inventario.',
+    icon: './icon-192.png',
+    badge: './icon-192.png',
+    tag: payload.tag || 'jk-stock-' + Date.now(),
+    renotify: true,
+    data: { url: payload.url || './inventario.html' },
+    vibrate: [180, 80, 180],
+    requireInteraction: true
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// Al tocar el aviso, enfoca una pestaña existente o abre el módulo Inventario.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = new URL(event.notification.data && event.notification.data.url || './inventario.html', self.location.origin).href;
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+      for (const client of clients) {
+        if (new URL(client.url).origin === self.location.origin && 'focus' in client) {
+          return client.navigate(target).then(() => client.focus());
+        }
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(target);
+    })
+  );
+});
+
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
-
-  // Solo manejamos peticiones del mismo origen
   if (url.origin !== self.location.origin) return;
 
-  // Navegación: network-first (siempre intenta red; si falla, sirve cache)
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(CACHE_NAME).then((c) => c.put(event.request, copy)).catch(() => {});
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy)).catch(() => {});
           return response;
         })
-        .catch(() => caches.match(event.request).then((r) => r || caches.match('./index.html')))
+        .catch(() => caches.match(event.request).then((cached) => cached || caches.match('./index.html')))
     );
     return;
   }
 
-  // Otros recursos GET: cache-first con fallback a red
   if (event.request.method === 'GET') {
     event.respondWith(
       caches.match(event.request).then((cached) => {
@@ -72,14 +98,11 @@ self.addEventListener('fetch', (event) => {
         return fetch(event.request).then((response) => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE_NAME).then((c) => c.put(event.request, copy)).catch(() => {});
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy)).catch(() => {});
           }
           return response;
         });
-      }).catch(() => {
-        // último recurso: devolver índice para navegación
-        return caches.match('./index.html');
-      })
+      }).catch(() => caches.match('./index.html'))
     );
   }
 });
