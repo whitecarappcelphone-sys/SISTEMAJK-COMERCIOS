@@ -866,9 +866,16 @@ async function escanearStockBajoPush() {
     if (!window.JK_COMERCIO_ID || !window.invSupabase) return;
     try {
         var result = await window.invSupabase.functions.invoke('send-push', { body: { action: 'scan', comercio_id: window.JK_COMERCIO_ID, url: 'inventario.html' } });
-        if (result.error) console.warn('Escaneo de stock push:', result.error);
-        else if (result.data && result.data.sent) console.info('Avisos de stock enviados:', result.data);
-    } catch (e) { console.warn('No se pudo escanear stock bajo:', e); }
+        if (result.error) {
+            console.error('Escaneo de stock push:', result.error);
+            mostrarAlertaError('No se pudo revisar/enviar stock: ' + (result.error.message || result.error));
+        } else if (result.data && result.data.sent) {
+            console.info('Avisos de stock enviados:', result.data);
+        }
+    } catch (e) {
+        console.warn('No se pudo escanear stock bajo:', e);
+        mostrarAlertaError('Error al revisar avisos de stock: ' + (e.message || e));
+    }
 }
 async function actualizarEstadoNotificacionesInventario() {
     var btn = document.getElementById('btnNotificar');
