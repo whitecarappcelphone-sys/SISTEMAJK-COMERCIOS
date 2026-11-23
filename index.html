@@ -5002,9 +5002,16 @@ async function escanearStockBajoPush() {
     if (!window.JK_COMERCIO_ID || !window.jkSupabase) return;
     try {
         var result = await window.jkSupabase.functions.invoke('send-push', { body: { action: 'scan', comercio_id: window.JK_COMERCIO_ID, url: 'inventario.html' } });
-        if (result.error) console.warn('Escaneo de stock push:', result.error);
-        else if (result.data && result.data.sent) console.info('Avisos de stock enviados:', result.data);
-    } catch (e) { console.warn('No se pudo escanear stock bajo:', e); }
+        if (result.error) {
+            console.error('Escaneo de stock push:', result.error);
+            mostrarAlertaError('No se pudo revisar/enviar stock: ' + (result.error.message || result.error));
+        } else if (result.data && result.data.sent) {
+            console.info('Avisos de stock enviados:', result.data);
+        }
+    } catch (e) {
+        console.warn('No se pudo escanear stock bajo:', e);
+        mostrarAlertaError('Error al revisar avisos de stock: ' + (e.message || e));
+    }
 }
 async function actualizarEstadoNotificacionesPush() {
     var btn = document.getElementById('btnNotificar');
@@ -5081,8 +5088,15 @@ async function enviarAvisoStockBajo(nombreProducto, nivel, productoId) {
                 tag: 'jk-stock-' + window.JK_COMERCIO_ID + '-' + String(productoId || nombreProducto) + '-' + nivel
             }
         });
-        if (result.error) console.warn('Edge Function send-push:', result.error);
-        else console.info('Stock push', nivel, result.data);
+        if (result.error) {
+            console.error('Edge Function send-push:', result.error);
+            mostrarAlertaError('Aviso de stock no enviado: ' + (result.error.message || result.error));
+        } else {
+            console.info('Stock push', nivel, result.data);
+            if (result.data && result.data.sent === 0 && !result.data.already_sent) {
+                mostrarAlertaError(result.data.message || 'Ningún dispositivo recibió el aviso. Revisa permisos y suscripciones push.');
+            }
+        }
     } catch (e) {
         console.warn('Notificación push falló:', e);
     }
