@@ -747,24 +747,34 @@ function imprimirEtiquetaProducto(id) {
     const nombreComercio = comercioData.empresa || comercio.name || 'Comercio';
     const precio = formatoMoneda(producto.precio_venta);
     const descripcion = String(producto.descripcion || '').trim().slice(0, 220);
+    // Payload compacto ASCII para no exceder la capacidad del QR en modelos largos.
+    const qrSafe = function (value, max) {
+        return String(value == null ? '' : value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\x20-\x7E]/g, '').slice(0, max);
+    };
     const textoQR = [
-        'COMERCIO: ' + nombreComercio,
-        'PRODUCTO: ' + (producto.nombre || '—'),
-        'CATEGORIA: ' + (producto.categoria || '—'),
-        'SKU: ' + (producto.sku || 'Sin SKU'),
-        'PRECIO: ' + precio,
-        'STOCK: ' + (Number(producto.stock) || 0) + ' unidades',
-        descripcion ? 'DETALLE: ' + descripcion : '',
-        'ID: ' + (producto.id || '—')
-    ] .filter(Boolean).join('\n');
+        'JK',
+        'COM:' + qrSafe(comercio.id, 10),
+        'ID:' + qrSafe(producto.id, 36),
+        'N:' + qrSafe(producto.nombre || 'Producto', 34),
+        'C:' + qrSafe(producto.categoria, 12),
+        'SKU:' + qrSafe(producto.sku || 'NA', 16),
+        'P:' + qrSafe(Number(producto.precio_venta) || 0, 14),
+        'ST:' + qrSafe(Number(producto.stock) || 0, 8)
+    ].join('|');
 
     const qrHost = document.createElement('div');
     try {
         new QRCode(qrHost, { text: textoQR, width: 260, height: 260, correctLevel: QRCode.CorrectLevel.M });
     } catch (e) {
-        console.error('QR:', e);
-        mostrarAlertaError('No se pudo generar el código QR para este producto.');
-        return;
+        // Respaldo de longitud mínima para evitar que el generador desborde.
+        try {
+            qrHost.innerHTML = '';
+            new QRCode(qrHost, { text: 'JK|' + String(producto.id || producto.sku || producto.nombre || 'PRODUCTO').slice(0, 80), width: 260, height: 260, correctLevel: QRCode.CorrectLevel.L });
+        } catch (fallbackError) {
+            console.error('QR:', e, fallbackError);
+            mostrarAlertaError('No se pudo generar el código QR para este producto.');
+            return;
+        }
     }
     const qrCanvas = qrHost.querySelector('canvas');
     const qrImgElement = qrHost.querySelector('img');
