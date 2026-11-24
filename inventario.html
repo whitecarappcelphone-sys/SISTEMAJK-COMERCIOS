@@ -480,6 +480,11 @@ html[data-theme="claro"] .admin-gate-err { background: #fef2f2 !important; borde
 html[data-theme="claro"] .admin-gate-foot { color: #5b6673 !important; }
 html[data-theme="claro"] .admin-gate-foot a { color: #0d9488 !important; }
 html[data-theme="claro"] .btn-notif { color: #0d9488 !important; background: rgba(13,148,136,.10) !important; border-color: rgba(13,148,136,.35) !important; }
+.btn-etiqueta { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 6px 10px; border-radius: 9px; border: 1px solid rgba(18,216,196,.32); background: rgba(18,216,196,.09); color: #12d8c4; font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: .2s; }
+.btn-etiqueta:hover { background: rgba(18,216,196,.2); border-color: #12d8c4; transform: translateY(-1px); }
+.btn-etiqueta i { font-size: 12px; }
+html[data-theme="claro"] .btn-etiqueta { background: rgba(13,148,136,.09) !important; color: #0d9488 !important; border-color: rgba(13,148,136,.35) !important; }
+@media (max-width: 600px) { .btn-etiqueta { padding: 6px 8px; font-size: 10px; } .btn-etiqueta span { display: none; } }
 /* ============ / ADMIN GATE ============ */
 </style>
 </head>
@@ -546,10 +551,11 @@ html[data-theme="claro"] .btn-notif { color: #0d9488 !important; background: rgb
                     <th>Precio Venta</th>
                     <th>Stock</th>
                     <th>Estado</th>
+                    <th>Etiqueta</th>
                 </tr>
             </thead>
             <tbody id="tablaProductos">
-                <tr><td colspan="6" style="text-align:center; padding: 30px;">Cargando inventario...</td></tr>
+                <tr><td colspan="7" style="text-align:center; padding: 30px;">Cargando inventario...</td></tr>
             </tbody>
         </table>
     </div>
@@ -594,6 +600,8 @@ html[data-theme="claro"] .btn-notif { color: #0d9488 !important; background: rgb
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <!-- Librería para exportar a Excel -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<!-- Librería para generar códigos QR de etiquetas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 // CONEXIÓN A SUPABASE (Con nombre protegido invSupabase)
 window.invSupabase = window.invSupabase || window.supabase.createClient(
@@ -695,11 +703,11 @@ async function cargarInventario() {
     const tbody = document.getElementById('tablaProductos');
 
     if (error) {
-        tbody.innerHTML = `<tr><td colspan="6" style="color:#ff4757; text-align:center; padding: 20px;">Error cargando datos: ${error.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="color:#ff4757; text-align:center; padding: 20px;">Error cargando datos: ${error.message}</td></tr>`;
         return;
     }
     if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 30px; color:#7d8594;">No hay productos registrados aún. Presiona "Registrar Producto" para comenzar.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 30px; color:#7d8594;">No hay productos registrados aún. Presiona "Registrar Producto" para comenzar.</td></tr>`;
         return;
     }
     tbody.innerHTML = '';
@@ -719,9 +727,77 @@ async function cargarInventario() {
             <td style="color:#12d8c4; font-weight:600;">${formatoMoneda(prod.precio_venta)}</td>
             <td><span class="stock-badge ${estadoClase}">${prod.stock} un.</span></td>
             <td>${prod.stock > 0 ? '<span style="color:#25D366; font-weight:600;"><i class="fa-solid fa-check"></i> Disponible</span>' : '<span style="color:#ff4757; font-weight:600;"><i class="fa-solid fa-xmark"></i> Agotado</span>'}</td>
+            <td><button type="button" class="btn-etiqueta" title="Imprimir etiqueta con QR" onclick="imprimirEtiquetaProducto('${String(prod.id).replace(/'/g, '')}')"><i class="fa-solid fa-print"></i><span>Etiqueta</span></button></td>
         `;
         tbody.appendChild(tr);
     });
+}
+function escaparHTML(etiqueta) {
+    return String(etiqueta == null ? '' : etiqueta).replace(/[&<>\"']/g, function (caracter) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;' }[caracter];
+    });
+}
+function imprimirEtiquetaProducto(id) {
+    const producto = (window.productosInventario || []).find(function (p) { return String(p.id) === String(id); });
+    if (!producto) { mostrarAlertaError('No se encontró el producto para imprimir.'); return; }
+    if (typeof QRCode === 'undefined') { mostrarAlertaError('No se pudo cargar la librería QR. Recarga la página e inténtalo de nuevo.'); return; }
+
+    const comercio = window.JK_COMERCIO || {};
+    const comercioData = comercio.data || {};
+    const nombreComercio = comercioData.empresa || comercio.name || 'Comercio';
+    const precio = formatoMoneda(producto.precio_venta);
+    const descripcion = String(producto.descripcion || '').trim().slice(0, 220);
+    const textoQR = [
+        'COMERCIO: ' + nombreComercio,
+        'PRODUCTO: ' + (producto.nombre || '—'),
+        'CATEGORIA: ' + (producto.categoria || '—'),
+        'SKU: ' + (producto.sku || 'Sin SKU'),
+        'PRECIO: ' + precio,
+        'STOCK: ' + (Number(producto.stock) || 0) + ' unidades',
+        descripcion ? 'DETALLE: ' + descripcion : '',
+        'ID: ' + (producto.id || '—')
+    ] .filter(Boolean).join('\n');
+
+    const qrHost = document.createElement('div');
+    try {
+        new QRCode(qrHost, { text: textoQR, width: 260, height: 260, correctLevel: QRCode.CorrectLevel.M });
+    } catch (e) {
+        console.error('QR:', e);
+        mostrarAlertaError('No se pudo generar el código QR para este producto.');
+        return;
+    }
+    const qrCanvas = qrHost.querySelector('canvas');
+    const qrImgElement = qrHost.querySelector('img');
+    const qrSrc = qrCanvas ? qrCanvas.toDataURL('image/png') : (qrImgElement ? qrImgElement.src : '');
+    if (!qrSrc) { mostrarAlertaError('No se pudo obtener la imagen del código QR.'); return; }
+
+    const win = window.open('', '_blank', 'width=520,height=460');
+    if (!win) { mostrarAlertaError('Permite las ventanas emergentes para imprimir la etiqueta.'); return; }
+    const logo = comercio.logo_url ? '<img class="logo" src="' + escaparHTML(comercio.logo_url) + '" alt="Logo">' : '';
+    const html = `<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Etiqueta ${escaparHTML(producto.nombre || 'Producto')}</title>
+<style>
+@page { size: 80mm 50mm; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 80mm; height: 50mm; font-family: Arial, Helvetica, sans-serif; color: #102027; background: #fff; }
+.etiqueta { width: 80mm; height: 50mm; padding: 2.4mm 2.8mm; display: flex; align-items: center; gap: 2.5mm; overflow: hidden; border: .35mm solid #0b2e33; }
+.info { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+.cabecera { display: flex; align-items: center; gap: 1.5mm; margin-bottom: 1.2mm; min-height: 7mm; }
+.logo { width: 7mm; height: 7mm; object-fit: contain; flex-shrink: 0; }
+.empresa { font-size: 7pt; font-weight: 700; color: #0b5f58; line-height: 1.1; max-height: 7mm; overflow: hidden; }
+.producto { font-size: 10pt; font-weight: 700; line-height: 1.15; color: #0b2e33; margin: 0 0 1.2mm; overflow-wrap: anywhere; }
+.linea { font-size: 6.6pt; line-height: 1.25; margin: .35mm 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sku { color: #47706b; }
+.precio { font-size: 9pt; font-weight: 700; color: #087f73; margin-top: .7mm; }
+.stock { font-size: 6.6pt; font-weight: 700; color: ${Number(producto.stock) <= 3 ? '#d43838' : '#47706b'}; }
+.qr { width: 27mm; flex-shrink: 0; text-align: center; }
+.qr img { display: block; width: 25mm; height: 25mm; margin: 0 auto; image-rendering: pixelated; }
+.qr small { display: block; font-size: 5.5pt; color: #47706b; margin-top: .7mm; }
+</style></head><body onload="setTimeout(function(){window.focus();window.print();},300)">
+<div class="etiqueta"><div class="info"><div class="cabecera">${logo}<span class="empresa">${escaparHTML(nombreComercio)}</span></div><p class="producto">${escaparHTML(producto.nombre || 'Producto')}</p><p class="linea">Categoría: ${escaparHTML(producto.categoria || '—')}</p><p class="linea sku">SKU: ${escaparHTML(producto.sku || 'Sin SKU')}</p><p class="precio">${escaparHTML(precio)}</p><p class="stock">Stock: ${Number(producto.stock) || 0} unidades</p>${descripcion ? '<p class="linea">' + escaparHTML(descripcion) + '</p>' : ''}</div><div class="qr"><img src="${qrSrc}" alt="Código QR"><small>Escanea para ver datos</small></div></div>
+</body></html>`;
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
 }
 function exportarExcel() {
     const productos = window.productosInventario || [];
@@ -1025,10 +1101,10 @@ async function jkValidarPassword(pwd) {
     var sg = jkS();
     if (!sg) return null;
     try {
-        var res = await sg.from('comercio').select('id, name, logo_url, theme, password, data, bloqueado').eq('password', pwd).limit(1);
+        var res = await sg.from('comercio').select('id, name, telefono_whatsapp, logo_url, theme, password, data, bloqueado').eq('password', pwd).limit(1);
         if (res.error) {
-            if (/bloqueado/i.test(res.error.message || '')) {
-                var res2 = await sg.from('comercio').select('id, name, logo_url, theme, password, data').eq('password', pwd).limit(1);
+            if (/bloqueado|telefono_whatsapp/i.test(res.error.message || '')) {
+                var res2 = await sg.from('comercio').select('id, name, telefono_whatsapp, logo_url, theme, password, data').eq('password', pwd).limit(1);
                 if (res2.error) throw res2.error;
                 var row = (res2.data && res2.data[0]) ? res2.data[0] : null;
                 if (row) row.bloqueado = false;
