@@ -2577,6 +2577,7 @@ async function guardarOperacion(prefijo, tipoOperacion) {
             imagen_url_3: urlImagen3 || null,
             estado: (abono < total) ? 'Pendiente' : 'Completado',
             estado_taller: (prefijo === 'rep') ? document.getElementById('rep_estado_taller').value : 'N/A',
+            inventario_id: (inputProducto && inputProducto.dataset.idInventario) ? inputProducto.dataset.idInventario : null,
             comercio_id: window.JK_COMERCIO_ID || null
         };
         // NUEVO: se intenta guardar las evidencias 2 y 3 en columnas propias;
@@ -3808,6 +3809,10 @@ function repDatosDesdeForm(num) {
 function repQRTexto(d) {
     const ck = d.checklist || {};
     const novedades = REP_CHECK.filter(([k]) => ck[k] === 'no').map(([, l]) => l);
+    const revisionTexto = REP_CHECK.map(([k, l]) => {
+        const estado = ck[k] === 'si' ? 'Sí' : (ck[k] === 'no' ? 'No' : 'N/R');
+        return l + ': ' + estado;
+    }).join(', ');
     const saldo = Math.max(0, (Number(d.total) || 0) - (Number(d.abono) || 0));
     const recorta = (s, n) => { const t = String(s || '—'); return t.length > n ? t.slice(0, n) + '...' : t; };
     return [
@@ -3817,6 +3822,7 @@ function repQRTexto(d) {
         'Cliente: ' + (d.cliente || '—') + ' | Tel: ' + (d.telefono || '—'),
         'Equipo: ' + (d.equipo || '—'),
         'IMEI: ' + (d.imei1 || '—') + (d.imei2 ? ' / ' + d.imei2 : ''),
+        'Revisión del equipo (componentes en orden del checklist): ' + revisionTexto,
         'Falla: ' + recorta(d.falla, 90),
         'Estado: ' + repEtiquetaEstado(d.estadoRaw),
         'Total: ' + pnlFmt(d.total) + ' | Saldo: ' + pnlFmt(saldo),
