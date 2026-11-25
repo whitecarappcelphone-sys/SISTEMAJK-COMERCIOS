@@ -1038,6 +1038,23 @@ body.jk-install-open { overflow: hidden !important; }
 html[data-theme="claro"] .qr-scan-status { color: #52616d !important; }
 html[data-theme="claro"] .qr-scan-trigger { color: #0d9488 !important; border-color: rgba(13,148,136,.35) !important; background: rgba(13,148,136,.10) !important; }
 @media (max-width: 600px) { .qr-scan-video-wrap, .qr-scan-video { min-height: 250px; } }
+.rep-clave-hint { color: #9fb6b2; font-size: 11px; line-height: 1.5; margin: 4px 0 10px; }
+.rep-pattern-box { width: min(100%, 310px); aspect-ratio: 1; margin: 0 auto; border-radius: 16px; border: 1px solid rgba(18,216,196,.3); background: #101319; overflow: hidden; }
+.rep-pattern-svg { display: block; width: 100%; height: 100%; touch-action: none; user-select: none; -webkit-user-select: none; cursor: crosshair; }
+.rep-pattern-line { fill: none; stroke: #12d8c4; stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; opacity: .9; }
+.rep-pattern-dot { fill: #263640; stroke: #82969d; stroke-width: 3; }
+.rep-pattern-dot.active { fill: #12d8c4; stroke: #e9fffc; }
+.rep-pattern-num { fill: #aab7bb; font: 15px Poppins, sans-serif; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.rep-pattern-num.active { fill: #06211e; font-weight: 700; }
+.rep-patron-resumen { margin-top: 8px; padding: 9px 12px; border-radius: 10px; border: 1px solid rgba(18,216,196,.22); background: rgba(18,216,196,.06); color: #d7f6f1; font-size: 11px; line-height: 1.5; text-align: center; word-break: break-word; }
+html[data-theme="claro"] .rep-clave-hint { color: #52616d !important; }
+html[data-theme="claro"] .rep-pattern-box { background: #f1f4f8 !important; border-color: rgba(13,148,136,.3) !important; }
+html[data-theme="claro"] .rep-pattern-dot { fill: #cbd5e1; stroke: #64748b; }
+html[data-theme="claro"] .rep-pattern-dot.active { fill: #0d9488; stroke: #fff; }
+html[data-theme="claro"] .rep-pattern-line { stroke: #0d9488; }
+html[data-theme="claro"] .rep-pattern-num { fill: #334155; }
+html[data-theme="claro"] .rep-pattern-num.active { fill: #fff; }
+html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; background: rgba(13,148,136,.08) !important; }
 </style>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_MX">
@@ -1576,6 +1593,25 @@ PART 2
                 <div class="field"><label>Equipo (Marca/Modelo)</label><input type="text" id="rep_equipo" required></div>
                 <div class="field"><label>IMEI / Serial</label><input type="text" id="rep_imei" required></div>
                 <div class="field full"><label>Descripción de la falla</label><textarea id="rep_falla" required></textarea></div>
+                <div class="field full">
+                    <label for="rep_clave_tipo">Clave de desbloqueo del móvil (opcional)</label>
+                    <select id="rep_clave_tipo" onchange="repCambiarTipoClave()">
+                        <option value="ninguna">Sin clave registrada</option>
+                        <option value="alfanumerica">Clave alfanumérica</option>
+                        <option value="patron">Patrón de desbloqueo</option>
+                    </select>
+                    <div id="rep_clave_alfanumerica_wrap" style="display:none; margin-top:10px;">
+                        <label for="rep_clave_alfanumerica">Código alfanumérico</label>
+                        <input type="text" id="rep_clave_alfanumerica" autocomplete="off" placeholder="Escribe el código autorizado por el cliente">
+                    </div>
+                    <div id="rep_patron_wrap" style="display:none; margin-top:10px;">
+                        <p class="rep-clave-hint">Dibuja el patrón en el orden en que lo traza el cliente. Se guardará la secuencia y se indicarán su inicio y fin.</p>
+                        <div class="rep-pattern-box"><svg id="rep_patron_svg" class="rep-pattern-svg" viewBox="0 0 300 300" role="img" aria-label="Dibuja el patrón del dispositivo"></svg></div>
+                        <div id="rep_patron_resumen" class="rep-patron-resumen">Inicio: — · Fin: — · Secuencia: —</div>
+                        <button type="button" class="conta-btn" style="margin-top:8px;" onclick="repLimpiarPatron()"><i class="fa-solid fa-eraser"></i> Borrar patrón</button>
+                    </div>
+                    <small class="asesor-hint">Registra el código o patrón solo con autorización del cliente. Se mostrará en el panel y PDF de Taller para uso del técnico.</small>
+                </div>
                 <div class="field full">
                     <label>Estado del Taller</label>
                     <select id="rep_estado_taller" class="estado-taller-select">
@@ -3537,6 +3573,152 @@ function repEtiquetaEstado(raw) {
     const m = { 'Pendiente': 'Por reparar', 'En Proceso': 'En proceso', 'Listo': 'Reparado', 'Entregado': 'Entregado' };
     return m[raw] || 'Por reparar';
 }
+// =====================================================================
+// CLAVE DE DESBLOQUEO DEL MÓVIL (alfanumérica o patrón)
+// =====================================================================
+let REP_PATRON = [];
+let REP_PATRON_DIBUJANDO = false;
+function repPatronCoord(n) {
+    var i = Number(n) - 1;
+    return { x: 50 + (i % 3) * 100, y: 50 + Math.floor(i / 3) * 100 };
+}
+function repPatronRender() {
+    var svg = document.getElementById('rep_patron_svg');
+    if (!svg) return;
+    var puntos = REP_PATRON.map(repPatronCoord);
+    var poly = svg.querySelector('#rep_pattern_line');
+    if (poly) poly.setAttribute('points', puntos.map(function (p) { return p.x + ',' + p.y; }).join(' '));
+    for (var n = 1; n <= 9; n++) {
+        var dot = svg.querySelector('#rep_pattern_dot_' + n);
+        var num = svg.querySelector('#rep_pattern_num_' + n);
+        var active = REP_PATRON.indexOf(n) !== -1;
+        if (dot) dot.classList.toggle('active', active);
+        if (num) num.classList.toggle('active', active);
+    }
+    var start = REP_PATRON.length ? REP_PATRON[0] : '—';
+    var end = REP_PATRON.length ? REP_PATRON[REP_PATRON.length - 1] : '—';
+    var seq = REP_PATRON.length ? REP_PATRON.join(' → ') : '—';
+    var out = document.getElementById('rep_patron_resumen');
+    if (out) out.textContent = 'Inicio: ' + start + ' · Fin: ' + end + ' · Secuencia: ' + seq;
+}
+function repPatronAppend(n) {
+    if (!n || REP_PATRON.indexOf(n) !== -1) return;
+    if (REP_PATRON.length) {
+        var prev = REP_PATRON[REP_PATRON.length - 1] - 1;
+        var next = n - 1;
+        var dr = Math.floor(next / 3) - Math.floor(prev / 3);
+        var dc = (next % 3) - (prev % 3);
+        var gcd = function (a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = b; b = a % b; a = t; } return a; };
+        var steps = gcd(dr, dc);
+        if (steps > 1) {
+            for (var step = 1; step < steps; step++) {
+                var row = Math.floor(prev / 3) + (dr / steps) * step;
+                var col = (prev % 3) + (dc / steps) * step;
+                var mid = row * 3 + col + 1;
+                if (REP_PATRON.indexOf(mid) === -1) REP_PATRON.push(mid);
+            }
+        }
+    }
+    if (REP_PATRON.indexOf(n) === -1) REP_PATRON.push(n);
+    repPatronRender();
+}
+function repPatronNodoCercano(e) {
+    var svg = document.getElementById('rep_patron_svg');
+    if (!svg) return null;
+    var r = svg.getBoundingClientRect();
+    var x = (e.clientX - r.left) * 300 / r.width;
+    var y = (e.clientY - r.top) * 300 / r.height;
+    var best = null, bestD = 34;
+    for (var n = 1; n <= 9; n++) {
+        var p = repPatronCoord(n);
+        var d = Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(y - p.y, 2));
+        if (d < bestD) { best = n; bestD = d; }
+    }
+    return best;
+}
+function repPatronInit() {
+    var svg = document.getElementById('rep_patron_svg');
+    if (!svg || svg.dataset.ready === '1') return;
+    svg.dataset.ready = '1';
+    var ns = 'http://www.w3.org/2000/svg';
+    var line = document.createElementNS(ns, 'polyline');
+    line.setAttribute('id', 'rep_pattern_line');
+    line.setAttribute('class', 'rep-pattern-line');
+    svg.appendChild(line);
+    for (var n = 1; n <= 9; n++) {
+        var p = repPatronCoord(n);
+        var dot = document.createElementNS(ns, 'circle');
+        dot.setAttribute('id', 'rep_pattern_dot_' + n);
+        dot.setAttribute('class', 'rep-pattern-dot');
+        dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y); dot.setAttribute('r', '17');
+        svg.appendChild(dot);
+        var label = document.createElementNS(ns, 'text');
+        label.setAttribute('id', 'rep_pattern_num_' + n);
+        label.setAttribute('class', 'rep-pattern-num');
+        label.setAttribute('x', p.x); label.setAttribute('y', p.y);
+        label.textContent = String(n);
+        svg.appendChild(label);
+    }
+    svg.addEventListener('pointerdown', function (e) {
+        REP_PATRON = [];
+        REP_PATRON_DIBUJANDO = true;
+        try { svg.setPointerCapture(e.pointerId); } catch (err) {}
+        var n = repPatronNodoCercano(e); if (n) repPatronAppend(n);
+        e.preventDefault();
+    });
+    svg.addEventListener('pointermove', function (e) {
+        if (!REP_PATRON_DIBUJANDO) return;
+        var n = repPatronNodoCercano(e); if (n) repPatronAppend(n);
+        e.preventDefault();
+    });
+    var stop = function () { REP_PATRON_DIBUJANDO = false; };
+    svg.addEventListener('pointerup', stop);
+    svg.addEventListener('pointercancel', stop);
+    repPatronRender();
+}
+function repLimpiarPatron() {
+    REP_PATRON = [];
+    REP_PATRON_DIBUJANDO = false;
+    repPatronRender();
+}
+function repCambiarTipoClave() {
+    var tipo = document.getElementById('rep_clave_tipo').value;
+    var alfa = document.getElementById('rep_clave_alfanumerica_wrap');
+    var patron = document.getElementById('rep_patron_wrap');
+    if (alfa) alfa.style.display = tipo === 'alfanumerica' ? 'block' : 'none';
+    if (patron) patron.style.display = tipo === 'patron' ? 'block' : 'none';
+    if (tipo === 'patron') { repPatronInit(); repPatronRender(); }
+}
+function repLeerClave() {
+    var tipo = (document.getElementById('rep_clave_tipo') || {}).value || 'ninguna';
+    if (tipo === 'ninguna') return { clave_tipo: null, clave_dispositivo: null, patron_secuencia: null, patron_inicio: null, patron_fin: null };
+    if (tipo === 'alfanumerica') {
+        var code = (document.getElementById('rep_clave_alfanumerica').value || '').trim();
+        if (!code) { mostrarAlertaError('Escribe la clave alfanumérica del móvil o selecciona “Sin clave registrada”.'); return null; }
+        return { clave_tipo: 'alfanumerica', clave_dispositivo: code, patron_secuencia: null, patron_inicio: null, patron_fin: null };
+    }
+    if (tipo === 'patron') {
+        if (REP_PATRON.length < 4) { mostrarAlertaError('Dibuja un patrón con al menos 4 puntos, o selecciona “Sin clave registrada”.'); return null; }
+        return { clave_tipo: 'patron', clave_dispositivo: null, patron_secuencia: REP_PATRON.join('-'), patron_inicio: REP_PATRON[0], patron_fin: REP_PATRON[REP_PATRON.length - 1] };
+    }
+    return { clave_tipo: null, clave_dispositivo: null, patron_secuencia: null, patron_inicio: null, patron_fin: null };
+}
+function repFormatoClave(o) {
+    if (!o) return 'No registrada';
+    var tipo = o.claveTipo || o.clave_tipo;
+    var clave = o.claveDispositivo || o.clave_dispositivo;
+    var secuencia = o.patronSecuencia || o.patron_secuencia;
+    var inicio = o.patronInicio || o.patron_inicio;
+    var fin = o.patronFin || o.patron_fin;
+    if (!tipo || tipo === 'ninguna') return 'No registrada';
+    if (tipo === 'alfanumerica') return 'Alfanumérica: ' + (clave || '—');
+    if (tipo === 'patron') {
+        var seq = String(secuencia || '').split('-').filter(Boolean);
+        return 'Patrón · Inicio: ' + (inicio || seq[0] || '—') + ' · Fin: ' + (fin || seq[seq.length - 1] || '—') + ' · Secuencia: ' + (seq.join(' → ') || '—');
+    }
+    return 'No registrada';
+}
+
 // ---------- FIRMA DIGITAL ----------
 function firmaFondo(c, ctx) {
     ctx.fillStyle = '#ffffff';
@@ -3603,6 +3785,8 @@ function repDatosDesdeOp(o) {
         asesor: o.asesor, equipo: o.equipo || o.descripcion, imei1: o.imei_serial, imei2: o.imei_serial_2, falla: o.falla,
         total: Number(o.total) || 0, abono: Number(o.amount_paid) || 0, metodo: o.payment_method, tipoPago: o.payment_type,
         checklist: o.checklist_equipo || {}, observacion: o.observacion_taller, dias: o.dias_garantia,
+        claveTipo: o.clave_tipo || null, claveDispositivo: o.clave_dispositivo || null,
+        patronSecuencia: o.patron_secuencia || null, patronInicio: o.patron_inicio || null, patronFin: o.patron_fin || null,
         estadoRaw: o.estado_taller, firmaSrc: o.firma_url || null
     };
 }
@@ -3615,7 +3799,10 @@ function repDatosDesdeForm(num) {
         id: null, numero: num || 'Pendiente', fecha: new Date().toISOString(), cliente: g('rep_cliente'), telefono: g('rep_telefono'),
         asesor: g('rep_asesor'), equipo: g('rep_equipo'), imei1: g('rep_imei'), imei2: '', falla: g('rep_falla'),
         total: total, abono: abono, metodo: g('rep_metodo_pago'), tipoPago: tipo, checklist: repLeerChecklist(),
-        observacion: g('rep_observacion'), dias: g('rep_dias_garantia'), estadoRaw: g('rep_estado_taller'), firmaSrc: firmaDataURL()
+        observacion: g('rep_observacion'), dias: g('rep_dias_garantia'),
+        claveTipo: g('rep_clave_tipo'), claveDispositivo: g('rep_clave_alfanumerica'),
+        patronSecuencia: REP_PATRON.join('-'), patronInicio: REP_PATRON[0] || null, patronFin: REP_PATRON.length ? REP_PATRON[REP_PATRON.length - 1] : null,
+        estadoRaw: g('rep_estado_taller'), firmaSrc: firmaDataURL()
     };
 }
 function repQRTexto(d) {
@@ -3727,6 +3914,7 @@ function repDetalleExtraHTML(o) {
                 <div class="det-item"><span>Estado del taller</span><strong>${contaEsc(repEtiquetaEstado(o.estado_taller))}</strong></div>
             </div>
         </div>
+        <div class="det-sec"><h4><i class="fa-solid fa-lock"></i> Clave de desbloqueo del móvil</h4><div class="det-item det-full"><span>${o.clave_tipo === 'patron' ? 'Patrón (nodos 1–9)' : 'Tipo y clave'}</span><strong>${contaEsc(repFormatoClave(o))}</strong></div></div>
         ${o.firma_url ? `<div class="det-sec"><h4><i class="fa-solid fa-signature"></i> Firma del cliente</h4><img src="${contaEsc(o.firma_url)}" alt="Firma del cliente" style="max-height:120px;background:#fff;border-radius:10px;padding:8px;"></div>` : ''}
         <div class="det-sec"><h4><i class="fa-solid fa-bolt"></i> Acciones</h4>
             <div class="det-acc-row">
@@ -3889,6 +4077,8 @@ async function repGuardarCompleto() {
         mostrarAlertaError('Debes validar tu PIN en el campo "Nombre de Asesor" para continuar.');
         return;
     }
+    const claveMovil = repLeerClave();
+    if (!claveMovil) return;
     const sb = window.jkSupabase;
     const btn = document.querySelector('#form_reparacion button[type="submit"]');
     btn.disabled = true;
@@ -3906,7 +4096,8 @@ async function repGuardarCompleto() {
             checklist_equipo: repLeerChecklist(),
             observacion_taller: (document.getElementById('rep_observacion').value || '').trim() || null,
             dias_garantia: parseInt(document.getElementById('rep_dias_garantia').value, 10) || null,
-            firma_url: uf || null
+            firma_url: uf || null,
+            ...claveMovil
         };
         datosFacturaActual = { numeroFactura: num };
         await guardarOperacion('rep', 'Reparacion');
@@ -3923,6 +4114,9 @@ async function repGuardarCompleto() {
             if (inp) inp.value = '';
         });
         firmaLimpiar();
+        repLimpiarPatron();
+        const claveAlfaInput = document.getElementById('rep_clave_alfanumerica');
+        if (claveAlfaInput) claveAlfaInput.value = '';
         await panelCargarTodo();
     } catch (e) {
         console.error(e);
@@ -3935,6 +4129,7 @@ async function repGuardarCompleto() {
 // ---------- INICIO ----------
 repChecklistInit();
 firmaInit();
+repPatronInit();
 </script>
 <script>
 /* =====================================================================
