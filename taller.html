@@ -647,6 +647,17 @@ function getEstadoRGB(estado) {
     if (e.includes('entregad')) return [18, 216, 196];
     return [125, 133, 148];
 }
+function formatearClaveTaller(item) {
+    if (!item || !item.clave_tipo) return 'No registrada';
+    if (item.clave_tipo === 'alfanumerica') return 'Alfanumérica: ' + (item.clave_dispositivo || '—');
+    if (item.clave_tipo === 'patron') {
+        const seq = String(item.patron_secuencia || '').split('-').filter(Boolean);
+        const inicio = item.patron_inicio || seq[0] || '—';
+        const fin = item.patron_fin || seq[seq.length - 1] || '—';
+        return 'Patrón · Inicio: ' + inicio + ' · Fin: ' + fin + ' · Secuencia: ' + (seq.join(' → ') || '—');
+    }
+    return 'No registrada';
+}
 // ==========================================
 // CARGAR TALLER
 // ==========================================
@@ -772,6 +783,10 @@ function renderizarLista(lista) {
                 <div class="repair-field">
                     <span class="field-label"><i class="fa-solid fa-barcode"></i> IMEI / Serial</span>
                     <span class="field-value">${item.imei_serial || 'N/A'}</span>
+                </div>
+                <div class="repair-field novedades">
+                    <span class="field-label"><i class="fa-solid fa-lock"></i> Clave de desbloqueo</span>
+                    <span class="field-value">${formatearClaveTaller(item)}</span>
                 </div>
                 <div class="repair-field">
                     <span class="field-label"><i class="fa-solid fa-money-bill-wave"></i> Valor Reparación</span>
@@ -1000,6 +1015,7 @@ async function generarPDF(idOperacion) {
             ['Teléfono', item.customer_phone || 'N/A'],
             ['Equipo', item.equipo || 'N/A'],
             ['IMEI / Serial', item.imei_serial || 'N/A'],
+            ['Clave de desbloqueo', formatearClaveTaller(item)],
             ['Factura / Ticket', item.numero_factura || 'N/A'],
             ['Valor Reparación', formatoMoneda(item.total)],
             ['Método de Pago', item.payment_method || 'N/A'],
@@ -1215,10 +1231,10 @@ async function jkValidarPassword(pwd) {
     var sg = jkS();
     if (!sg) return null;
     try {
-        var res = await sg.from('comercio').select('id, name, logo_url, theme, password, data, bloqueado').eq('password', pwd).limit(1);
+        var res = await sg.from('comercio').select('id, name, telefono_whatsapp, logo_url, theme, password, data, bloqueado').eq('password', pwd).limit(1);
         if (res.error) {
-            if (/bloqueado/i.test(res.error.message || '')) {
-                var res2 = await sg.from('comercio').select('id, name, logo_url, theme, password, data').eq('password', pwd).limit(1);
+            if (/bloqueado|telefono_whatsapp/i.test(res.error.message || '')) {
+                var res2 = await sg.from('comercio').select('id, name, telefono_whatsapp, logo_url, theme, password, data').eq('password', pwd).limit(1);
                 if (res2.error) throw res2.error;
                 var row = (res2.data && res2.data[0]) ? res2.data[0] : null;
                 if (row) row.bloqueado = false;
