@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/@zxing/browser@0.1.5"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -1025,6 +1026,19 @@ body.jk-install-open { overflow: hidden !important; }
 .cfg-grid .field.firma-full { grid-column: 1 / -1 !important; }
 .firma-wrap { margin-top: 8px; }
 </style>
+<style>
+/* Escáner QR para producto */
+.qr-scan-wrap { display: flex; flex-direction: column; gap: 12px; }
+.qr-scan-video-wrap { width: 100%; min-height: 220px; max-height: 56vh; border-radius: 16px; overflow: hidden; background: #05090c; border: 1px solid rgba(18,216,196,.28); position: relative; }
+.qr-scan-video { display: block; width: 100%; max-height: 56vh; min-height: 220px; object-fit: cover; background: #05090c; }
+.qr-scan-frame { position: absolute; inset: 15% 18%; border: 2px solid rgba(34,245,221,.85); border-radius: 18px; box-shadow: 0 0 0 999px rgba(0,0,0,.18), 0 0 26px rgba(18,216,196,.24); pointer-events: none; }
+.qr-scan-status { min-height: 22px; color: #9fb6b2; font-size: 12px; text-align: center; line-height: 1.5; }
+.qr-scan-actions { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.qr-scan-trigger { margin-top: 8px; width: fit-content; }
+html[data-theme="claro"] .qr-scan-status { color: #52616d !important; }
+html[data-theme="claro"] .qr-scan-trigger { color: #0d9488 !important; border-color: rgba(13,148,136,.35) !important; background: rgba(13,148,136,.10) !important; }
+@media (max-width: 600px) { .qr-scan-video-wrap, .qr-scan-video { min-height: 250px; } }
+</style>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_MX">
 <meta property="og:site_name" content="Sistema JK">
@@ -1379,6 +1393,7 @@ body.jk-install-open { overflow: hidden !important; }
                         <input type="text" id="acc_producto" autocomplete="off" placeholder="Escribe el nombre del accesorio..." required oninput="appCore.buscarEnInventario(this, 'Accesorio', 'lista_acc', 'acc')">
                         <div id="lista_acc" class="autocomplete-list"></div>
                     </div>
+                    <button type="button" class="conta-btn qr-scan-trigger" onclick="abrirEscanerProducto('acc')"><i class="fa-solid fa-qrcode"></i> Escanear etiqueta QR</button>
                 </div>
                 <div class="field"><label>Cantidad</label><input type="number" id="acc_cantidad" value="1" min="1" required oninput="appCore.actualizarTotales('acc')"></div>
                 <div class="field"><label>IMEI / Serial</label><input type="text" id="acc_imei"></div>
@@ -1461,6 +1476,7 @@ body.jk-install-open { overflow: hidden !important; }
                         <input type="text" id="cel_modelo" autocomplete="off" placeholder="Escribe la marca/modelo..." required oninput="appCore.buscarEnInventario(this, 'Celular', 'lista_cel', 'cel')">
                         <div id="lista_cel" class="autocomplete-list"></div>
                     </div>
+                    <button type="button" class="conta-btn qr-scan-trigger" onclick="abrirEscanerProducto('cel')"><i class="fa-solid fa-qrcode"></i> Escanear etiqueta QR</button>
                 </div>
                 <div class="field"><label>Cantidad</label><input type="number" id="cel_cantidad" value="1" min="1" required oninput="appCore.actualizarTotales('cel')"></div>
                 <div class="field"><label>IMEI / Serial 1</label><input type="text" id="cel_imei" required></div>
@@ -1523,6 +1539,28 @@ body.jk-install-open { overflow: hidden !important; }
             <button type="button" class="secondary-bill" onclick="appCore.prepararFactura('cel')"><i class="fa-solid fa-file-invoice"></i> Crear Factura</button>
             <button type="submit" class="submit">Registrar Venta</button>
         </form>
+    </div>
+</div>
+<!-- MODAL COMPARTIDO: ESCANEAR ETIQUETA QR -->
+<div class="form-modal" id="modal_qr_scanner">
+    <div class="form-modal-content conta-content">
+        <button type="button" class="modal-close" onclick="cerrarEscanerProducto()" aria-label="Cerrar escáner"><i class="fa-solid fa-xmark"></i></button>
+        <div class="conta-wrap">
+            <div class="form-header">
+                <div class="form-icon"><i class="fa-solid fa-qrcode"></i></div>
+                <div><h3>Escanear etiqueta del producto</h3><p>Apunta la cámara trasera al código QR impreso.</p></div>
+            </div>
+            <div class="qr-scan-wrap">
+                <div class="qr-scan-video-wrap">
+                    <video id="qr_scan_video" class="qr-scan-video" playsinline muted></video>
+                    <div class="qr-scan-frame" aria-hidden="true"></div>
+                </div>
+                <div class="qr-scan-status" id="qr_scan_status" aria-live="polite">Preparando cámara…</div>
+                <div class="qr-scan-actions">
+                    <button type="button" class="conta-btn" onclick="cerrarEscanerProducto()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <!-- ============================================================
@@ -2170,6 +2208,7 @@ function abrirModalFormulario(modalId) {
 function cerrarModalFormulario(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
+    if (modalId === 'modal_qr_scanner' && typeof detenerCamaraQR === 'function') detenerCamaraQR();
     modal.classList.remove('show');
     if (!document.querySelector('.form-modal.show')) { document.body.style.overflow = ''; }
 }
@@ -5203,6 +5242,183 @@ async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo,
 })();
 </script>
 
+<script>
+/* =====================================================================
+   ESCÁNER QR DE PRODUCTOS — Accesorios y Celulares
+   ===================================================================== */
+var qrProductoPrefijo = null;
+var qrProductoReader = null;
+var qrProductoControls = null;
+var qrProductoProcesando = false;
+
+function detenerCamaraQR() {
+    if (qrProductoControls && typeof qrProductoControls.stop === 'function') {
+        try { qrProductoControls.stop(); } catch (e) {}
+    }
+    qrProductoControls = null;
+    qrProductoReader = null;
+    var video = document.getElementById('qr_scan_video');
+    if (video && video.srcObject) {
+        try { video.srcObject.getTracks().forEach(function (track) { track.stop(); }); } catch (e) {}
+        video.srcObject = null;
+    }
+}
+function cerrarEscanerProducto() {
+    detenerCamaraQR();
+    qrProductoProcesando = false;
+    cerrarModalFormulario('modal_qr_scanner');
+}
+function parseEtiquetaQR(texto) {
+    var parts = String(texto || '').split('|');
+    if (parts[0] !== 'JK') return null;
+    var fields = {};
+    parts.slice(1).forEach(function (part) {
+        var idx = part.indexOf(':');
+        if (idx > 0) fields[part.slice(0, idx)] = part.slice(idx + 1);
+    });
+    return { comercioId: fields.COM || '', productoId: fields.ID || '' };
+}
+function qrScanEstado(texto) {
+    var el = document.getElementById('qr_scan_status');
+    if (el) el.textContent = texto;
+}
+async function procesarEtiquetaQR(texto) {
+    var datos = parseEtiquetaQR(texto);
+    if (!datos || !datos.productoId) {
+        qrScanEstado('El código no corresponde a una etiqueta de inventario JK.');
+        mostrarAlertaError('Etiqueta QR inválida o de otro tipo.');
+        qrProductoProcesando = false;
+        return;
+    }
+    var comercioId = window.JK_COMERCIO_ID || '';
+    if (!comercioId) {
+        qrScanEstado('No hay un comercio activo.');
+        mostrarAlertaError('Inicia sesión con tu comercio antes de escanear.');
+        qrProductoProcesando = false;
+        return;
+    }
+    if (datos.comercioId && datos.comercioId !== comercioId) {
+        qrScanEstado('Esta etiqueta pertenece a otro comercio.');
+        mostrarAlertaError('El QR pertenece a otro comercio. No se cargó el producto.');
+        qrProductoProcesando = false;
+        return;
+    }
+    qrScanEstado('Verificando producto y stock…');
+    try {
+        const { data, error } = await window.jkSupabase
+            .from('inventario')
+            .select('id,nombre,categoria,sku,precio_venta,stock,comercio_id')
+            .eq('id', datos.productoId)
+            .eq('comercio_id', comercioId)
+            .maybeSingle();
+        if (error) throw error;
+        if (!data) {
+            qrScanEstado('No se encontró el producto en este comercio.');
+            mostrarAlertaError('Producto inexistente o perteneciente a otro comercio.');
+            qrProductoProcesando = false;
+            return;
+        }
+        const categoria = String(data.categoria || '').trim().toLowerCase();
+        const esperado = qrProductoPrefijo === 'acc' ? 'accesorio' : 'celular';
+        if (categoria !== esperado) {
+            qrScanEstado('La categoría del producto no coincide con el formulario abierto.');
+            mostrarAlertaError('Este producto es de categoría ' + (data.categoria || 'desconocida') + ', no ' + esperado + '.');
+            qrProductoProcesando = false;
+            return;
+        }
+        const stockActual = Number(data.stock) || 0;
+        if (stockActual <= 0) {
+            qrScanEstado('Producto agotado: no se puede registrar una venta.');
+            mostrarAlertaError('«' + data.nombre + '» está agotado en el inventario.');
+            qrProductoProcesando = false;
+            return;
+        }
+        const prefix = qrProductoPrefijo;
+        const input = document.getElementById(prefix === 'acc' ? 'acc_producto' : 'cel_modelo');
+        const price = document.getElementById(prefix + '_precio');
+        const qty = document.getElementById(prefix + '_cantidad');
+        if (!input || !price) throw new Error('No se encontró el formulario de venta.');
+        // Si el usuario edita el texto después del escaneo, invalida el ID adjunto.
+        if (!input.dataset.qrInvalidationBound) {
+            input.dataset.qrInvalidationBound = '1';
+            input.addEventListener('input', function () { delete input.dataset.idInventario; });
+        }
+        input.value = data.nombre || '';
+        input.dataset.idInventario = String(data.id);
+        // Se utiliza el precio vigente leído de Supabase; sigue siendo editable en el formulario.
+        price.value = Number(data.precio_venta) || 0;
+        const cantidad = Math.max(1, parseInt((qty && qty.value) || '1', 10) || 1);
+        if (cantidad > stockActual) {
+            qrScanEstado('Stock disponible: ' + stockActual + ' unidad(es). Ajusta la cantidad.');
+            if (qty) { qty.value = String(stockActual); appCore.actualizarTotales(prefix); }
+        } else {
+            qrScanEstado('Producto cargado: ' + data.nombre + ' · stock disponible: ' + stockActual + '.');
+            appCore.actualizarTotales(prefix);
+        }
+        detenerCamaraQR();
+        cerrarModalFormulario('modal_qr_scanner');
+        mostrarAlertaExito('Producto «' + data.nombre + '» cargado. Verifica cantidad y precio antes de registrar.');
+    } catch (e) {
+        console.error('QR inventory lookup:', e);
+        qrScanEstado('No se pudo verificar el producto.');
+        mostrarAlertaError('Error al buscar el producto en este comercio: ' + (e && e.message ? e.message : 'error'));
+        qrProductoProcesando = false;
+    }
+}
+async function abrirEscanerProducto(prefijo) {
+    if (!obtenerSesion()) {
+        mostrarAlertaError('Debes iniciar sesión para escanear productos.');
+        abrirModalSesion();
+        return;
+    }
+    if (!window.JK_COMERCIO_ID) { mostrarAlertaError('No hay un comercio activo.'); return; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        mostrarAlertaError('El navegador no permite usar la cámara. Abre la app con HTTPS en un navegador actualizado.');
+        return;
+    }
+    if (!window.ZXingBrowser || !window.ZXingBrowser.BrowserQRCodeReader) {
+        mostrarAlertaError('No se pudo cargar el lector QR. Comprueba tu conexión e inténtalo de nuevo.');
+        return;
+    }
+    cerrarEscanerProducto();
+    qrProductoPrefijo = prefijo;
+    qrProductoProcesando = false;
+    abrirModalFormulario('modal_qr_scanner');
+    qrScanEstado('Solicitando acceso a la cámara…');
+    var video = document.getElementById('qr_scan_video');
+    try {
+        qrProductoReader = new window.ZXingBrowser.BrowserQRCodeReader();
+        qrProductoControls = await qrProductoReader.decodeFromConstraints(
+            { audio: false, video: { facingMode: { ideal: 'environment' } } },
+            video,
+            function (result, error, controls) {
+                if (controls) qrProductoControls = controls;
+                if (result && !qrProductoProcesando) {
+                    qrProductoProcesando = true;
+                    qrScanEstado('Etiqueta leída. Consultando Supabase…');
+                    detenerCamaraQR();
+                    procesarEtiquetaQR(result.getText());
+                }
+            }
+        );
+        qrScanEstado('Apunta la cámara trasera al QR de la etiqueta.');
+    } catch (e) {
+        console.error('QR camera:', e);
+        detenerCamaraQR();
+        qrScanEstado('No se pudo abrir la cámara. Revisa el permiso del navegador.');
+        mostrarAlertaError('No se pudo abrir la cámara: ' + (e && e.message ? e.message : 'revisa permisos y HTTPS.'));
+    }
+}
+(function () {
+    var modal = document.getElementById('modal_qr_scanner');
+    if (modal) modal.addEventListener('click', function (e) {
+        if (e.target === modal) cerrarEscanerProducto();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal && modal.classList.contains('show')) cerrarEscanerProducto();
+    });
+})();
+</script>
 <script>
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
