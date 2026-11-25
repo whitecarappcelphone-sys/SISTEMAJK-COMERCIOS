@@ -1049,6 +1049,42 @@ body.jk-locked { overflow: hidden !important; }
 <meta name="apple-mobile-web-app-title" content="Sistema JK">
 
 <link rel="manifest" href="manifest.json">
+
+<style>
+/* Acciones de operación e historial de bajas */
+.op-row.op-row-deleted { opacity: .72; border-left-color: #ff5e5e !important; }
+.op-deleted-label { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; margin-left: 7px; border-radius: 14px; border: 1px solid rgba(255,94,94,.38); background: rgba(255,94,94,.12); color: #ff8d8d; font-size: 9px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.op-actions-right { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.op-manage-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 32px; padding: 5px 9px; border-radius: 7px; background: rgba(18,216,196,.08); border: 1px solid rgba(18,216,196,.25); color: #12d8c4; font: 600 10px 'Poppins',sans-serif; cursor: pointer; transition: .2s; }
+.op-manage-btn:hover { background: rgba(18,216,196,.18); border-color: #12d8c4; }
+.op-manage-btn.delete { background: rgba(255,94,94,.08); border-color: rgba(255,94,94,.28); color: #ff8d8d; }
+.op-manage-btn.delete:hover { background: rgba(255,94,94,.18); border-color: #ff5e5e; }
+.op-manage-btn:disabled { opacity: .55; cursor: not-allowed; }
+.op-edit-overlay { position: fixed; inset: 0; z-index: 12000; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(4,10,14,.78); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.op-edit-overlay.show { display: flex; }
+.op-edit-dialog { width: 100%; max-width: 850px; max-height: 92vh; overflow: auto; background: #171a21; color: #fff; border: 1px solid rgba(18,216,196,.25); border-radius: 20px; padding: 24px; box-shadow: 0 24px 70px rgba(0,0,0,.65); }
+.op-edit-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; padding-bottom:15px; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,.08); }
+.op-edit-head h3 { color:#12d8c4; font-size:18px; margin:0; }
+.op-edit-head p { color:#7d8594; font-size:11px; margin-top:4px; }
+.op-edit-close { width:36px;height:36px; flex-shrink:0; border-radius:50%; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); color:#fff; cursor:pointer; }
+.op-edit-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.op-edit-field { display:flex; flex-direction:column; gap:6px; min-width:0; }
+.op-edit-field.full { grid-column:1/-1; }
+.op-edit-field label { color:#bfc6d2; font-size:10px; text-transform:uppercase; letter-spacing:.08em; font-weight:600; }
+.op-edit-field input,.op-edit-field select,.op-edit-field textarea { width:100%; min-height:40px; border:1px solid rgba(255,255,255,.10); border-radius:9px; background:#101319; color:#fff; padding:8px 10px; font:12px 'Poppins',sans-serif; outline:none; }
+.op-edit-field textarea { min-height:70px; resize:vertical; }
+.op-edit-field input:focus,.op-edit-field select:focus,.op-edit-field textarea:focus { border-color:#12d8c4; box-shadow:0 0 10px rgba(18,216,196,.12); }
+.op-edit-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; flex-wrap:wrap; }
+.op-edit-save { min-height:42px; padding:0 18px; border:0; border-radius:10px; background:linear-gradient(135deg,#12d8c4,#22f5dd); color:#081014; font:700 12px 'Poppins',sans-serif; cursor:pointer; }
+.op-edit-cancel { min-height:42px; padding:0 16px; border:1px solid rgba(255,255,255,.14); border-radius:10px; background:rgba(255,255,255,.05); color:#cbd5e1; font:600 12px 'Poppins',sans-serif; cursor:pointer; }
+.op-edit-save:disabled { opacity:.6; cursor:wait; }
+html[data-theme="claro"] .op-edit-dialog { background:#fff !important; color:#1a1e28 !important; border-color:rgba(13,148,136,.3) !important; }
+html[data-theme="claro"] .op-edit-field label { color:#44505d !important; }
+html[data-theme="claro"] .op-edit-field input,html[data-theme="claro"] .op-edit-field select,html[data-theme="claro"] .op-edit-field textarea { background:#f1f4f8 !important; color:#1a1e28 !important; border-color:rgba(20,30,50,.14) !important; }
+html[data-theme="claro"] .op-edit-head p { color:#64748b !important; }
+html[data-theme="claro"] .op-edit-cancel { background:#f1f4f8 !important; color:#334155 !important; border-color:rgba(20,30,50,.14) !important; }
+@media(max-width:620px) { .op-edit-grid { grid-template-columns:1fr; } .op-edit-field.full { grid-column:auto; } .op-actions { align-items:flex-start; } .op-actions-right { width:100%; } .op-manage-btn { flex:1; } .op-edit-dialog { padding:18px; } }
+</style>
 </head>
   <body>
 <!-- LOCKSCREEN: contraseña del comercio -->
@@ -1158,6 +1194,45 @@ body.jk-locked { overflow: hidden !important; }
         </section>
       </main>
     </div>
+    <!-- MODAL: editar operación -->
+    <div class="op-edit-overlay" id="modalEditarOperacion" role="dialog" aria-modal="true" aria-labelledby="opEditTitle">
+      <div class="op-edit-dialog">
+        <div class="op-edit-head">
+          <div><h3 id="opEditTitle">Editar operación</h3><p>Los cambios se guardan en el comercio activo.</p></div>
+          <button type="button" class="op-edit-close" aria-label="Cerrar" onclick="cerrarEdicionOperacion()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form id="formEditarOperacion" onsubmit="event.preventDefault(); guardarEdicionOperacion();">
+          <div class="op-edit-grid">
+            <div class="op-edit-field"><label for="editFactura">Factura</label><input id="editFactura" type="text"></div>
+            <div class="op-edit-field"><label for="editFecha">Fecha y hora</label><input id="editFecha" type="datetime-local"></div>
+            <div class="op-edit-field"><label for="editTipo">Tipo de operación</label><select id="editTipo"><option>Accesorio</option><option>Celular</option><option>Reparacion</option><option>Otro</option></select></div>
+            <div class="op-edit-field"><label for="editEstado">Estado de pago</label><select id="editEstado"><option value="Pendiente">Pendiente</option><option value="Completado">Completado</option></select></div>
+            <div class="op-edit-field"><label for="editCliente">Cliente</label><input id="editCliente" type="text"></div>
+            <div class="op-edit-field"><label for="editTelefono">Teléfono</label><input id="editTelefono" type="tel"></div>
+            <div class="op-edit-field"><label for="editAsesor">Asesor</label><input id="editAsesor" type="text"></div>
+            <div class="op-edit-field"><label for="editMetodo">Método de pago</label><input id="editMetodo" type="text"></div>
+            <div class="op-edit-field"><label for="editTipoPago">Tipo de pago</label><input id="editTipoPago" type="text"></div>
+            <div class="op-edit-field"><label for="editCantidad">Cantidad</label><input id="editCantidad" type="number" min="0" step="1"></div>
+            <div class="op-edit-field"><label for="editPrecio">Precio unitario</label><input id="editPrecio" type="number" min="0" step="1"></div>
+            <div class="op-edit-field"><label for="editTotal">Total de operación</label><input id="editTotal" type="number" min="0" step="1"></div>
+            <div class="op-edit-field"><label for="editPagado">Monto recibido / pagado</label><input id="editPagado" type="number" min="0" step="1"></div>
+            <div class="op-edit-field"><label for="editImei1">IMEI / Serial 1</label><input id="editImei1" type="text"></div>
+            <div class="op-edit-field"><label for="editImei2">IMEI / Serial 2</label><input id="editImei2" type="text"></div>
+            <div class="op-edit-field"><label for="editEstadoTaller">Estado del taller</label><select id="editEstadoTaller"><option value="">No aplica</option><option value="Pendiente">Pendiente</option><option value="En Proceso">En Proceso</option><option value="Listo">Listo</option><option value="Entregado">Entregado</option></select></div>
+            <div class="op-edit-field full"><label for="editDetalle">Descripción / producto</label><textarea id="editDetalle"></textarea></div>
+            <div class="op-edit-field full"><label for="editEquipo">Equipo / modelo</label><input id="editEquipo" type="text"></div>
+            <div class="op-edit-field full"><label for="editFalla">Falla / observación</label><textarea id="editFalla"></textarea></div>
+            <div class="op-edit-field"><label for="editImagen1">URL evidencia 1</label><input id="editImagen1" type="url"></div>
+            <div class="op-edit-field"><label for="editImagen2">URL evidencia 2</label><input id="editImagen2" type="url"></div>
+            <div class="op-edit-field"><label for="editImagen3">URL evidencia 3</label><input id="editImagen3" type="url"></div>
+          </div>
+          <div class="op-edit-actions">
+            <button type="button" class="op-edit-cancel" onclick="cerrarEdicionOperacion()">Cancelar</button>
+            <button type="submit" class="op-edit-save" id="btnGuardarOperacion"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
     <script>
       (function () {
         const supabaseUrl = "https://omwbjbmodqybbogyafkz.supabase.co";
@@ -1177,6 +1252,8 @@ body.jk-locked { overflow: hidden !important; }
           currency: "COP",
           minimumFractionDigits: 0,
         });
+        let operacionesDashboard = [];
+        let operacionEditandoId = null;
         function obtenerValorNumerico(val) {
           if (val === null || val === undefined) return 0;
           const str = String(val).replace(/[^0-9.-]+/g, "");
@@ -1231,6 +1308,7 @@ body.jk-locked { overflow: hidden !important; }
               totalCajaEl.textContent = formatoMoneda.format(0);
               return;
             }
+            operacionesDashboard = data || [];
             if (!data || data.length === 0) {
               totalCajaEl.textContent = formatoMoneda.format(0);
               estadoEl.textContent = "✅ En línea | 0 operaciones";
@@ -1239,7 +1317,7 @@ body.jk-locked { overflow: hidden !important; }
             }
             let totalCaja = 0;
             data.forEach((item) => {
-              totalCaja += obtenerValorNumerico(item.amount_paid);
+              if (!item.eliminado) totalCaja += obtenerValorNumerico(item.amount_paid);
             });
             const dataToDisplay = data.slice(0, 50); 
             let html = '<div class="ops-scroll"><ul class="ops-list">';
@@ -1248,6 +1326,7 @@ body.jk-locked { overflow: hidden !important; }
               const totalOperacion = obtenerValorNumerico(item.total);
               let saldoPendiente = Math.max(0, totalOperacion - montoRecibido);
               
+              const eliminada = item.eliminado === true;
               const tipo = item.tipo_operacion ?? item.tipo_registro ?? item.tipo ?? item.concepto ?? "OPERACIÓN";
               const cliente = item.customer_name ?? item.cliente ?? "Sin nombre";
               const telefono = item.telefono ?? item.telefono_cliente ?? item.phone ?? item.customer_phone ?? "Sin teléfono";
@@ -1314,11 +1393,11 @@ if (urlsImagenes.length > 0) {
                 montoRecibido, totalOperacion, saldoPendiente, fecha: item.created_at
               }));
               html += `
-                <li class="op-row">
+                <li class="op-row ${eliminada ? 'op-row-deleted' : ''}">
                   <div class="op-grid">
                     <div class="op-seg">
                       <div class="op-label">Operación</div>
-                      <div class="op-title">${tipo}</div>
+                      <div class="op-title">${tipo}${eliminada ? '<span class="op-deleted-label"><i class="fa-solid fa-ban"></i> ELIMINADA</span>' : ''}</div>
                       <div class="op-sub">${detalle}</div>
                       ${htmlCantidad}${htmlImei}${htmlFalla}${htmlImagen}
                     </div>
@@ -1338,6 +1417,8 @@ if (urlsImagenes.length > 0) {
                     </div>
                   </div>
                   <div class="op-actions">
+                    <div class="op-actions-right">
+                    ${eliminada ? '<span class="op-deleted-label"><i class="fa-solid fa-ban"></i> Eliminada · no editable</span>' : `<button type="button" class="op-manage-btn" data-edit-operation="${item.id}" title="Editar toda la operación"><i class="fa-solid fa-pen"></i> Editar</button><button type="button" class="op-manage-btn delete" data-delete-operation="${item.id}" title="Marcar operación como eliminada"><i class="fa-solid fa-trash"></i> Eliminar</button>`}
                     <button type="button" class="ticket-print-btn" data-ticket="${datosTicket}" title="Imprimir ticket">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 6 2 18 2 18 9"></polyline>
@@ -1346,6 +1427,7 @@ if (urlsImagenes.length > 0) {
                       </svg>
                     </button>
                     <span style="margin-left:10px; font-size:11px; color:#12d8c4; font-weight:500; white-space:nowrap;">${item.created_at ? new Date(item.created_at).toLocaleString("es-CO", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}) : '-'}</span>
+                    </div>
                   </div>
                 </li>
               `;
@@ -1396,6 +1478,7 @@ if (urlsImagenes.length > 0) {
                 "IMEI 1": item.imei_serial ?? "N/A",
                 "IMEI 2": item.imei_serial_2 ?? "N/A",
                 "Falla / Observación": (String(item.tipo_operacion ?? item.tipo ?? "").toLowerCase().includes("reparacion")) ? (item.falla ?? item.descripcion_falla ?? item.problema ?? item.observacion ?? "N/A") : "N/A",
+                "Estado de registro": item.eliminado ? "ELIMINADA" : "ACTIVA",
                 "Fecha": item.created_at ? new Date(item.created_at).toLocaleString("es-CO") : "N/A"
               };
             });
@@ -1411,7 +1494,187 @@ if (urlsImagenes.length > 0) {
             btnExcelEl.style.opacity = "1";
           }
         }
-                async function jkImagenBase64(url) {
+                function dashToast(text, error) {
+          document.querySelectorAll('.dash-toast').forEach((n) => n.remove());
+          const node = document.createElement('div');
+          node.className = 'dash-toast' + (error ? ' error' : '');
+          node.textContent = text;
+          document.body.appendChild(node);
+          setTimeout(() => { node.style.opacity = '0'; setTimeout(() => node.remove(), 350); }, 3500);
+        }
+        function fechaParaInput(value) {
+          if (!value) return '';
+          const d = new Date(value);
+          if (Number.isNaN(d.getTime())) return '';
+          return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+        }
+        function setSelectValue(id, value) {
+          const select = document.getElementById(id);
+          if (!select) return;
+          const v = String(value || '');
+          if (v && !Array.from(select.options).some((o) => o.value === v)) {
+            const opt = document.createElement('option'); opt.value = v; opt.textContent = v; select.appendChild(opt);
+          }
+          select.value = v;
+        }
+        function abrirEdicionOperacion(id) {
+          const item = operacionesDashboard.find((o) => String(o.id) === String(id));
+          if (!item) { dashToast('No se encontró la operación en el historial.', true); return; }
+          if (item.eliminado) { dashToast('La operación está eliminada y no se puede editar.', true); return; }
+          if (!window.JK_COMERCIO_ID || String(item.comercio_id) !== String(window.JK_COMERCIO_ID)) {
+            dashToast('La operación no pertenece al comercio activo.', true); return;
+          }
+          operacionEditandoId = String(item.id);
+          const set = (field, value) => { const el = document.getElementById(field); if (el) el.value = value == null ? '' : String(value); };
+          set('editFactura', item.numero_factura);
+          set('editFecha', fechaParaInput(item.created_at));
+          setSelectValue('editTipo', item.tipo_operacion || 'Otro');
+          setSelectValue('editEstado', item.estado || ((Number(item.amount_paid) >= Number(item.total)) ? 'Completado' : 'Pendiente'));
+          set('editCliente', item.customer_name);
+          set('editTelefono', item.customer_phone);
+          set('editAsesor', item.asesor);
+          set('editMetodo', item.payment_method);
+          set('editTipoPago', item.payment_type);
+          set('editCantidad', item.quantity == null ? 1 : item.quantity);
+          set('editPrecio', item.price);
+          set('editTotal', item.total);
+          set('editPagado', item.amount_paid);
+          set('editImei1', item.imei_serial);
+          set('editImei2', item.imei_serial_2);
+          setSelectValue('editEstadoTaller', item.estado_taller === 'N/A' ? '' : item.estado_taller);
+          set('editDetalle', item.descripcion);
+          set('editEquipo', item.equipo);
+          set('editFalla', item.falla);
+          set('editImagen1', item.imagen_url);
+          set('editImagen2', item.imagen_url_2);
+          set('editImagen3', item.imagen_url_3);
+          document.getElementById('modalEditarOperacion').classList.add('show');
+          document.body.style.overflow = 'hidden';
+        }
+        function cerrarEdicionOperacion() {
+          const modal = document.getElementById('modalEditarOperacion');
+          if (modal) modal.classList.remove('show');
+          if (!document.querySelector('.op-edit-overlay.show')) document.body.style.overflow = '';
+          operacionEditandoId = null;
+        }
+        function operacionDescuentaStock(tipo) { return /accesorio|celular/i.test(String(tipo || '')); }
+        async function ajustarStockVinculado(item, nuevaCantidad, nuevoTipo, comercioId) {
+          if (!item.inventario_id) return null;
+          const antesDescontaba = operacionDescuentaStock(item.tipo_operacion) ? (Number(item.quantity) || 1) : 0;
+          const ahoraDescuenta = operacionDescuentaStock(nuevoTipo) ? (Number(nuevaCantidad) || 0) : 0;
+          const delta = antesDescontaba - ahoraDescuenta;
+          if (!delta) return null;
+          const { data: producto, error: readError } = await supabase.from('inventario')
+            .select('id, stock').eq('id', item.inventario_id).eq('comercio_id', comercioId).maybeSingle();
+          if (readError) throw readError;
+          if (!producto) throw new Error('No se encontró el producto de inventario vinculado.');
+          const stockAntes = Number(producto.stock) || 0;
+          const stockNuevo = stockAntes + delta;
+          if (stockNuevo < 0) throw new Error('No hay stock suficiente para aumentar la cantidad de esta operación.');
+          const { data: updated, error: updateError } = await supabase.from('inventario')
+            .update({ stock: stockNuevo }).eq('id', item.inventario_id).eq('comercio_id', comercioId).eq('stock', stockAntes).select('id').maybeSingle();
+          if (updateError) throw updateError;
+          if (!updated) throw new Error('El stock cambió en otro dispositivo. Actualiza y vuelve a intentar.');
+          return { id: item.inventario_id, antes: stockAntes, despues: stockNuevo };
+        }
+        async function restaurarStockVinculado(ajuste, comercioId) {
+          if (!ajuste) return;
+          const { error } = await supabase.from('inventario').update({ stock: ajuste.antes })
+            .eq('id', ajuste.id).eq('comercio_id', comercioId).eq('stock', ajuste.despues);
+          if (error) console.error('No se pudo revertir el ajuste de stock:', error);
+        }
+        async function guardarEdicionOperacion() {
+          if (!operacionEditandoId) return;
+          const item = operacionesDashboard.find((o) => String(o.id) === String(operacionEditandoId));
+          if (!item || item.eliminado) { dashToast('Esta operación ya no se puede editar.', true); cerrarEdicionOperacion(); return; }
+          const comercioId = window.JK_COMERCIO_ID;
+          if (!comercioId || String(item.comercio_id) !== String(comercioId)) { dashToast('Comercio no válido para esta operación.', true); return; }
+          const val = (id) => document.getElementById(id).value.trim();
+          const cantidad = Number(val('editCantidad'));
+          const precio = Number(val('editPrecio'));
+          const total = Number(val('editTotal'));
+          const pagado = Number(val('editPagado'));
+          if (!Number.isFinite(cantidad) || cantidad < 0 || !Number.isFinite(precio) || precio < 0 || !Number.isFinite(total) || total < 0 || !Number.isFinite(pagado) || pagado < 0) {
+            dashToast('Verifica cantidad, precio, total y valor recibido.', true); return;
+          }
+          const fechaRaw = val('editFecha');
+          const fecha = fechaRaw ? new Date(fechaRaw) : new Date(item.created_at || Date.now());
+          if (Number.isNaN(fecha.getTime())) { dashToast('La fecha ingresada no es válida.', true); return; }
+          const payload = {
+            numero_factura: val('editFactura') || null,
+            created_at: fecha.toISOString(),
+            tipo_operacion: val('editTipo') || 'Otro',
+            estado: val('editEstado') || (pagado >= total ? 'Completado' : 'Pendiente'),
+            customer_name: val('editCliente') || null,
+            customer_phone: val('editTelefono') || null,
+            asesor: val('editAsesor') || null,
+            payment_method: val('editMetodo') || null,
+            payment_type: val('editTipoPago') || null,
+            quantity: cantidad,
+            price: precio,
+            total: total,
+            amount_paid: pagado,
+            imei_serial: val('editImei1') || null,
+            imei_serial_2: val('editImei2') || null,
+            estado_taller: val('editEstadoTaller') || 'N/A',
+            descripcion: val('editDetalle') || null,
+            equipo: val('editEquipo') || null,
+            falla: val('editFalla') || null,
+            imagen_url: val('editImagen1') || null,
+            imagen_url_2: val('editImagen2') || null,
+            imagen_url_3: val('editImagen3') || null,
+          };
+          const saveBtn = document.getElementById('btnGuardarOperacion');
+          saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+          let stockAjuste = null;
+          try {
+            stockAjuste = await ajustarStockVinculado(item, cantidad, payload.tipo_operacion, comercioId);
+            const { data: updated, error } = await supabase.from(NOMBRE_TABLA).update(payload)
+              .eq('id', operacionEditandoId).eq('comercio_id', comercioId).eq('eliminado', false).select('id').maybeSingle();
+            if (error) throw error;
+            if (!updated) throw new Error('No se encontró la operación activa para actualizar.');
+            cerrarEdicionOperacion();
+            dashToast('Cambios guardados.');
+            await cargarDashboard();
+          } catch (error) {
+            await restaurarStockVinculado(stockAjuste, comercioId);
+            console.error('Editar operación:', error);
+            dashToast('No se pudieron guardar los cambios: ' + (error.message || error), true);
+          } finally {
+            saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
+          }
+        }
+        async function eliminarOperacion(id) {
+          const item = operacionesDashboard.find((o) => String(o.id) === String(id));
+          if (!item || item.eliminado) return;
+          if (!window.JK_COMERCIO_ID || String(item.comercio_id) !== String(window.JK_COMERCIO_ID)) {
+            dashToast('La operación no pertenece al comercio activo.', true); return;
+          }
+          if (!confirm('¿Marcar la operación ' + (item.numero_factura || '') + ' como eliminada? Se conservará en el historial y no podrá editarse.')) return;
+          let stockAjuste = null;
+          try {
+            const session = (() => { try { return JSON.parse(localStorage.getItem('jk_sesion_actual') || 'null'); } catch (_) { return null; } })();
+            stockAjuste = await ajustarStockVinculado(item, 0, 'Eliminado', window.JK_COMERCIO_ID);
+            const { data: updated, error } = await supabase.from(NOMBRE_TABLA).update({
+              eliminado: true,
+              eliminado_at: new Date().toISOString(),
+              eliminado_por: (session && session.nombre) || 'Administrador',
+              estado: 'Eliminado'
+            }).eq('id', id).eq('comercio_id', window.JK_COMERCIO_ID).eq('eliminado', false).select('id').maybeSingle();
+            if (error) throw error;
+            if (!updated) throw new Error('No se encontró la operación activa para marcar como eliminada.');
+            dashToast('Operación marcada como eliminada; se conserva en el historial.');
+            await cargarDashboard();
+          } catch (error) {
+            await restaurarStockVinculado(stockAjuste, window.JK_COMERCIO_ID);
+            console.error('Eliminar operación:', error);
+            dashToast('No se pudo marcar como eliminada: ' + (error.message || error), true);
+          }
+        }
+        const modalEditar = document.getElementById('modalEditarOperacion');
+        if (modalEditar) modalEditar.addEventListener('click', (event) => { if (event.target === modalEditar) cerrarEdicionOperacion(); });
+        document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modalEditar && modalEditar.classList.contains('show')) cerrarEdicionOperacion(); });
+        async function jkImagenBase64(url) {
           if (!url) return null;
           try {
             const res = await fetch(url);
@@ -1426,6 +1689,10 @@ if (urlsImagenes.length > 0) {
           } catch (e) { return null; }
         }
         infoContenidoEl.addEventListener("click", async function (event) {
+          const editButton = event.target.closest('[data-edit-operation]');
+          if (editButton) { event.preventDefault(); abrirEdicionOperacion(editButton.dataset.editOperation); return; }
+          const deleteButton = event.target.closest('[data-delete-operation]');
+          if (deleteButton) { event.preventDefault(); await eliminarOperacion(deleteButton.dataset.deleteOperation); return; }
           const boton = event.target.closest(".ticket-print-btn");
           if (!boton) return;
           try {
@@ -1707,10 +1974,10 @@ async function jkValidarPassword(pwd) {
     var sg = jkS();
     if (!sg) return null;
     try {
-        var res = await sg.from('comercio').select('id, name, logo_url, theme, password, data, bloqueado').eq('password', pwd).limit(1);
+        var res = await sg.from('comercio').select('id, name, telefono_whatsapp, logo_url, theme, password, data, bloqueado').eq('password', pwd).limit(1);
         if (res.error) {
-            if (/bloqueado/i.test(res.error.message || '')) {
-                var res2 = await sg.from('comercio').select('id, name, logo_url, theme, password, data').eq('password', pwd).limit(1);
+            if (/bloqueado|telefono_whatsapp/i.test(res.error.message || '')) {
+                var res2 = await sg.from('comercio').select('id, name, telefono_whatsapp, logo_url, theme, password, data').eq('password', pwd).limit(1);
                 if (res2.error) throw res2.error;
                 var row = (res2.data && res2.data[0]) ? res2.data[0] : null;
                 if (row) row.bloqueado = false;
