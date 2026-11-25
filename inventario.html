@@ -485,6 +485,13 @@ html[data-theme="claro"] .btn-notif { color: #0d9488 !important; background: rgb
 .btn-etiqueta i { font-size: 12px; }
 html[data-theme="claro"] .btn-etiqueta { background: rgba(13,148,136,.09) !important; color: #0d9488 !important; border-color: rgba(13,148,136,.35) !important; }
 @media (max-width: 600px) { .btn-etiqueta { padding: 6px 8px; font-size: 10px; } .btn-etiqueta span { display: none; } }
+.inv-imei-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.stock-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.btn-stock-edit { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 6px 10px; border-radius: 9px; border: 1px solid rgba(245,158,11,.35); background: rgba(245,158,11,.10); color: #fbbf24; font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: .2s; }
+.btn-stock-edit:hover { background: rgba(245,158,11,.22); border-color: #f59e0b; }
+html[data-theme="claro"] .btn-stock-edit { color: #9a5b00 !important; background: rgba(245,158,11,.10) !important; border-color: rgba(180,83,9,.35) !important; }
+#modalStock .modal-content { max-width: 430px; }
+@media (max-width: 600px) { .inv-imei-grid { grid-template-columns: 1fr; gap: 10px; } .stock-actions { flex-direction: column; align-items: stretch; } .stock-actions button { width: 100%; } }
 /* ============ / ADMIN GATE ============ */
 </style>
 </head>
@@ -551,7 +558,7 @@ html[data-theme="claro"] .btn-etiqueta { background: rgba(13,148,136,.09) !impor
                     <th>Precio Venta</th>
                     <th>Stock</th>
                     <th>Estado</th>
-                    <th>Etiqueta</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="tablaProductos">
@@ -574,13 +581,20 @@ html[data-theme="claro"] .btn-etiqueta { background: rgba(13,148,136,.09) !impor
                 <div class="field"><label>Nombre del Producto *</label><input type="text" id="inv_nombre" placeholder="Ej: Audífonos Bluetooth" required></div>
                 <div class="field">
                     <label>Categoría *</label>
-                    <select id="inv_categoria" required>
+                    <select id="inv_categoria" required onchange="actualizarCamposCategoria()">
                         <option value="Accesorio">Accesorio</option>
                         <option value="Celular">Celular</option>
                         <option value="Repuesto">Repuesto</option>
                     </select>
                 </div>
                 <div class="field"><label>Código / SKU (Opcional)</label><input type="text" id="inv_sku" placeholder="Ej: ACC-001"></div>
+                <div class="field full" id="inv_imei_fields" style="display:none">
+                    <label>Identificadores del celular (opcionales)</label>
+                    <div class="inv-imei-grid">
+                        <div class="field"><label for="inv_imei_1">IMEI 1</label><input type="text" id="inv_imei_1" inputmode="numeric" placeholder="IMEI principal"></div>
+                        <div class="field"><label for="inv_imei_2">IMEI 2</label><input type="text" id="inv_imei_2" inputmode="numeric" placeholder="IMEI secundario (opcional)"></div>
+                    </div>
+                </div>
 
                 <div class="field"><label>Precio de Venta ($) *</label><input type="number" id="inv_precio_venta" placeholder="Ej: 50000" required></div>
                 <div class="field"><label>Precio de Compra / Costo ($)</label><input type="number" id="inv_precio_compra" value="0"></div>
@@ -594,6 +608,22 @@ html[data-theme="claro"] .btn-etiqueta { background: rgba(13,148,136,.09) !impor
                 <i class="fa-solid fa-cloud-arrow-up"></i> Guardar en Inventario
             </button>
         </form>
+    </div>
+</div>
+<!-- MODAL PARA AJUSTAR LA CANTIDAD DEL PRODUCTO -->
+<div id="modalStock" class="modal-overlay">
+    <div class="modal-content">
+        <button type="button" class="close-modal" aria-label="Cerrar" onclick="cerrarModalStock()"><i class="fa-solid fa-xmark"></i></button>
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-boxes-stacked"></i> Ajustar cantidad</h3>
+            <p id="stockProductoNombre" style="color:#7d8594; font-size:12px; margin-top:5px;"></p>
+        </div>
+        <div class="field">
+            <label for="stockNuevoValor">Cantidad actualizada *</label>
+            <input type="number" id="stockNuevoValor" min="0" step="1" inputmode="numeric" required>
+            <small style="color:#7d8594; margin-top:7px; font-size:11px;">Escribe el conteo físico correcto. Se permiten cero unidades.</small>
+        </div>
+        <button type="button" class="submit" id="btnGuardarStock" onclick="guardarCantidadProducto()"><i class="fa-solid fa-floppy-disk"></i> Guardar cantidad</button>
     </div>
 </div>
 <!-- Librería de Supabase -->
@@ -639,6 +669,17 @@ function cerrarModal() {
     modal.classList.remove('active');
     setTimeout(() => modal.style.display = 'none', 300);
 }
+function actualizarCamposCategoria() {
+    const esCelular = document.getElementById('inv_categoria').value === 'Celular';
+    const camposImei = document.getElementById('inv_imei_fields');
+    if (camposImei) camposImei.style.display = esCelular ? 'block' : 'none';
+    if (!esCelular) {
+        const imei1 = document.getElementById('inv_imei_1');
+        const imei2 = document.getElementById('inv_imei_2');
+        if (imei1) imei1.value = '';
+        if (imei2) imei2.value = '';
+    }
+}
 // Subir Imagen
 async function subirImagen(file) {
     const fileExt = file.name.split('.').pop();
@@ -678,6 +719,8 @@ async function guardarProducto() {
             stock_minimo: 3,
             descripcion: document.getElementById('inv_descripcion').value,
             imagen_url: imageUrl,
+            imei_serial: document.getElementById('inv_categoria').value === 'Celular' ? (document.getElementById('inv_imei_1').value.trim() || null) : null,
+            imei_serial_2: document.getElementById('inv_categoria').value === 'Celular' ? (document.getElementById('inv_imei_2').value.trim() || null) : null,
             comercio_id: window.JK_COMERCIO_ID || null
         };
         const { data: productoCreado, error } = await window.invSupabase.from('inventario').insert([nuevoProducto]).select('id').single();
@@ -686,6 +729,7 @@ async function guardarProducto() {
         if (Number(nuevoProducto.stock) <= 3) await enviarAvisoStockInicial(nuevoProducto);
         mostrarAlertaExito("¡Producto agregado con éxito al inventario!");
         form.reset();
+        actualizarCamposCategoria();
         cerrarModal(); // Cierra el modal automáticamente al tener éxito
         cargarInventario(); // Recarga la tabla de atrás
     } catch (error) {
@@ -727,10 +771,65 @@ async function cargarInventario() {
             <td style="color:#12d8c4; font-weight:600;">${formatoMoneda(prod.precio_venta)}</td>
             <td><span class="stock-badge ${estadoClase}">${prod.stock} un.</span></td>
             <td>${prod.stock > 0 ? '<span style="color:#25D366; font-weight:600;"><i class="fa-solid fa-check"></i> Disponible</span>' : '<span style="color:#ff4757; font-weight:600;"><i class="fa-solid fa-xmark"></i> Agotado</span>'}</td>
-            <td><button type="button" class="btn-etiqueta" title="Imprimir etiqueta con QR" onclick="imprimirEtiquetaProducto('${String(prod.id).replace(/'/g, '')}')"><i class="fa-solid fa-print"></i><span>Etiqueta</span></button></td>
+            <td><div class="stock-actions"><button type="button" class="btn-etiqueta" title="Imprimir etiqueta con QR" onclick="imprimirEtiquetaProducto('${String(prod.id).replace(/'/g, '')}')"><i class="fa-solid fa-print"></i><span>Etiqueta</span></button><button type="button" class="btn-stock-edit" title="Editar la cantidad física" onclick="abrirModalStock('${String(prod.id).replace(/'/g, '')}')"><i class="fa-solid fa-pen-to-square"></i><span>Editar cantidad</span></button></div></td>
         `;
         tbody.appendChild(tr);
     });
+}
+let productoStockEditando = null;
+function abrirModalStock(id) {
+    const producto = (window.productosInventario || []).find(function (p) { return String(p.id) === String(id); });
+    if (!producto) { mostrarAlertaError('No se encontró el producto para editar.'); return; }
+    productoStockEditando = producto;
+    document.getElementById('stockProductoNombre').textContent = (producto.nombre || 'Producto') + (producto.sku ? ' · SKU: ' + producto.sku : '');
+    document.getElementById('stockNuevoValor').value = String(Number(producto.stock) || 0);
+    const modal = document.getElementById('modalStock');
+    modal.style.display = 'flex';
+    setTimeout(function () { modal.classList.add('active'); document.getElementById('stockNuevoValor').focus(); }, 10);
+}
+function cerrarModalStock() {
+    const modal = document.getElementById('modalStock');
+    if (!modal) return;
+    modal.classList.remove('active');
+    setTimeout(function () { modal.style.display = 'none'; }, 300);
+    productoStockEditando = null;
+}
+async function guardarCantidadProducto() {
+    if (!productoStockEditando) return;
+    const input = document.getElementById('stockNuevoValor');
+    const raw = String(input.value || '').trim();
+    const nuevoStock = Number(raw);
+    if (raw === '' || !Number.isInteger(nuevoStock) || nuevoStock < 0) {
+        mostrarAlertaError('Ingresa una cantidad entera igual o mayor que cero.');
+        input.focus();
+        return;
+    }
+    const producto = productoStockEditando;
+    const stockAnterior = Number(producto.stock) || 0;
+    const btn = document.getElementById('btnGuardarStock');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+    try {
+        const { error } = await window.invSupabase.from('inventario')
+            .update({ stock: nuevoStock })
+            .eq('id', producto.id)
+            .eq('comercio_id', window.JK_COMERCIO_ID || '');
+        if (error) throw error;
+        if (nuevoStock < stockAnterior) {
+            await enviarAvisosStockCruceInventario(producto, stockAnterior, nuevoStock);
+        } else if (nuevoStock > 3) {
+            await escanearStockBajoPush();
+        }
+        mostrarAlertaExito('Cantidad actualizada: ' + nuevoStock + ' unidad(es).');
+        cerrarModalStock();
+        await cargarInventario();
+    } catch (e) {
+        console.error('Error al ajustar stock:', e);
+        mostrarAlertaError('No se pudo actualizar el stock: ' + (e.message || 'error'));
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cantidad';
+    }
 }
 function escaparHTML(etiqueta) {
     return String(etiqueta == null ? '' : etiqueta).replace(/[&<>\"']/g, function (caracter) {
@@ -747,6 +846,10 @@ function imprimirEtiquetaProducto(id) {
     const nombreComercio = comercioData.empresa || comercio.name || 'Comercio';
     const precio = formatoMoneda(producto.precio_venta);
     const descripcion = String(producto.descripcion || '').trim().slice(0, 220);
+    const imeiEtiqueta = [
+        producto.imei_serial ? '<p class="linea imei">IMEI 1: ' + escaparHTML(producto.imei_serial) + '</p>' : '',
+        producto.imei_serial_2 ? '<p class="linea imei">IMEI 2: ' + escaparHTML(producto.imei_serial_2) + '</p>' : ''
+    ].join('');
     // Payload compacto ASCII para no exceder la capacidad del QR en modelos largos.
     const qrSafe = function (value, max) {
         return String(value == null ? '' : value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\x20-\x7E]/g, '').slice(0, max);
@@ -755,12 +858,14 @@ function imprimirEtiquetaProducto(id) {
         'JK',
         'COM:' + qrSafe(comercio.id, 10),
         'ID:' + qrSafe(producto.id, 36),
-        'N:' + qrSafe(producto.nombre || 'Producto', 34),
-        'C:' + qrSafe(producto.categoria, 12),
-        'SKU:' + qrSafe(producto.sku || 'NA', 16),
-        'P:' + qrSafe(Number(producto.precio_venta) || 0, 14),
-        'ST:' + qrSafe(Number(producto.stock) || 0, 8)
-    ].join('|');
+        'N:' + qrSafe(producto.nombre || 'Producto', 28),
+        'C:' + qrSafe(producto.categoria, 10),
+        'SKU:' + qrSafe(producto.sku || 'NA', 12),
+        producto.imei_serial ? 'I1:' + qrSafe(producto.imei_serial, 18) : '',
+        producto.imei_serial_2 ? 'I2:' + qrSafe(producto.imei_serial_2, 18) : '',
+        'P:' + qrSafe(Number(producto.precio_venta) || 0, 12),
+        'ST:' + qrSafe(Number(producto.stock) || 0, 6)
+    ].filter(Boolean).join('|');
 
     const qrHost = document.createElement('div');
     try {
@@ -797,13 +902,14 @@ html, body { margin: 0; padding: 0; width: 80mm; height: 50mm; font-family: Aria
 .producto { font-size: 10pt; font-weight: 700; line-height: 1.15; color: #0b2e33; margin: 0 0 1.2mm; overflow-wrap: anywhere; }
 .linea { font-size: 6.6pt; line-height: 1.25; margin: .35mm 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sku { color: #47706b; }
+.imei { color: #405563; font-size: 5.8pt; }
 .precio { font-size: 9pt; font-weight: 700; color: #087f73; margin-top: .7mm; }
 .stock { font-size: 6.6pt; font-weight: 700; color: ${Number(producto.stock) <= 3 ? '#d43838' : '#47706b'}; }
 .qr { width: 27mm; flex-shrink: 0; text-align: center; }
 .qr img { display: block; width: 25mm; height: 25mm; margin: 0 auto; image-rendering: pixelated; }
 .qr small { display: block; font-size: 5.5pt; color: #47706b; margin-top: .7mm; }
 </style></head><body onload="setTimeout(function(){window.focus();window.print();},300)">
-<div class="etiqueta"><div class="info"><div class="cabecera">${logo}<span class="empresa">${escaparHTML(nombreComercio)}</span></div><p class="producto">${escaparHTML(producto.nombre || 'Producto')}</p><p class="linea">Categoría: ${escaparHTML(producto.categoria || '—')}</p><p class="linea sku">SKU: ${escaparHTML(producto.sku || 'Sin SKU')}</p><p class="precio">${escaparHTML(precio)}</p><p class="stock">Stock: ${Number(producto.stock) || 0} unidades</p>${descripcion ? '<p class="linea">' + escaparHTML(descripcion) + '</p>' : ''}</div><div class="qr"><img src="${qrSrc}" alt="Código QR"><small>Escanea para ver datos</small></div></div>
+<div class="etiqueta"><div class="info"><div class="cabecera">${logo}<span class="empresa">${escaparHTML(nombreComercio)}</span></div><p class="producto">${escaparHTML(producto.nombre || 'Producto')}</p><p class="linea">Categoría: ${escaparHTML(producto.categoria || '—')}</p><p class="linea sku">SKU: ${escaparHTML(producto.sku || 'Sin SKU')}</p>${imeiEtiqueta}<p class="precio">${escaparHTML(precio)}</p><p class="stock">Stock: ${Number(producto.stock) || 0} unidades</p>${descripcion ? '<p class="linea">' + escaparHTML(descripcion) + '</p>' : ''}</div><div class="qr"><img src="${qrSrc}" alt="Código QR"><small>Escanea para ver datos</small></div></div>
 </body></html>`;
     win.document.open();
     win.document.write(html);
@@ -1013,6 +1119,12 @@ async function activarNotificacionesPush() {
         mostrarAlertaError('No se pudo activar el push: ' + (e && e.message ? e.message : 'revisa permiso, HTTPS y VAPID.'));
         console.error('activarNotificacionesPush:', e);
     }
+}
+async function enviarAvisosStockCruceInventario(producto, stockAnterior, stockNuevo) {
+    var anterior = Number(stockAnterior) || 0;
+    var nuevo = Number(stockNuevo) || 0;
+    var niveles = [3, 2, 1, 0].filter(function (nivel) { return anterior > nivel && nuevo <= nivel; });
+    for (const nivel of niveles) await enviarAvisoStockInicial(Object.assign({}, producto, { stock: nivel }));
 }
 async function enviarAvisoStockInicial(prod) {
     var stock = Number(prod.stock) || 0;
