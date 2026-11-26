@@ -9,10 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <!-- SUPABASE (CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <!-- SHEETJS PARA EXPORTAR A EXCEL (CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
     <!-- JSPDF PARA GENERAR TICKETS PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -804,7 +802,6 @@ html[data-theme="claro"] .stat-value { color: #1a1e28 !important; }
 html[data-theme="claro"] .stat-label, html[data-theme="claro"] .stat-icon { color: #6b7280 !important; }
 html[data-theme="claro"] select option { color: #1a1e28 !important; background: #fff !important; }
 html[data-theme="claro"] .regi-line { color: #6b7280 !important; }
-
 /* ---- GRADIENTE ----- */
 html[data-theme="gradiente"] body { background: radial-gradient(circle at top left, #2a1a4a 0%, #16102b 48%, #0c0a16 100%) !important; color: #f5f3ff !important; }
 html[data-theme="gradiente"] h1, html[data-theme="gradiente"] h2, html[data-theme="gradiente"] h3 { color: #f5f3ff !important; }
@@ -855,7 +852,6 @@ html[data-theme="gradiente"] .hm-panel-title { color: #c4b5e8 !important; }
 html[data-theme="gradiente"] .hm-btn { background: rgba(167,139,250,.12) !important; border-color: rgba(167,139,250,.4) !important; }
 html[data-theme="gradiente"] .hm-btn span { background: #a78bfa !important; }
 html[data-theme="gradiente"] .hm-item:hover { border-color: rgba(167,139,250,.6) !important; background: rgba(167,139,250,.22) !important; }
-
 /* ---- ESMERALDA ----- */
 html[data-theme="esmeralda"] body { background: radial-gradient(circle at top left, #012b22 0%, #0b1f1a 50%, #061311 100%) !important; color: #f0fff9 !important; }
 html[data-theme="esmeralda"] h1, html[data-theme="esmeralda"] h2, html[data-theme="esmeralda"] h3 { color: #f0fff9 !important; }
@@ -900,7 +896,6 @@ html[data-theme="esmeralda"] .hm-panel-title { color: #7ea69b !important; }
 html[data-theme="esmeralda"] .hm-btn { background: rgba(52,211,153,.12) !important; border-color: rgba(52,211,153,.4) !important; }
 html[data-theme="esmeralda"] .hm-btn span { background: #34d399 !important; }
 html[data-theme="esmeralda"] .hm-item:hover { border-color: rgba(52,211,153,.6) !important; background: rgba(52,211,153,.22) !important; }
-
 /* ---- OCÉANO ----- */
 html[data-theme="oceano"] body { background: radial-gradient(circle at top left, #06192e 0%, #0d2133 45%, #05101f 100%) !important; color: #eef5ff !important; }
 html[data-theme="oceano"] h1, html[data-theme="oceano"] h2, html[data-theme="oceano"] h3 { color: #eef5ff !important; }
@@ -945,7 +940,6 @@ html[data-theme="oceano"] .hm-panel-title { color: #8aa1b8 !important; }
 html[data-theme="oceano"] .hm-btn { background: rgba(56,189,248,.12) !important; border-color: rgba(56,189,248,.4) !important; }
 html[data-theme="oceano"] .hm-btn span { background: #38bdf8 !important; }
 html[data-theme="oceano"] .hm-item:hover { border-color: rgba(56,189,248,.6) !important; background: rgba(56,189,248,.22) !important; }
-
 /* ========== LOCKSCREEN (todas las 5 paletas) ========== */
 .jk-lock { position: fixed; inset: 0; z-index: 15000; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(6,9,14,.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .jk-lock.show { display: flex; animation: jkLockIn .4s ease both; }
@@ -1025,7 +1019,6 @@ html[data-theme="oceano"] .jk-lock-warn i { color: #fde047 !important; }
 html[data-theme="oceano"] .jk-lock-foot { color: #8aa1b8 !important; }
 html[data-theme="oceano"] .jk-lock-link { color: #38bdf8 !important; }
 body.jk-locked { overflow: hidden !important; }
-
 </style>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_MX">
@@ -1047,9 +1040,7 @@ body.jk-locked { overflow: hidden !important; }
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sistema JK">
-
 <link rel="manifest" href="manifest.json">
-
 <style>
 /* Acciones de operación e historial de bajas */
 .op-row.op-row-deleted { opacity: .72; border-left-color: #ff5e5e !important; }
@@ -1102,7 +1093,6 @@ html[data-theme="claro"] .op-edit-cancel { background:#f1f4f8 !important; color:
         <div class="jk-lock-foot">¿Primera vez? <button type="button" id="jkLockConfigurar" class="jk-lock-link">Crear mi comercio</button></div>
     </div>
 </div>
-
     <div class="container">
       <!-- HEADER -->
       <header class="header">
@@ -1267,7 +1257,6 @@ html[data-theme="claro"] .op-edit-cancel { background:#f1f4f8 !important; color:
             .order("created_at", { ascending: false });
           const valorFiltro = filtroPeriodoEl.value;
           const ahora = new Date();
-
           if (valorFiltro === "este_mes") {
   const primerDiaMes = new Date(
     ahora.getFullYear(),
@@ -1697,7 +1686,6 @@ if (urlsImagenes.length > 0) {
           if (!boton) return;
           try {
             const datos = JSON.parse(decodeURIComponent(boton.dataset.ticket));
-
             if (!window.jspdf || !window.jspdf.jsPDF) {
               alert("PDF no disponible aún.");
               return;
@@ -2007,14 +1995,12 @@ function jkInicializar() {
     jkAplicarTema((brand && brand.theme) || 'oscuro');
     if (brand) { jkRenderMarca(brand); jkActualizarLockLogo(brand); }
     var cmd = window.cmdIniciar;
-
     var form = document.getElementById('jkLockForm');
     var input = document.getElementById('jkLockPassword');
     var btn = document.getElementById('jkLockBtn');
     var err = document.getElementById('jkLockErr');
     var configurarBtn = document.getElementById('jkLockConfigurar');
     var lock = document.getElementById('jkLock');
-
     function bindLockscreen() {
         if (form) form.addEventListener('submit', function (e) { e.preventDefault(); entrar(); });
         if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
@@ -2048,7 +2034,6 @@ function jkInicializar() {
             btn.innerHTML = '<i class="fa-solid fa-lock"></i> Ingresar';
         });
     }
-
     if (configurar) {
         // Modo crear comercio desde cero: sin lockscreen
         if (lock) lock.classList.remove('show');
@@ -2056,16 +2041,13 @@ function jkInicializar() {
         window.location.href = 'index.html?configurar=1';
         return;
     }
-
     bindLockscreen();
     window.addEventListener('jk-install-closed', unlockAndStart);
-
     if (active) {
         // Sesión activa — desbloquear, sin lockscreen
         unlockAndStart();
         return;
     }
-
     // Sin sesión activa — lockscreen
     jkMostrarLockscreen();
 }
