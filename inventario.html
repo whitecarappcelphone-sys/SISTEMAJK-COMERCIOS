@@ -121,7 +121,6 @@ input:focus, select:focus, textarea:focus { border-color: #12d8c4; box-shadow: 0
 .custom-alert-container { position: fixed; top: 25px; left: 0; right: 0; width: 280px; max-width: 90vw; margin: 0 auto; z-index: 9999999; box-sizing: border-box; background: #171a21; border: 2px solid #12d8c4; border-radius: 14px; padding: 16px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.85); text-align: center; font-family: 'Poppins', sans-serif; }
 .custom-alert-container.error { border-color: #ff5e5e; }
 </style>
-
 <script>
 (function(){try{var c=null;var s=sessionStorage.getItem('jk_session');if(s){try{c=JSON.parse(s)}catch(e){}}if(!c){c=JSON.parse(localStorage.getItem('jk_comercio')||'null');}document.documentElement.setAttribute('data-theme',(c&&c.theme)||'oscuro');}catch(e){document.documentElement.setAttribute('data-theme','oscuro');}})();
 </script>
@@ -155,6 +154,8 @@ html[data-theme="claro"] .form-header p, html[data-theme="claro"] .panel-header 
 html[data-theme="claro"] .form-modal, html[data-theme="claro"] .modal-overlay, html[data-theme="claro"] .rep-overlay { background: rgba(15, 21, 32, .42) !important; }
 html[data-theme="claro"] .modal-close { border-color: rgba(0,0,0,.18) !important; background: #f1f4f8 !important; color: #1a1e28 !important; }
 html[data-theme="claro"] .modal-close:hover { background: rgba(225,29,72,.12) !important; border-color: rgba(225,29,72,.5) !important; color: #e11d48 !important; }
+html[data-theme="claro"] .close-modal { background: #f1f4f8 !important; color: #1a1e28 !important; border: 1px solid rgba(0,0,0,.18) !important; }
+html[data-theme="claro"] .close-modal:hover { background: #e11d48 !important; color: #ffffff !important; border-color: #e11d48 !important; }
 html[data-theme="claro"] .conta-seg { background: #f1f4f8 !important; border-color: rgba(0,0,0,.08) !important; }
 html[data-theme="claro"] .conta-seg button { color: #4b5563 !important; }
 html[data-theme="claro"] .conta-seg button.on { background: #0d9488 !important; color: #ffffff !important; }
@@ -204,7 +205,6 @@ html[data-theme="claro"] .stat-value { color: #1a1e28 !important; }
 html[data-theme="claro"] .stat-label, html[data-theme="claro"] .stat-icon { color: #6b7280 !important; }
 html[data-theme="claro"] select option { color: #1a1e28 !important; background: #fff !important; }
 html[data-theme="claro"] .regi-line { color: #6b7280 !important; }
-
 /* ---- GRADIENTE ----- */
 html[data-theme="gradiente"] body { background: radial-gradient(circle at top left, #2a1a4a 0%, #16102b 48%, #0c0a16 100%) !important; color: #f5f3ff !important; }
 html[data-theme="gradiente"] h1, html[data-theme="gradiente"] h2, html[data-theme="gradiente"] h3 { color: #f5f3ff !important; }
@@ -255,7 +255,6 @@ html[data-theme="gradiente"] .hm-panel-title { color: #c4b5e8 !important; }
 html[data-theme="gradiente"] .hm-btn { background: rgba(167,139,250,.12) !important; border-color: rgba(167,139,250,.4) !important; }
 html[data-theme="gradiente"] .hm-btn span { background: #a78bfa !important; }
 html[data-theme="gradiente"] .hm-item:hover { border-color: rgba(167,139,250,.6) !important; background: rgba(167,139,250,.22) !important; }
-
 /* ---- ESMERALDA ----- */
 html[data-theme="esmeralda"] body { background: radial-gradient(circle at top left, #012b22 0%, #0b1f1a 50%, #061311 100%) !important; color: #f0fff9 !important; }
 html[data-theme="esmeralda"] h1, html[data-theme="esmeralda"] h2, html[data-theme="esmeralda"] h3 { color: #f0fff9 !important; }
@@ -300,7 +299,6 @@ html[data-theme="esmeralda"] .hm-panel-title { color: #7ea69b !important; }
 html[data-theme="esmeralda"] .hm-btn { background: rgba(52,211,153,.12) !important; border-color: rgba(52,211,153,.4) !important; }
 html[data-theme="esmeralda"] .hm-btn span { background: #34d399 !important; }
 html[data-theme="esmeralda"] .hm-item:hover { border-color: rgba(52,211,153,.6) !important; background: rgba(52,211,153,.22) !important; }
-
 /* ---- OCÉANO ----- */
 html[data-theme="oceano"] body { background: radial-gradient(circle at top left, #06192e 0%, #0d2133 45%, #05101f 100%) !important; color: #eef5ff !important; }
 html[data-theme="oceano"] h1, html[data-theme="oceano"] h2, html[data-theme="oceano"] h3 { color: #eef5ff !important; }
@@ -345,7 +343,6 @@ html[data-theme="oceano"] .hm-panel-title { color: #8aa1b8 !important; }
 html[data-theme="oceano"] .hm-btn { background: rgba(56,189,248,.12) !important; border-color: rgba(56,189,248,.4) !important; }
 html[data-theme="oceano"] .hm-btn span { background: #38bdf8 !important; }
 html[data-theme="oceano"] .hm-item:hover { border-color: rgba(56,189,248,.6) !important; background: rgba(56,189,248,.22) !important; }
-
 /* ========== LOCKSCREEN (todas las 5 paletas) ========== */
 .jk-lock { position: fixed; inset: 0; z-index: 15000; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(6,9,14,.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .jk-lock.show { display: flex; animation: jkLockIn .4s ease both; }
@@ -425,7 +422,6 @@ html[data-theme="oceano"] .jk-lock-warn i { color: #fde047 !important; }
 html[data-theme="oceano"] .jk-lock-foot { color: #8aa1b8 !important; }
 html[data-theme="oceano"] .jk-lock-link { color: #38bdf8 !important; }
 body.jk-locked { overflow: hidden !important; }
-
 </style>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_MX">
@@ -447,9 +443,7 @@ body.jk-locked { overflow: hidden !important; }
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sistema JK">
-
 <link rel="manifest" href="manifest.json">
-
 <style>
 /* ============ ADMIN GATE ============ */
 .admin-gate { position: fixed; inset: 0; z-index: 14900; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(6,9,14,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: 0; transition: opacity .35s ease; }
@@ -511,7 +505,6 @@ html[data-theme="claro"] .btn-stock-edit { color: #9a5b00 !important; background
         <div class="jk-lock-foot">¿Primera vez? <button type="button" id="jkLockConfigurar" class="jk-lock-link">Crear mi comercio</button></div>
     </div>
 </div>
-
 <!-- GATE ADMINISTRADOR (PIN de asesor) -->
 <div class="admin-gate" id="adminGate">
     <div class="admin-gate-box">
@@ -526,7 +519,6 @@ html[data-theme="claro"] .btn-stock-edit { color: #9a5b00 !important; background
         <small class="admin-gate-foot">¿No tienes acceso? <a href="index.html">Volver a Operaciones</a></small>
     </div>
 </div>
-
 <div class="container">
     <!-- CABECERA PRINCIPAL -->
     <div class="header">
@@ -571,7 +563,6 @@ html[data-theme="claro"] .btn-stock-edit { color: #9a5b00 !important; background
 <div id="modalInventario" class="modal-overlay">
     <div class="modal-content">
         <button class="close-modal" onclick="cerrarModal()"><i class="fa-solid fa-xmark"></i></button>
-
         <div class="modal-header">
             <h3><i class="fa-solid fa-box-open"></i> Nuevo Producto</h3>
             <p style="color:#7d8594; font-size:12px; margin-top:5px;">Ingresa los datos para agregarlo a la base de datos real.</p>
@@ -595,15 +586,12 @@ html[data-theme="claro"] .btn-stock-edit { color: #9a5b00 !important; background
                         <div class="field"><label for="inv_imei_2">IMEI 2</label><input type="text" id="inv_imei_2" inputmode="numeric" placeholder="IMEI secundario (opcional)"></div>
                     </div>
                 </div>
-
                 <div class="field"><label>Precio de Venta ($) *</label><input type="number" id="inv_precio_venta" placeholder="Ej: 50000" required></div>
                 <div class="field"><label>Precio de Compra / Costo ($)</label><input type="number" id="inv_precio_compra" value="0"></div>
                 <div class="field"><label>Stock Inicial (Cantidad) *</label><input type="number" id="inv_stock" placeholder="Ej: 10" required></div>
-
                 <div class="field full"><label>Descripción / Detalles</label><textarea id="inv_descripcion" style="min-height: 80px;" placeholder="Características del producto..."></textarea></div>
                 <div class="field full"><label>Foto del Producto *</label><input type="file" id="inv_imagen" accept="image/*" required></div>
             </div>
-
             <button type="button" class="submit" id="btnSubmit" onclick="guardarProducto()">
                 <i class="fa-solid fa-cloud-arrow-up"></i> Guardar en Inventario
             </button>
@@ -684,17 +672,14 @@ function actualizarCamposCategoria() {
 async function subirImagen(file) {
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-
     const { data, error } = await window.invSupabase.storage.from('productos').upload(fileName, file);
     if (error) throw error;
-
     const { data: publicUrlData } = window.invSupabase.storage.from('productos').getPublicUrl(fileName);
     return publicUrlData.publicUrl;
 }
 // NUEVA FUNCIÓN GUARDAR PRODUCTO
 async function guardarProducto() {
     const form = document.getElementById('formInventario');
-
     // Forzar validación HTML5
     if (!form.checkValidity()) {
         form.reportValidity();
@@ -745,7 +730,6 @@ async function cargarInventario() {
     const { data, error } = await window.invSupabase.from('inventario').select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('created_at', { ascending: false });
     window.productosInventario = data || [];
     const tbody = document.getElementById('tablaProductos');
-
     if (error) {
         tbody.innerHTML = `<tr><td colspan="7" style="color:#ff4757; text-align:center; padding: 20px;">Error cargando datos: ${error.message}</td></tr>`;
         return;
@@ -758,13 +742,11 @@ async function cargarInventario() {
     data.forEach(prod => {
         const estadoClase = prod.stock <= prod.stock_minimo ? 'stock-low' : '';
         const imgHtml = prod.imagen_url ? `<img src="${prod.imagen_url}" class="prod-img">` : '<div class="prod-img" style="display:flex;align-items:center;justify-content:center;font-size:10px;color:#7d8594;">N/A</div>';
-
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${imgHtml}</td>
             <td>
                 <strong style="font-size:14px; color:#fff;">${prod.nombre}</strong>
-
                 <small style="color:#7d8594"><i class="fa-solid fa-barcode"></i> ${prod.sku || 'Sin SKU'}</small>
             </td>
             <td><span style="background:rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${prod.categoria}</span></td>
@@ -840,7 +822,6 @@ function imprimirEtiquetaProducto(id) {
     const producto = (window.productosInventario || []).find(function (p) { return String(p.id) === String(id); });
     if (!producto) { mostrarAlertaError('No se encontró el producto para imprimir.'); return; }
     if (typeof QRCode === 'undefined') { mostrarAlertaError('No se pudo cargar la librería QR. Recarga la página e inténtalo de nuevo.'); return; }
-
     const comercio = window.JK_COMERCIO || {};
     const comercioData = comercio.data || {};
     const nombreComercio = comercioData.empresa || comercio.name || 'Comercio';
@@ -866,7 +847,6 @@ function imprimirEtiquetaProducto(id) {
         'P:' + qrSafe(Number(producto.precio_venta) || 0, 12),
         'ST:' + qrSafe(Number(producto.stock) || 0, 6)
     ].filter(Boolean).join('|');
-
     const qrHost = document.createElement('div');
     try {
         new QRCode(qrHost, { text: textoQR, width: 260, height: 260, correctLevel: QRCode.CorrectLevel.M });
@@ -885,7 +865,6 @@ function imprimirEtiquetaProducto(id) {
     const qrImgElement = qrHost.querySelector('img');
     const qrSrc = qrCanvas ? qrCanvas.toDataURL('image/png') : (qrImgElement ? qrImgElement.src : '');
     if (!qrSrc) { mostrarAlertaError('No se pudo obtener la imagen del código QR.'); return; }
-
     const win = window.open('', '_blank', 'width=520,height=460');
     if (!win) { mostrarAlertaError('Permite las ventanas emergentes para imprimir la etiqueta.'); return; }
     const logo = comercio.logo_url ? '<img class="logo" src="' + escaparHTML(comercio.logo_url) + '" alt="Logo">' : '';
@@ -964,7 +943,6 @@ window.cmdIniciar = function () { inventarioCheckRol(); };
    ADMIN GATE + PUSH NOTIFICATIONS (Inventario)
    ===================================================================== */
 const VAPID_PUBLIC_KEY = 'BH33bOLS6dkjLcJ13YNrH1RoIcw5tQ-ViYdhmpk-_NckxbpLodetnGpevX0otS1RzrrfA4jWgShNVu5Cj2OgwAc';
-
 async function hashPinAdmin(pin) {
     const texto = 'JK-SEGURO-' + String(pin);
     try {
@@ -1158,7 +1136,6 @@ async function enviarAvisoStockInicial(prod) {
         if (res.error) console.warn('send-push:', res.error);
     } catch (e) { console.warn('Stock push:', e); }
 }
-
 </script>
 <script>
 /* ===== COMERCIO (multi-tenant bootstrap) ===== */
@@ -1263,14 +1240,12 @@ function jkInicializar() {
     jkAplicarTema((brand && brand.theme) || 'oscuro');
     if (brand) { jkRenderMarca(brand); jkActualizarLockLogo(brand); }
     var cmd = window.cmdIniciar;
-
     var form = document.getElementById('jkLockForm');
     var input = document.getElementById('jkLockPassword');
     var btn = document.getElementById('jkLockBtn');
     var err = document.getElementById('jkLockErr');
     var configurarBtn = document.getElementById('jkLockConfigurar');
     var lock = document.getElementById('jkLock');
-
     function bindLockscreen() {
         if (form) form.addEventListener('submit', function (e) { e.preventDefault(); entrar(); });
         if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
@@ -1304,7 +1279,6 @@ function jkInicializar() {
             btn.innerHTML = '<i class="fa-solid fa-lock"></i> Ingresar';
         });
     }
-
     if (configurar) {
         // Modo crear comercio desde cero: sin lockscreen
         if (lock) lock.classList.remove('show');
@@ -1312,16 +1286,13 @@ function jkInicializar() {
         window.location.href = 'index.html?configurar=1';
         return;
     }
-
     bindLockscreen();
     window.addEventListener('jk-install-closed', unlockAndStart);
-
     if (active) {
         // Sesión activa — desbloquear, sin lockscreen
         unlockAndStart();
         return;
     }
-
     // Sin sesión activa — lockscreen
     jkMostrarLockscreen();
 }
