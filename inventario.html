@@ -588,7 +588,12 @@ html[data-theme="claro"] .btn-stock-edit { color: #9a5b00 !important; background
                 </div>
                 <div class="field"><label>Precio de Venta ($) *</label><input type="number" id="inv_precio_venta" placeholder="Ej: 50000" required></div>
                 <div class="field"><label>Precio de Compra / Costo ($)</label><input type="number" id="inv_precio_compra" value="0"></div>
-                <div class="field"><label>Stock Inicial (Cantidad) *</label><input type="number" id="inv_stock" placeholder="Ej: 10" required></div>
+                <div class="field">
+                    <label for="inv_stock_minimo">Stock Mínimo *</label>
+                    <input type="number" id="inv_stock_minimo" min="0" value="3" placeholder="Ej: 3" required style="margin-bottom: 14px;">
+                    <label for="inv_stock">Stock Inicial (Cantidad) *</label>
+                    <input type="number" id="inv_stock" min="0" placeholder="Ej: 10" required>
+                </div>
                 <div class="field full"><label>Descripción / Detalles</label><textarea id="inv_descripcion" style="min-height: 80px;" placeholder="Características del producto..."></textarea></div>
                 <div class="field full"><label>Foto del Producto *</label><input type="file" id="inv_imagen" accept="image/*" required></div>
             </div>
@@ -694,14 +699,16 @@ async function guardarProducto() {
         if (fileInput.files.length > 0) {
             imageUrl = await subirImagen(fileInput.files[0]);
         }
+        const stockMinimoInput = parseInt(document.getElementById('inv_stock_minimo').value, 10);
+        const stockMinimo = (!isNaN(stockMinimoInput) && stockMinimoInput >= 0) ? stockMinimoInput : 3;
         const nuevoProducto = {
             nombre: document.getElementById('inv_nombre').value,
             categoria: document.getElementById('inv_categoria').value,
             sku: document.getElementById('inv_sku').value || null,
             precio_venta: parseFloat(document.getElementById('inv_precio_venta').value),
             precio_compra: parseFloat(document.getElementById('inv_precio_compra').value) || 0,
-            stock: parseInt(document.getElementById('inv_stock').value),
-            stock_minimo: 3,
+            stock: parseInt(document.getElementById('inv_stock').value, 10),
+            stock_minimo: stockMinimo,
             descripcion: document.getElementById('inv_descripcion').value,
             imagen_url: imageUrl,
             imei_serial: document.getElementById('inv_categoria').value === 'Celular' ? (document.getElementById('inv_imei_1').value.trim() || null) : null,
@@ -711,7 +718,7 @@ async function guardarProducto() {
         const { data: productoCreado, error } = await window.invSupabase.from('inventario').insert([nuevoProducto]).select('id').single();
         if (error) throw error;
         nuevoProducto.id = productoCreado && productoCreado.id;
-        if (Number(nuevoProducto.stock) <= 3) await enviarAvisoStockInicial(nuevoProducto);
+        if (Number(nuevoProducto.stock) <= stockMinimo) await enviarAvisoStockInicial(nuevoProducto);
         mostrarAlertaExito("¡Producto agregado con éxito al inventario!");
         form.reset();
         actualizarCamposCategoria();
@@ -849,12 +856,12 @@ function imprimirEtiquetaProducto(id) {
     ].filter(Boolean).join('|');
     const qrHost = document.createElement('div');
     try {
-        new QRCode(qrHost, { text: textoQR, width: 260, height: 260, correctLevel: QRCode.CorrectLevel.M });
+        new QRCode(qrHost, { text: textoQR, width: 420, height: 420, correctLevel: QRCode.CorrectLevel.M });
     } catch (e) {
         // Respaldo de longitud mínima para evitar que el generador desborde.
         try {
             qrHost.innerHTML = '';
-            new QRCode(qrHost, { text: 'JK|' + String(producto.id || producto.sku || producto.nombre || 'PRODUCTO').slice(0, 80), width: 260, height: 260, correctLevel: QRCode.CorrectLevel.L });
+            new QRCode(qrHost, { text: 'JK|' + String(producto.id || producto.sku || producto.nombre || 'PRODUCTO').slice(0, 80), width: 420, height: 420, correctLevel: QRCode.CorrectLevel.L });
         } catch (fallbackError) {
             console.error('QR:', e, fallbackError);
             mostrarAlertaError('No se pudo generar el código QR para este producto.');
@@ -865,37 +872,158 @@ function imprimirEtiquetaProducto(id) {
     const qrImgElement = qrHost.querySelector('img');
     const qrSrc = qrCanvas ? qrCanvas.toDataURL('image/png') : (qrImgElement ? qrImgElement.src : '');
     if (!qrSrc) { mostrarAlertaError('No se pudo obtener la imagen del código QR.'); return; }
-    const win = window.open('', '_blank', 'width=520,height=460');
+    const stockMinimoProd = (producto.stock_minimo !== null && producto.stock_minimo !== undefined && !isNaN(Number(producto.stock_minimo))) ? Number(producto.stock_minimo) : 3;
+    const win = window.open('', '_blank', 'width=420,height=640');
     if (!win) { mostrarAlertaError('Permite las ventanas emergentes para imprimir la etiqueta.'); return; }
     const logo = comercio.logo_url ? '<img class="logo" src="' + escaparHTML(comercio.logo_url) + '" alt="Logo">' : '';
     const html = `<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Etiqueta ${escaparHTML(producto.nombre || 'Producto')}</title>
 <style>
-@page { size: 80mm 50mm; margin: 0 !important; }
+@page { margin: 0 !important; }
 * { box-sizing: border-box; }
-html, body { margin: 0 !important; padding: 0 !important; width: 80mm !important; height: 50mm !important; min-width: 80mm !important; max-width: 80mm !important; font-family: Arial, Helvetica, sans-serif; color: #102027; background: #fff; overflow: hidden !important; }
-.etiqueta { position: fixed; top: 0; left: 0; width: 80mm; height: 50mm; margin: 0; padding: 2.4mm 2.8mm; display: flex; align-items: center; gap: 2.5mm; overflow: hidden; border: .35mm solid #0b2e33; }
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  min-height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000000;
+  background: #ffffff;
+}
+.etiqueta {
+  width: 100%;
+  margin: 0 auto;
+  padding: 4vw 3.5vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2.2vw;
+  text-align: center;
+  border-bottom: 2px dashed #000000;
+}
+.cabecera {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5vw;
+  padding-bottom: 2vw;
+  border-bottom: 2px dashed #000000;
+}
+.logo {
+  width: 22vw;
+  max-width: 96px;
+  height: auto;
+  max-height: 70px;
+  object-fit: contain;
+}
+.empresa {
+  font-size: clamp(13px, 5.2vw, 24px);
+  font-weight: 800;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  line-height: 1.15;
+}
+.producto {
+  font-size: clamp(16px, 6.4vw, 30px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #000000;
+  margin: 1vw 0;
+  overflow-wrap: anywhere;
+}
+.precio-box {
+  width: 100%;
+  border: 2px solid #000000;
+  border-radius: 6px;
+  padding: 2vw 2.5vw;
+  margin: 1vw 0;
+}
+.precio {
+  font-size: clamp(18px, 7.6vw, 34px);
+  font-weight: 900;
+  color: #000000;
+  margin: 0;
+  line-height: 1.1;
+}
+.datos {
+  width: 100%;
+  text-align: left;
+  border-top: 1px dashed #000000;
+  border-bottom: 1px dashed #000000;
+  padding: 2vw 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+}
+.linea {
+  font-size: clamp(11px, 4.1vw, 18px);
+  line-height: 1.3;
+  margin: 0;
+  color: #000000;
+  overflow-wrap: anywhere;
+}
+.linea b { font-weight: 800; }
+.imei { font-size: clamp(10px, 3.7vw, 16px); font-weight: 700; }
+.stock {
+  font-size: clamp(11px, 4.1vw, 18px);
+  font-weight: 800;
+  color: ${Number(producto.stock) <= stockMinimoProd ? '#000000' : '#000000'};
+}
+.qr {
+  width: 100%;
+  padding-top: 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.qr img {
+  display: block;
+  width: 68vw;
+  max-width: 260px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  image-rendering: pixelated;
+}
+.qr small {
+  display: block;
+  font-size: clamp(10px, 3.6vw, 15px);
+  font-weight: 700;
+  color: #000000;
+  margin-top: 1.8vw;
+  text-transform: uppercase;
+}
 @media print {
-  @page { size: 80mm 50mm; margin: 0 !important; }
-  html, body { display: block !important; width: 80mm !important; height: 50mm !important; min-width: 80mm !important; max-width: 80mm !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; }
-  body { position: relative !important; }
-  .etiqueta { position: absolute !important; top: 0 !important; left: 0 !important; inset: auto !important; width: 80mm !important; height: 50mm !important; min-width: 80mm !important; max-width: 80mm !important; margin: 0 !important; page-break-before: avoid !important; page-break-after: avoid !important; page-break-inside: avoid !important; break-before: avoid-page !important; break-after: avoid-page !important; break-inside: avoid-page !important; }
+  @page { margin: 0 !important; }
+  html, body {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .etiqueta {
+    width: 100% !important;
+    max-width: 100% !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid-page !important;
+  }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
-.info { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
-.cabecera { display: flex; align-items: center; gap: 1.5mm; margin-bottom: 1.2mm; min-height: 7mm; }
-.logo { width: 7mm; height: 7mm; object-fit: contain; flex-shrink: 0; }
-.empresa { font-size: 7pt; font-weight: 700; color: #0b5f58; line-height: 1.1; max-height: 7mm; overflow: hidden; }
-.producto { font-size: 10pt; font-weight: 700; line-height: 1.15; color: #0b2e33; margin: 0 0 1.2mm; overflow-wrap: anywhere; }
-.linea { font-size: 6.6pt; line-height: 1.25; margin: .35mm 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sku { color: #47706b; }
-.imei { color: #405563; font-size: 5.8pt; }
-.precio { font-size: 9pt; font-weight: 700; color: #087f73; margin-top: .7mm; }
-.stock { font-size: 6.6pt; font-weight: 700; color: ${Number(producto.stock) <= 3 ? '#d43838' : '#47706b'}; }
-.qr { width: 27mm; flex-shrink: 0; text-align: center; }
-.qr img { display: block; width: 25mm; height: 25mm; margin: 0 auto; image-rendering: pixelated; }
-.qr small { display: block; font-size: 5.5pt; color: #47706b; margin-top: .7mm; }
 </style></head><body onload="setTimeout(function(){window.focus();window.print();},300)">
-<div class="etiqueta"><div class="info"><div class="cabecera">${logo}<span class="empresa">${escaparHTML(nombreComercio)}</span></div><p class="producto">${escaparHTML(producto.nombre || 'Producto')}</p><p class="linea">Categoría: ${escaparHTML(producto.categoria || '—')}</p><p class="linea sku">SKU: ${escaparHTML(producto.sku || 'Sin SKU')}</p>${imeiEtiqueta}<p class="precio">${escaparHTML(precio)}</p><p class="stock">Stock: ${Number(producto.stock) || 0} unidades</p>${descripcion ? '<p class="linea">' + escaparHTML(descripcion) + '</p>' : ''}</div><div class="qr"><img src="${qrSrc}" alt="Código QR"><small>Escanea para ver datos</small></div></div>
+<div class="etiqueta">
+  <div class="cabecera">${logo}<span class="empresa">${escaparHTML(nombreComercio)}</span></div>
+  <p class="producto">${escaparHTML(producto.nombre || 'Producto')}</p>
+  <div class="precio-box"><p class="precio">${escaparHTML(precio)}</p></div>
+  <div class="datos">
+    <p class="linea"><b>Categoría:</b> ${escaparHTML(producto.categoria || '—')}</p>
+    <p class="linea"><b>SKU:</b> ${escaparHTML(producto.sku || 'Sin SKU')}</p>
+    ${imeiEtiqueta}
+    <p class="linea stock"><b>Stock:</b> ${Number(producto.stock) || 0} un. (Mín: ${stockMinimoProd})</p>
+    ${descripcion ? '<p class="linea"><b>Detalle:</b> ' + escaparHTML(descripcion) + '</p>' : ''}
+  </div>
+  <div class="qr"><img src="${qrSrc}" alt="Código QR"><small>Escanea para cargar producto</small></div>
+</div>
 </body></html>`;
     win.document.open();
     win.document.write(html);
