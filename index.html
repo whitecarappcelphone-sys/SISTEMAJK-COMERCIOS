@@ -651,7 +651,6 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
     .hm-btn { width: 39px; height: 39px; }
 }
 </style>
-
 <!-- Script de inicialización temprana de tema -->
 <script>
 (function(){try{var c=null;var s=sessionStorage.getItem('jk_session');if(s){try{c=JSON.parse(s)}catch(e){}}if(!c){c=JSON.parse(localStorage.getItem('jk_comercio')||'null');}document.documentElement.setAttribute('data-theme',(c&&c.theme)||'oscuro');}catch(e){document.documentElement.setAttribute('data-theme','oscuro');}})();
@@ -735,7 +734,6 @@ html[data-theme="claro"] .stat-value { color: #1a1e28 !important; }
 html[data-theme="claro"] .stat-label, html[data-theme="claro"] .stat-icon { color: #6b7280 !important; }
 html[data-theme="claro"] select option { color: #1a1e28 !important; background: #fff !important; }
 html[data-theme="claro"] .regi-line { color: #6b7280 !important; }
-
 /* ---- GRADIENTE ----- */
 html[data-theme="gradiente"] body { background: radial-gradient(circle at top left, #2a1a4a 0%, #16102b 48%, #0c0a16 100%) !important; color: #f5f3ff !important; }
 html[data-theme="gradiente"] h1, html[data-theme="gradiente"] h2, html[data-theme="gradiente"] h3 { color: #f5f3ff !important; }
@@ -786,7 +784,6 @@ html[data-theme="gradiente"] .hm-panel-title { color: #c4b5e8 !important; }
 html[data-theme="gradiente"] .hm-btn { background: rgba(167,139,250,.12) !important; border-color: rgba(167,139,250,.4) !important; }
 html[data-theme="gradiente"] .hm-btn span { background: #a78bfa !important; }
 html[data-theme="gradiente"] .hm-item:hover { border-color: rgba(167,139,250,.6) !important; background: rgba(167,139,250,.22) !important; }
-
 /* ---- ESMERALDA ----- */
 html[data-theme="esmeralda"] body { background: radial-gradient(circle at top left, #012b22 0%, #0b1f1a 50%, #061311 100%) !important; color: #f0fff9 !important; }
 html[data-theme="esmeralda"] h1, html[data-theme="esmeralda"] h2, html[data-theme="esmeralda"] h3 { color: #f0fff9 !important; }
@@ -831,7 +828,6 @@ html[data-theme="esmeralda"] .hm-panel-title { color: #7ea69b !important; }
 html[data-theme="esmeralda"] .hm-btn { background: rgba(52,211,153,.12) !important; border-color: rgba(52,211,153,.4) !important; }
 html[data-theme="esmeralda"] .hm-btn span { background: #34d399 !important; }
 html[data-theme="esmeralda"] .hm-item:hover { border-color: rgba(52,211,153,.6) !important; background: rgba(52,211,153,.22) !important; }
-
 /* ---- OCÉANO ----- */
 html[data-theme="oceano"] body { background: radial-gradient(circle at top left, #06192e 0%, #0d2133 45%, #05101f 100%) !important; color: #eef5ff !important; }
 html[data-theme="oceano"] h1, html[data-theme="oceano"] h2, html[data-theme="oceano"] h3 { color: #eef5ff !important; }
@@ -876,7 +872,6 @@ html[data-theme="oceano"] .hm-panel-title { color: #8aa1b8 !important; }
 html[data-theme="oceano"] .hm-btn { background: rgba(56,189,248,.12) !important; border-color: rgba(56,189,248,.4) !important; }
 html[data-theme="oceano"] .hm-btn span { background: #38bdf8 !important; }
 html[data-theme="oceano"] .hm-item:hover { border-color: rgba(56,189,248,.6) !important; background: rgba(56,189,248,.22) !important; }
-
 /* ========== LOCKSCREEN (todas las 5 paletas) ========== */
 .jk-lock { position: fixed; inset: 0; z-index: 15000; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(6,9,14,.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .jk-lock.show { display: flex; animation: jkLockIn .4s ease both; }
@@ -956,7 +951,6 @@ html[data-theme="oceano"] .jk-lock-warn i { color: #fde047 !important; }
 html[data-theme="oceano"] .jk-lock-foot { color: #8aa1b8 !important; }
 html[data-theme="oceano"] .jk-lock-link { color: #38bdf8 !important; }
 body.jk-locked { overflow: hidden !important; }
-
 </style>
 <style>
 /* ============ ESTILOS EDICIÓN DE COMERCIO ============ */
@@ -986,7 +980,6 @@ body.jk-locked { overflow: hidden !important; }
 .com-password-row .conta-btn { white-space: nowrap; }
 .com-cfg-titulo { display: flex; align-items: center; gap: 8px; margin: 18px 0 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.06); font-size: 14px; font-weight: 600; color: #e9f8f6; }
 .com-cfg-titulo i { color: #12d8c4; }
-
 /* ============ POPUP INSTALACIÓN ============ */
 .jk-install { position: fixed; inset: 0; z-index: 15500; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(6,12,16,.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .jk-install.show { display: flex; animation: jkLockIn .4s ease both; }
@@ -1013,7 +1006,6 @@ html[data-theme="claro"] .jk-install-primary { background: linear-gradient(135de
 html[data-theme="claro"] .jk-install-ghost { background: #f1f4f8 !important; color: #1a1e28 !important; border-color: rgba(20,30,50,.14) !important; }
 html[data-theme="claro"] .jk-install-hint { color: #5b6673 !important; }
 body.jk-install-open { overflow: hidden !important; }
-
 /* ============ FIRMA / SELLO ============ */
 .firma-canvas { width: 100%; height: 170px; max-width: 800px; background: #ffffff; border-radius: 12px; border: 1px dashed rgba(18,216,196,.45); touch-action: none; cursor: crosshair; display: block; }
 .firma-wrap, .com-sello-wrap { margin-bottom: 14px; }
@@ -1055,6 +1047,33 @@ html[data-theme="claro"] .rep-pattern-line { stroke: #0d9488; }
 html[data-theme="claro"] .rep-pattern-num { fill: #334155; }
 html[data-theme="claro"] .rep-pattern-num.active { fill: #fff; }
 html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; background: rgba(13,148,136,.08) !important; }
+/* ============================================================
+   NUEVO: REGISTRAR INGRESO (Contabilidad)
+   Botón, formulario y listado de ingresos adicionales
+   ============================================================ */
+.conta-btn-ing { background: rgba(34,197,94,.13); border-color: rgba(34,197,94,.45); color: #4ade80; }
+.conta-btn-ing:hover { background: rgba(34,197,94,.26); border-color: #22c55e; }
+.conta-ing-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.conta-ing-grid .submit { grid-column: 1 / -1; margin-top: 6px; }
+.conta-ing-grid .field.full, .conta-ing-grid .conta-ing-res { grid-column: 1 / -1; }
+.conta-ing-note { margin: 0 0 12px; color: #7d8594; font-size: 11px; line-height: 1.55; }
+.conta-ing-res { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(34,197,94,.28); background: rgba(34,197,94,.07); color: #bfc6d2; font-size: 11.5px; line-height: 1.5; }
+.conta-ing-res i { color: #4ade80; flex-shrink: 0; }
+.conta-ing-res strong { color: #4ade80; }
+.conta-ing-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(34,197,94,.35); background: rgba(34,197,94,.12); color: #4ade80; font-size: 10px; font-weight: 600; white-space: nowrap; }
+.conta-ing-vinc { color: #7d8594; font-size: 10px; display: block; margin-top: 3px; }
+.kpi.ing { border-color: rgba(34,197,94,.22); }
+html[data-theme="claro"] .conta-btn-ing { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.4) !important; color: #15803d !important; }
+html[data-theme="gradiente"] .conta-btn-ing { background: rgba(52,211,153,.13) !important; border-color: rgba(52,211,153,.4) !important; color: #34d399 !important; }
+html[data-theme="esmeralda"] .conta-btn-ing { background: rgba(110,231,183,.14) !important; border-color: rgba(110,231,183,.4) !important; color: #6ee7b7 !important; }
+html[data-theme="oceano"] .conta-btn-ing { background: rgba(52,211,153,.13) !important; border-color: rgba(52,211,153,.4) !important; color: #6ee7b7 !important; }
+html[data-theme="claro"] .conta-ing-res { background: rgba(22,163,74,.07) !important; border-color: rgba(22,163,74,.25) !important; color: #1a1e28 !important; }
+html[data-theme="claro"] .conta-ing-res i, html[data-theme="claro"] .conta-ing-res strong { color: #15803d !important; }
+html[data-theme="claro"] .conta-ing-chip { background: rgba(22,163,74,.1) !important; border-color: rgba(22,163,74,.3) !important; color: #15803d !important; }
+@media (max-width: 700px) {
+    .conta-ing-grid { grid-template-columns: 1fr; }
+    .conta-ing-res { flex-direction: column; align-items: flex-start; }
+}
 </style>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_MX">
@@ -1076,8 +1095,7 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sistema JK">
-
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="/manifest.json">
 </head>
 <body>
 <!-- POPUP INSTALACIÓN -->
@@ -1094,7 +1112,6 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
     </div>
 </div>
 <!-- LOCKSCREEN: contraseña del comercio -->
-
 <div class="jk-lock" id="jkLock">
     <div class="jk-lock-box">
         <div class="jk-lock-logo" id="jkLockLogo"><img id="jkLockLogoImg" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:20px;display:none"><span id="jkLockLogoText"><i class="fa-solid fa-lock"></i></span></div>
@@ -1210,6 +1227,8 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
                     <button type="button" data-periodo="todo" onclick="contaSetPeriodo('todo')">Todo</button>
                 </div>
                 <button type="button" class="conta-btn" onclick="contaCargar()"><i class="fa-solid fa-rotate"></i> Actualizar</button>
+                <!-- NUEVO: BOTON REGISTRAR INGRESO -->
+                <button type="button" class="conta-btn conta-btn-ing" onclick="contaAbrirIngreso()"><i class="fa-solid fa-money-bill-wave"></i> Registrar ingreso</button>
                 <button type="button" class="conta-btn conta-btn-pdf" onclick="contaReportePDFv2()"><i class="fa-solid fa-file-pdf"></i> Reporte PDF</button>
             </div>
             <div class="conta-periodo-label" id="contaPeriodoLabel">Cargando...</div>
@@ -1220,6 +1239,10 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
                 <div class="kpi"><span>Pagos electrónicos</span><strong id="kpi_electronicos">$0</strong><small>Transferencias y tarjeta</small></div>
                 <div class="kpi"><span>Efectivo recibido</span><strong id="kpi_efectivo">$0</strong><small>Ingreso en caja</small></div>
                 <div class="kpi"><span>Por cobrar</span><strong id="kpi_pendiente" class="c-warn">$0</strong><small>Saldos pendientes</small></div>
+                <!-- NUEVO: KPIs PARA LAS CUENTAS CLARAS DE LOS INGRESOS -->
+                <div class="kpi ing"><span>Ingresos por operaciones</span><strong id="kpi_ing_ops">$0</strong><small id="kpi_ing_ops_n">0 operaciones</small></div>
+                <div class="kpi ing"><span>Ingresos adicionales</span><strong id="kpi_ing_manuales" class="c-ok">$0</strong><small id="kpi_ing_manuales_n">0 registros manuales</small></div>
+                <div class="kpi ing"><span>Cobros de cartera</span><strong id="kpi_cobros" class="c-warn">$0</strong><small id="kpi_cobros_n">0 cobros en el periodo</small></div>
             </div>
             <div class="conta-sec">
                 <h4><i class="fa-solid fa-layer-group"></i> Ingresos por tipo de operación</h4>
@@ -1244,6 +1267,16 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
                         <tbody id="contaHistBody"></tbody>
                     </table>
                 </div>
+            </div>
+            <!-- NUEVO: SECCION DE INGRESOS ADICIONALES REGISTRADOS -->
+            <div class="conta-sec">
+                <div class="conta-sec-head">
+                    <h4><i class="fa-solid fa-money-bill-wave"></i> Ingresos adicionales registrados</h4>
+                    <button type="button" class="conta-btn conta-btn-ing" onclick="contaAbrirIngreso()"><i class="fa-solid fa-plus"></i> Registrar ingreso</button>
+                </div>
+                <p class="conta-ing-note">Ingresos que no provienen de una venta registrada en el sistema: cobros de cartera, servicios técnicos, ventas de mostrador, comisiones y rentas. Se suman a los ingresos del periodo, aparecen en las gráficas, en los KPIs y en el reporte PDF.</p>
+                <div class="conta-ing-res" id="conta_ing_res"></div>
+                <div class="lista-wrap" id="conta_ing_lista"></div>
             </div>
             <div class="conta-sec">
                 <h4><i class="fa-solid fa-money-bill-transfer"></i> Registrar egreso</h4>
@@ -1273,6 +1306,50 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
                     <button type="submit" class="submit" id="btnEgreso">Registrar egreso</button>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+<!-- NUEVO: MODAL REGISTRAR INGRESO -->
+<div class="form-modal" id="modal_ingreso">
+    <div class="form-modal-content conta-content">
+        <button type="button" class="modal-close" onclick="cerrarModalFormulario('modal_ingreso')" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+        <div class="conta-wrap">
+            <div class="form-header">
+                <div class="form-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
+                <div><h3>Registrar ingreso</h3><p>Ingresos que no vienen de una venta registrada: cobros de cartera, servicios, ventas de mostrador, comisiones y otros.</p></div>
+            </div>
+            <form id="form_ingreso" class="conta-ing-grid" onsubmit="event.preventDefault(); contaGuardarIngreso();">
+                <div class="field full"><label>Concepto</label><input type="text" id="in_concepto" placeholder="Ej: Cobro saldo factura JK/12 de Juan Pérez" required></div>
+                <div class="field"><label>Categoría</label>
+                    <select id="in_categoria" required>
+                        <option value="Cobro Cartera">Cobro de cartera / saldo pendiente</option>
+                        <option value="Servicio Técnico">Servicio técnico / taller</option>
+                        <option value="Venta Mostrador">Venta de mostrador (sin inventario)</option>
+                        <option value="Comisión">Comisiones / referidos</option>
+                        <option value="Renta">Renta / arriendo recibido</option>
+                        <option value="Otros">Otros ingresos</option>
+                    </select>
+                </div>
+                <div class="field"><label>Monto</label><input type="number" id="in_monto" min="1" step="1" required oninput="contaPreviewIngreso()"></div>
+                <div class="field"><label>Método de pago</label>
+                    <select id="in_metodo" required onchange="contaPreviewIngreso()">
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Tarjeta">Tarjeta</option>
+                    </select>
+                </div>
+                <div class="field"><label>Fecha</label><input type="date" id="in_fecha" required></div>
+                <div class="field full">
+                    <label>Vincular a una factura con saldo (opcional)</label>
+                    <select id="in_factura" onchange="contaPreviewIngreso()">
+                        <option value="">Sin vincular — ingreso libre</option>
+                    </select>
+                    <span class="asesor-hint">Si eliges una factura pendiente, el abono se descuenta del saldo por cobrar y el ingreso queda asociado a ese cliente (sin contarlo dos veces en el total).</span>
+                </div>
+                <div class="field full"><label>Notas (opcional)</label><input type="text" id="in_notas" placeholder="Ej: Abono del cliente Juan Pérez en efectivo"></div>
+                <div class="conta-ing-res" id="conta_ing_preview"><i class="fa-solid fa-circle-info"></i> <span>Elige la categoría, el monto y la fecha. Si el ingreso aplica a una factura, el saldo pendiente se actualizará automáticamente.</span></div>
+                <button type="submit" class="submit" id="btnIngreso">Registrar ingreso</button>
+            </form>
         </div>
     </div>
 </div>
@@ -1580,9 +1657,6 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
         </div>
     </div>
 </div>
-<!-- ============================================================
-PART 2
--->
 <!-- MODAL ANIMADO: FORMULARIO REPARACION -->
 <div class="form-modal" id="modal_reparacion">
     <div class="form-modal-content">
@@ -1933,11 +2007,12 @@ PART 2
         <div class="pdf-garantia">
             <strong>TÉRMINOS DE GARANTÍA</strong>
             <p id="pdf-garantia-texto">La garantía de todo producto o reparación es de 30 días calendario contados a partir de la emisión de este comprobante. No cubre golpes directos, ingreso de humedad, manipulación de terceros ajenos a la tienda, sobrecargas eléctricas, ni remoción de sellos de seguridad instalados en los repuestos o equipos.</p>
-            <div class="inv-direccion"><strong>DIRECCIÓN:</strong> <span id="cfg-direccion">Calle 14 # 2-67 Centro Ibagué-Tolima</span> &nbsp;·&nbsp; <strong>SERVICIOS:</strong> <span id="cfg-servicios">Técnico profesional y telefonía.</span></div>
+            <div class="inv-direccion"><strong>DIRECCIÓN:</strong> <span id="cfg-direccion">Calle 14 # 2-67 Centro Ibagué-Tolima</span>  ·  <strong>SERVICIOS:</strong> <span id="cfg-servicios">Técnico profesional y telefonía.</span></div>
         </div>
         <div class="pdf-signatures">
             <div class="signature-box">Recibí Conforme<span id="pdf-firma-cliente"></span></div>
-            <div class="signature-box">Autorizado<br>
+            <div class="signature-box">Autorizado
+
                 <span id="cfg-firma-img" class="factura-firma-img" style="display:none"><img id="cfg-firma-img-src" src="" alt="Firma" style="max-height:70px;max-width:180px;object-fit:contain"></span>
                 <span id="cfg-sello-img" class="factura-sello-img" style="display:none"><img id="cfg-sello-img-src" src="" alt="Sello" style="max-height:60px;max-width:180px;object-fit:contain"></span>
                 <span id="cfg-firma">ACCESORIOS JK</span></div>
@@ -1957,7 +2032,7 @@ const PREFIJO_FACTURA = "JK/";
 // NUEVO: texto de garantía por defecto (el original de la factura)
 let GARANTIA_POR_DEFECTO = "La garantía de todo producto o reparación es de 30 días calendario contados a partir de la emisión de este comprobante. No cubre golpes directos, ingreso de humedad, manipulación de terceros ajenos a la tienda, sobrecargas eléctricas, ni remoción de sellos de seguridad instalados en los repuestos o equipos.";
 // ============================================================
-// NUEVO: INICIO DE SESIÓN / REGISTRO DE ASESOR CON PIN (UNA SOLA VEZ)
+// INICIO DE SESIÓN / REGISTRO DE ASESOR CON PIN (UNA SOLA VEZ)
 // Tabla 'asesores' (opcional) en Supabase con columnas:
 // id (uuid PK), nombre (text), email (text), rol (text),
 // created_at (timestamptz), pin_hash (text).
@@ -2506,7 +2581,7 @@ function mostrarAlertaError(mensaje) {
     document.body.appendChild(alerta);
     setTimeout(() => { alerta.style.transition = 'opacity 0.4s ease, transform 0.4s ease'; alerta.style.opacity = '0'; alerta.style.transform = 'translateY(-15px)'; setTimeout(() => { alerta.remove(); }, 400); }, 4000);
 }
-// FUNCIÓN GUARDAR OPERACIÓN
+// FUNCION GUARDAR OPERACIÓN
 async function guardarOperacion(prefijo, tipoOperacion) {
     // NUEVO: sin sesión iniciada no se puede registrar ninguna operación
     if (!obtenerSesion()) {
@@ -2624,15 +2699,28 @@ async function guardarOperacion(prefijo, tipoOperacion) {
         botonSubmit.disabled = false;
     }
 }
+</script>
+<script>
 // ============================================================
-// NUEVO: CONTABILIDAD
-// Lee la tabla 'operaciones' (ingresos, pagos electrónicos, por cobrar)
-// y la tabla 'egresos' (ver supabase_contabilidad.sql).
+// CONTABILIDAD
+// Lee la tabla 'operaciones' (ingresos, pagos electrónicos, por cobrar),
+// la tabla 'egresos' y la tabla 'ingresos' (ver supabase_ingresos.sql).
 // ============================================================
 const CONTA_TABLA_OPS = 'operaciones';
 const CONTA_TABLA_EGR = 'egresos';
-const contaEstado = { ops: [], egr: [], periodo: 'semana', hist: 'dia', ultimo: null };
+// NUEVO: tabla de ingresos adicionales registrados manualmente
+const CONTA_TABLA_ING = 'ingresos';
 const CONTA_LABEL_TIPO = { Accesorio: 'Accesorios', Celular: 'Celulares', Reparacion: 'Reparaciones' };
+// NUEVO: nombres legibles de las categorías de ingreso manual
+const CONTA_LABEL_CAT_ING = {
+    'Cobro Cartera': 'Cobros de cartera',
+    'Servicio Técnico': 'Servicios técnicos',
+    'Venta Mostrador': 'Ventas de mostrador',
+    'Comisión': 'Comisiones',
+    'Renta': 'Rentas',
+    'Otros': 'Otros ingresos'
+};
+const contaEstado = { ops: [], egr: [], ing: [], periodo: 'semana', hist: 'dia', ultimo: null };
 function contaFmt(n) { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(n) || 0); }
 function contaEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 function contaEsElectronico(m) { return /transfer|tarjeta|electr|nequi|daviplata|pse|dat[aá]fono/i.test(String(m || '')); }
@@ -2655,18 +2743,48 @@ function contaEnIntervalo(fecha, desde, hasta) {
     if (desde && x < desde.getTime()) return false;
     return x < hasta.getTime();
 }
-function contaCalcular(ops, egr) {
-    const t = { ingresos: 0, egresos: 0, electronicos: 0, efectivo: 0, pendiente: 0, nOps: 0, nEgr: 0, egrElec: 0, tipos: {} };
+// NUEVO: el calculador ahora recibe los ingresos manuales (ing).
+// Los cobros vinculados a una operación que YA está en el periodo no se
+// suman dos veces (el pago ya viene incluido en amount_paid de la operación).
+function contaCalcular(ops, egr, ing) {
+    const t = {
+        ingresos: 0, egresos: 0, electronicos: 0, efectivo: 0, pendiente: 0,
+        nOps: 0, nEgr: 0, egrElec: 0, tipos: {},
+        // NUEVO: desglose para las cuentas claras
+        ingresosOps: 0, ingresosManuales: 0, cobrosCartera: 0, cobrosAplicados: 0,
+        nIng: 0, nCobros: 0, nCobrosAplicados: 0, ingElec: 0
+    };
+    const opsIndex = {};
+    ops.forEach(o => { opsIndex[String(o.id)] = o; });
     ops.forEach(o => {
         const pagado = Number(o.amount_paid) || 0;
         const total = Number(o.total) || 0;
         t.ingresos += pagado;
+        t.ingresosOps += pagado;
         t.nOps++;
         if (contaEsElectronico(o.payment_method)) t.electronicos += pagado; else t.efectivo += pagado;
         const pend = total - pagado;
         if (pend > 0) t.pendiente += pend;
         const tipo = o.tipo_operacion || 'Otro';
         t.tipos[tipo] = (t.tipos[tipo] || 0) + pagado;
+    });
+    // NUEVO: ingresos adicionales registrados con el botón "Registrar ingreso"
+    (ing || []).forEach(i => {
+        const m = Number(i.monto) || 0;
+        const vinculada = i.operacion_id && opsIndex[String(i.operacion_id)];
+        if (vinculada) {
+            // El cobro ya está incluido en el pago de la operación de este periodo
+            t.cobrosAplicados += m;
+            t.nCobrosAplicados++;
+            return;
+        }
+        t.ingresos += m;
+        t.ingresosManuales += m;
+        t.nIng++;
+        if (contaEsElectronico(i.metodo_pago)) { t.electronicos += m; t.ingElec += m; } else { t.efectivo += m; }
+        if (i.operacion_id || i.categoria === 'Cobro Cartera') { t.cobrosCartera += m; t.nCobros++; }
+        const cat = i.categoria || 'Otros';
+        t.tipos[cat] = (t.tipos[cat] || 0) + m;
     });
     egr.forEach(e => {
         const m = Number(e.monto) || 0;
@@ -2684,37 +2802,6 @@ function contaTextoPeriodo(p, r) {
     if (p === 'mes') return 'Mes de ' + new Date().toLocaleDateString('es-CO', { month: 'long', year: 'numeric' });
     return 'Histórico completo';
 }
-// Histórico: 'dia' = últimos 14 días, 'semana' = últimas 8 semanas (desde lunes)
-function contaHistorico_old(tipo) {
-    const ahora = new Date();
-    const filas = [];
-    if (tipo === 'dia') {
-        for (let i = 13; i >= 0; i--) {
-            const desde = contaInicioDia(ahora);
-            desde.setDate(desde.getDate() - i);
-            const hasta = new Date(desde);
-            hasta.setDate(hasta.getDate() + 1);
-            filas.push({ etiqueta: desde.toLocaleDateString('es-CO', { weekday: 'short', day: '2-digit', month: 'short' }), desde, hasta });
-        }
-    } else {
-        const base = contaInicioSemana(ahora);
-        for (let i = 7; i >= 0; i--) {
-            const desde = new Date(base);
-            desde.setDate(desde.getDate() - 7 * i);
-            const hasta = new Date(desde);
-            hasta.setDate(hasta.getDate() + 7);
-            const fin = new Date(hasta);
-            fin.setDate(fin.getDate() - 1);
-            filas.push({ etiqueta: desde.toLocaleDateString('es-CO', { day: '2-digit', month: 'short' }) + ' – ' + fin.toLocaleDateString('es-CO', { day: '2-digit', month: 'short' }), desde, hasta });
-        }
-    }
-    return filas.map(f => {
-        const ops = contaEstado.ops.filter(o => contaEnIntervalo(o.created_at, f.desde, f.hasta));
-        const egr = contaEstado.egr.filter(e => contaEnIntervalo(e.fecha, f.desde, f.hasta));
-        const t = contaCalcular(ops, egr);
-        return { etiqueta: f.etiqueta, ingresos: t.ingresos, egresos: t.egresos, electronicos: t.electronicos, balance: t.balance };
-    });
-}
 function contaRenderHistorico() {
     const filas = contaHistorico(contaEstado.hist);
     const max = Math.max(1, ...filas.map(f => Math.max(f.ingresos, f.egresos)));
@@ -2726,16 +2813,61 @@ function contaRenderHistorico() {
     document.getElementById('contaHistBody').innerHTML = filas.map(f => `<tr><td>${contaEsc(f.etiqueta)}</td><td>${contaFmt(f.ingresos)}</td><td>${contaFmt(f.egresos)}</td><td>${contaFmt(f.electronicos)}</td><td style="color:${f.balance < 0 ? '#ff5e5e' : '#12d8c4'};font-weight:600">${contaFmt(f.balance)}</td></tr>`).join('');
     document.querySelectorAll('#contaHistSeg button').forEach(b => b.classList.toggle('on', b.dataset.hist === contaEstado.hist));
 }
+// NUEVO: número de factura de una operación vinculada (busca en contabilidad y paneles)
+function contaNumeroFacturaPorId(id) {
+    if (!id) return '';
+    const lista = (contaEstado.ops || []).concat((typeof PANEL !== 'undefined' && PANEL.ops) ? PANEL.ops : []);
+    const op = lista.find(o => String(o.id) === String(id));
+    return op ? (op.numero_factura || '') : '';
+}
+// NUEVO: listado de ingresos adicionales del periodo (con opción de eliminar)
+function contaRenderIngLista(ing) {
+    const cont = document.getElementById('conta_ing_lista');
+    if (!cont) return;
+    if (!ing.length) {
+        cont.innerHTML = '<div class="vacio-box">Aún no hay ingresos adicionales en este periodo. Usa el botón «Registrar ingreso».</div>';
+        return;
+    }
+    cont.innerHTML = `<table class="lista-table"><thead><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Método</th><th>Factura</th><th>Monto</th><th></th></tr></thead><tbody>${ing.map(i => {
+        const id = String(i.id).replace(/'/g, '');
+        const vinc = i.operacion_id
+            ? `<b>${contaEsc(i.numero_factura || contaNumeroFacturaPorId(i.operacion_id) || 'Vinculada')}</b><span class="conta-ing-vinc">Cobro aplicado al saldo</span>`
+            : '—';
+        return `<tr>
+            <td>${contaEsc(pnlFechaCorta(i.fecha))}</td>
+            <td><b>${contaEsc(i.concepto || '—')}</b>${i.notas ? `<span class="conta-ing-vinc">${contaEsc(i.notas)}</span>` : ''}</td>
+            <td>${contaEsc(CONTA_LABEL_CAT_ING[i.categoria] || i.categoria || '—')}</td>
+            <td>${contaEsc(i.metodo_pago || '—')}</td>
+            <td>${vinc}</td>
+            <td><b>${contaFmt(i.monto)}</b></td>
+            <td class="acc-cell"><button type="button" class="mini-btn mini-del" title="Eliminar ingreso" onclick="contaEliminarIngreso('${id}')"><i class="fa-solid fa-trash"></i></button></td>
+        </tr>`;
+    }).join('')}</tbody></table>`;
+}
+// NUEVO: resumen del bloque de ingresos adicionales
+function contaRenderIngResumen(t, ing) {
+    const cont = document.getElementById('conta_ing_res');
+    if (!cont) return;
+    cont.innerHTML = `
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Ingresos adicionales contabilizados: <strong>${contaFmt(t.ingresosManuales)}</strong> (${t.nIng} registro(s)).
+        Cobros de cartera: <strong>${contaFmt(t.cobrosCartera)}</strong>.
+        Cobros ya incluidos en las operaciones del periodo: <strong>${contaFmt(t.cobrosAplicados)}</strong> (${t.nCobrosAplicados}) — no se suman dos veces.
+        Total ingresos del periodo: <strong>${contaFmt(t.ingresos)}</strong>.</span>
+        <span class="conta-ing-chip"><i class="fa-solid fa-receipt"></i> ${ing.length} registro(s) en el periodo</span>`;
+}
 function contaRender() {
     const r = contaRangoPeriodo(contaEstado.periodo);
     const ops = contaEstado.ops.filter(o => contaEnIntervalo(o.created_at, r.desde, r.hasta));
     const egr = contaEstado.egr.filter(e => contaEnIntervalo(e.fecha, r.desde, r.hasta));
-    const t = contaCalcular(ops, egr);
-    contaEstado.ultimo = { t, ops, egr, r };
+    // NUEVO: ingresos adicionales del periodo
+    const ing = contaEstado.ing.filter(i => contaEnIntervalo(i.fecha, r.desde, r.hasta));
+    const t = contaCalcular(ops, egr, ing);
+    contaEstado.ultimo = { t, ops, egr, ing, r };
     document.querySelectorAll('#contaPeriodoSeg button').forEach(b => b.classList.toggle('on', b.dataset.periodo === contaEstado.periodo));
     document.getElementById('contaPeriodoLabel').innerText = contaTextoPeriodo(contaEstado.periodo, r);
     document.getElementById('kpi_ingresos').innerText = contaFmt(t.ingresos);
-    document.getElementById('kpi_ingresos_n').innerText = t.nOps + ' operaciones';
+    document.getElementById('kpi_ingresos_n').innerText = t.nOps + ' operaciones · ' + t.nIng + ' ingresos manuales';
     document.getElementById('kpi_egresos').innerText = contaFmt(t.egresos);
     document.getElementById('kpi_egresos_n').innerText = t.nEgr + ' registros';
     const bal = document.getElementById('kpi_balance');
@@ -2744,11 +2876,20 @@ function contaRender() {
     document.getElementById('kpi_electronicos').innerText = contaFmt(t.electronicos);
     document.getElementById('kpi_efectivo').innerText = contaFmt(t.efectivo);
     document.getElementById('kpi_pendiente').innerText = contaFmt(t.pendiente);
+    // NUEVO: KPIs de las cuentas claras de los ingresos
+    document.getElementById('kpi_ing_ops').innerText = contaFmt(t.ingresosOps);
+    document.getElementById('kpi_ing_ops_n').innerText = t.nOps + ' operación(es) pagadas';
+    document.getElementById('kpi_ing_manuales').innerText = contaFmt(t.ingresosManuales);
+    document.getElementById('kpi_ing_manuales_n').innerText = t.nIng + ' registro(s) manual(es)';
+    document.getElementById('kpi_cobros').innerText = contaFmt(t.cobrosCartera);
+    document.getElementById('kpi_cobros_n').innerText = t.nCobros + ' cobro(s) · ' + t.nCobrosAplicados + ' aplicado(s) a facturas';
     const base = ['Accesorio', 'Celular', 'Reparacion'];
     const extra = Object.keys(t.tipos).filter(k => !base.includes(k));
     document.getElementById('conta_tipos').innerHTML = base.concat(extra).map(k =>
-        `<div class="conta-tipo"><span>${contaEsc(CONTA_LABEL_TIPO[k] || k)}</span><strong>${contaFmt(t.tipos[k] || 0)}</strong></div>`
+        `<div class="conta-tipo"><span>${contaEsc(CONTA_LABEL_TIPO[k] || CONTA_LABEL_CAT_ING[k] || k)}</span><strong>${contaFmt(t.tipos[k] || 0)}</strong></div>`
     ).join('');
+    contaRenderIngResumen(t, ing);
+    contaRenderIngLista(ing);
     contaRenderHistorico();
 }
 function contaSetPeriodo(p) { contaEstado.periodo = p; contaRender(); }
@@ -2756,9 +2897,11 @@ function contaSetHist(h) { contaEstado.hist = h; contaRenderHistorico(); }
 async function contaCargar() {
     try {
         const sb = window.jkSupabase;
-        const [rOps, rEgr] = await Promise.all([
+        const [rOps, rEgr, rIng] = await Promise.all([
             sb.from(CONTA_TABLA_OPS).select('id, tipo_operacion, numero_factura, customer_name, total, amount_paid, payment_method, payment_type, created_at, asesor').eq('comercio_id', window.JK_COMERCIO_ID || '').order('created_at', { ascending: false }).limit(5000),
-            sb.from(CONTA_TABLA_EGR).select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('fecha', { ascending: false }).limit(5000)
+            sb.from(CONTA_TABLA_EGR).select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('fecha', { ascending: false }).limit(5000),
+            // NUEVO: ingresos adicionales registrados con el botón "Registrar ingreso"
+            sb.from(CONTA_TABLA_ING).select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('fecha', { ascending: false }).limit(5000)
         ]);
         if (rOps.error) throw rOps.error;
         contaEstado.ops = rOps.data || [];
@@ -2768,6 +2911,13 @@ async function contaCargar() {
             mostrarAlertaError('Tabla egresos no disponible. Ejecuta el archivo supabase_contabilidad.sql en Supabase.');
         } else {
             contaEstado.egr = rEgr.data || [];
+        }
+        if (rIng.error) {
+            console.warn('Tabla ingresos no disponible:', rIng.error);
+            contaEstado.ing = [];
+            mostrarAlertaError('Tabla ingresos no disponible: ejecuta supabase_ingresos.sql en Supabase para activar el botón «Registrar ingreso».');
+        } else {
+            contaEstado.ing = rIng.data || [];
         }
         contaRender();
     } catch (e) {
@@ -2820,6 +2970,165 @@ async function contaGuardarEgreso() {
         btn.innerText = 'Registrar egreso';
     }
 }
+/* =====================================================================
+   NUEVO: REGISTRAR INGRESO (ingresos adicionales de la contabilidad)
+   - Formulario propio (modal_ingreso) con categoría, monto, método,
+     fecha, notas y vinculación opcional a una factura con saldo.
+   - Si se vincula a una factura, el abono se aplica a amount_paid de la
+     operación (el saldo por cobrar baja) y el ingreso queda asociado
+     (no se cuenta dos veces dentro del periodo).
+   - Los ingresos libres se suman a los ingresos, al efectivo/electrónicos,
+     a los KPIs, a las gráficas del histórico y al reporte PDF.
+   ===================================================================== */
+function contaAbrirIngreso() {
+    if (!obtenerSesion()) {
+        mostrarAlertaError('Debes iniciar sesión para registrar ingresos.');
+        abrirModalSesion();
+        return;
+    }
+    const f = document.getElementById('in_fecha');
+    if (f && !f.value) f.value = contaHoyISO();
+    contaPreviewIngreso();
+    contaLlenarFacturasPendientes();
+    abrirModalFormulario('modal_ingreso');
+    setTimeout(() => { const el = document.getElementById('in_concepto'); if (el) el.focus(); }, 400);
+}
+// Carga las facturas que aún tienen saldo pendiente para poder vincular el cobro
+async function contaLlenarFacturasPendientes() {
+    const sel = document.getElementById('in_factura');
+    if (!sel) return;
+    const prev = sel.value;
+    sel.innerHTML = '<option value="">Cargando facturas con saldo…</option>';
+    try {
+        const { data, error } = await window.jkSupabase.from(CONTA_TABLA_OPS)
+            .select('id, numero_factura, customer_name, total, amount_paid, estado')
+            .eq('comercio_id', window.JK_COMERCIO_ID || '')
+            .order('id', { ascending: false }).limit(300);
+        if (error) throw error;
+        const pend = (data || []).filter(o => ((Number(o.total) || 0) - (Number(o.amount_paid) || 0)) > 0);
+        sel.innerHTML = '<option value="">Sin vincular — ingreso libre</option>' + pend.map(o => {
+            const saldo = (Number(o.total) || 0) - (Number(o.amount_paid) || 0);
+            const id = String(o.id).replace(/"/g, '');
+            return `<option value="${id}">${contaEsc(o.numero_factura || '—')} · ${contaEsc(o.customer_name || '—')} · saldo ${contaFmt(saldo)}</option>`;
+        }).join('');
+        if (prev) sel.value = prev;
+        if (!sel.value) sel.selectedIndex = 0;
+    } catch (e) {
+        console.warn('No se pudieron cargar las facturas pendientes.', e);
+        sel.innerHTML = '<option value="">Sin vincular — ingreso libre</option>';
+    }
+}
+// Vista previa en vivo del ingreso que se va a registrar
+function contaPreviewIngreso() {
+    const cont = document.getElementById('conta_ing_preview');
+    if (!cont) return;
+    const monto = parseFloat(document.getElementById('in_monto').value) || 0;
+    const metodo = document.getElementById('in_metodo').value;
+    const categoria = document.getElementById('in_categoria').value;
+    const sel = document.getElementById('in_factura');
+    const opId = sel && sel.value ? sel.value : '';
+    const texto = sel && opId ? (sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : '') : '';
+    if (!monto) {
+        cont.innerHTML = '<i class="fa-solid fa-circle-info"></i> <span>Elige la categoría, el monto y la fecha. Si el ingreso aplica a una factura, el saldo pendiente se actualizará automáticamente.</span>';
+        return;
+    }
+    const tipoTxt = opId
+        ? `Se aplicarán <strong>${contaFmt(monto)}</strong> al saldo de la factura (${contaEsc(texto)}) y quedará registrado como «${contaEsc(CONTA_LABEL_CAT_ING[categoria] || categoria)}»`
+        : `Se sumarán <strong>${contaFmt(monto)}</strong> a los ingresos del periodo como «${contaEsc(CONTA_LABEL_CAT_ING[categoria] || categoria)}»`;
+    cont.innerHTML = `<i class="fa-solid fa-money-bill-wave"></i>
+        <span>${tipoTxt} · método: <strong>${contaEsc(metodo)}</strong> ${contaEsElectronico(metodo) ? '(pago electrónico)' : '(efectivo en caja)'}.</span>`;
+}
+async function contaGuardarIngreso() {
+    if (!obtenerSesion()) { mostrarAlertaError('Debes iniciar sesión para registrar ingresos.'); return; }
+    const concepto = document.getElementById('in_concepto').value.trim();
+    const monto = parseFloat(document.getElementById('in_monto').value);
+    if (!concepto || !(monto > 0)) { mostrarAlertaError('Escribe el concepto del ingreso y un monto válido.'); return; }
+    const categoria = document.getElementById('in_categoria').value;
+    const metodo = document.getElementById('in_metodo').value;
+    const fechaVal = document.getElementById('in_fecha').value;
+    const notas = document.getElementById('in_notas').value.trim() || null;
+    const selFac = document.getElementById('in_factura');
+    const opId = (selFac && selFac.value) ? selFac.value : null;
+    const sesion = obtenerSesion() || {};
+    const btn = document.getElementById('btnIngreso');
+    btn.disabled = true;
+    btn.innerText = 'Guardando...';
+    try {
+        const data = {
+            concepto: concepto,
+            categoria: categoria,
+            monto: monto,
+            metodo_pago: metodo,
+            fecha: fechaVal ? new Date(fechaVal + 'T12:00:00').toISOString() : new Date().toISOString(),
+            notas: notas,
+            asesor: sesion.nombre || 'N/A',
+            operacion_id: opId || null,
+            comercio_id: window.JK_COMERCIO_ID || null
+        };
+        const res = await window.jkSupabase.from(CONTA_TABLA_ING).insert([data]);
+        if (res && res.error) throw res.error;
+        // Si el ingreso se vincula a una factura, se aplica el abono al saldo
+        if (opId) {
+            const { data: op, error: eOp } = await window.jkSupabase.from(CONTA_TABLA_OPS)
+                .select('id, total, amount_paid, estado').eq('id', opId).eq('comercio_id', window.JK_COMERCIO_ID || '').maybeSingle();
+            if (eOp) throw eOp;
+            if (op) {
+                const total = Number(op.total) || 0;
+                const nuevoPagado = (Number(op.amount_paid) || 0) + monto;
+                const { error: eUpd } = await window.jkSupabase.from(CONTA_TABLA_OPS)
+                    .update({ amount_paid: nuevoPagado, estado: (total > 0 && nuevoPagado >= total) ? 'Completado' : 'Pendiente' })
+                    .eq('id', opId).eq('comercio_id', window.JK_COMERCIO_ID || '');
+                if (eUpd) throw eUpd;
+            }
+        }
+        mostrarAlertaExito('Ingreso registrado por ' + contaFmt(monto) + (opId ? ' y aplicado al saldo de la factura.' : '.') + ' Cuentas actualizadas.');
+        document.getElementById('form_ingreso').reset();
+        document.getElementById('in_fecha').value = contaHoyISO();
+        if (selFac) selFac.selectedIndex = 0;
+        contaPreviewIngreso();
+        cerrarModalFormulario('modal_ingreso');
+        await contaCargar();
+        if (typeof panelCargarTodo === 'function') { try { await panelCargarTodo(); } catch (e) { console.warn(e); } }
+    } catch (e) {
+        console.error(e);
+        const msg = (e && e.message) ? e.message : String(e);
+        const faltaTabla = /ingresos|does not exist|column|relation/i.test(msg);
+        mostrarAlertaError('Error al guardar el ingreso: ' + msg + (faltaTabla ? '. Ejecuta supabase_ingresos.sql en Supabase para crear la tabla «ingresos».' : ''));
+    } finally {
+        btn.disabled = false;
+        btn.innerText = 'Registrar ingreso';
+    }
+}
+// Elimina un ingreso adicional; si estaba vinculado, devuelve el abono a la factura
+async function contaEliminarIngreso(id) {
+    if (!obtenerSesion()) { mostrarAlertaError('Debes iniciar sesión para eliminar ingresos.'); return; }
+    const reg = contaEstado.ing.find(x => String(x.id) === String(id));
+    if (!reg) { mostrarAlertaError('No se encontró el ingreso.'); return; }
+    if (!confirm('¿Eliminar el ingreso "' + (reg.concepto || '') + '" por ' + contaFmt(reg.monto) + '? ' + (reg.operacion_id ? 'El abono se devolverá al saldo de la factura.' : ''))) return;
+    try {
+        if (reg.operacion_id) {
+            const { data: op, error: eOp } = await window.jkSupabase.from(CONTA_TABLA_OPS)
+                .select('id, total, amount_paid').eq('id', reg.operacion_id).eq('comercio_id', window.JK_COMERCIO_ID || '').maybeSingle();
+            if (eOp) throw eOp;
+            if (op) {
+                const total = Number(op.total) || 0;
+                const nuevo = Math.max(0, (Number(op.amount_paid) || 0) - (Number(reg.monto) || 0));
+                const { error: eUpd } = await window.jkSupabase.from(CONTA_TABLA_OPS)
+                    .update({ amount_paid: nuevo, estado: (total > 0 && nuevo >= total) ? 'Completado' : 'Pendiente' })
+                    .eq('id', reg.operacion_id).eq('comercio_id', window.JK_COMERCIO_ID || '');
+                if (eUpd) throw eUpd;
+            }
+        }
+        const { error } = await window.jkSupabase.from(CONTA_TABLA_ING).delete().eq('id', id).eq('comercio_id', window.JK_COMERCIO_ID || '');
+        if (error) throw error;
+        mostrarAlertaExito('Ingreso eliminado y cuentas actualizadas.');
+        await contaCargar();
+        if (typeof panelCargarTodo === 'function') { try { await panelCargarTodo(); } catch (e) { console.warn(e); } }
+    } catch (e) {
+        console.error(e);
+        mostrarAlertaError('No se pudo eliminar el ingreso: ' + ((e && e.message) ? e.message : e));
+    }
+}
 function contaGenerarPDF() {
     if (!contaEstado.ultimo) { mostrarAlertaError('Primero carga la contabilidad.'); return; }
     const { t, ops, egr, r } = contaEstado.ultimo;
@@ -2828,7 +3137,7 @@ function contaGenerarPDF() {
     const sesion = obtenerSesion() || {};
     const hist = contaHistorico('dia');
     const filasTipos = Object.keys(t.tipos).map(k =>
-        `<tr><td>${contaEsc(CONTA_LABEL_TIPO[k] || k)}</td><td class="num">${contaFmt(t.tipos[k])}</td></tr>`
+        `<tr><td>${contaEsc(CONTA_LABEL_TIPO[k] || CONTA_LABEL_CAT_ING[k] || k)}</td><td class="num">${contaFmt(t.tipos[k])}</td></tr>`
     ).join('') || '<tr><td colspan="2" class="vacio">Sin ingresos en el periodo</td></tr>';
     const filasHist = hist.map(h =>
         `<tr><td>${contaEsc(h.etiqueta)}</td><td class="num">${contaFmt(h.ingresos)}</td><td class="num">${contaFmt(h.egresos)}</td><td class="num">${contaFmt(h.electronicos)}</td><td class="num">${contaFmt(h.balance)}</td></tr>`
@@ -2870,8 +3179,8 @@ function contaGenerarPDF() {
             <table>
                 <thead><tr><th>Concepto</th><th class="num">Valor</th></tr></thead>
                 <tbody>
-                    <tr><td>Ingresos (abonos y pagos recibidos)</td><td class="num">${contaFmt(t.ingresos)}</td></tr>
-                    <tr><td>(-) Egresos registrados</td><td class="num">${contaFmt(t.egresos)}</td></tr>
+                    <tr><td>Ingresos por operaciones (abonos y pagos recibidos)</td><td class="num">${contaFmt(t.ingresosOps)}</td></tr>
+                    <tr><td>(+) Ingresos adicionales registrados</td><td class="num">${contaFmt(t.ingresosManuales)}</td></tr>
                     <tr class="neto"><td>Balance neto del periodo</td><td class="num">${contaFmt(t.balance)}</td></tr>
                     <tr><td>Egresos pagados electrónicamente</td><td class="num">${contaFmt(t.egrElec)}</td></tr>
                     <tr><td>Número de operaciones</td><td class="num">${t.nOps}</td></tr>
@@ -2938,7 +3247,7 @@ ACCESORIOS JK</div>
 </script>
 <script>
 /* =====================================================================
-   NUEVO: PANELES TALLER, INVENTARIO, COTIZACIONES, DASHBOARD Y PDF
+   PANELES TALLER, INVENTARIO, COTIZACIONES, DASHBOARD Y PDF
    ===================================================================== */
 const PANEL = { ops: [], inv: [], prov: [], cot: [] };
 const PANEL_ESTADOS_TALLER = [['Pendiente', 'Por reparar'], ['En Proceso', 'En proceso'], ['Listo', 'Reparado'], ['Entregado', 'Entregado']];
@@ -2998,6 +3307,8 @@ function panelRenderTodo() {
 function pkHTML(lista, fn) {
     return lista.map(k => `<div class="pk" style="--c:${k.col}" onclick="${fn}('${k.f}')"><div class="pk-top"><i class="fa-solid ${k.ic}"></i><span>${k.lbl}</span></div><strong>${k.val}</strong><small>${k.sub}</small></div>`).join('');
 }
+</script>
+<script>
 // ---------- KPIs TALLER ----------
 function panelRenderTaller() {
     const t = PANEL.ops.filter(pnlEsRep);
@@ -3308,27 +3619,6 @@ async function cotGuardar() {
     return r;
 }
 function cotNumeroWA(num) { return num.length === 10 ? '57' + num : num; }
-function cotMensajeWA_old(d) {
-    const lineas = (d.items || []).map((i, idx) => `${idx + 1}. ${i.descripcion} x${i.cantidad} — ${pnlFmt(i.precio)} c/u = ${pnlFmt(i.subtotal)}`);
-    return [
-        '*ACCESORIOS JK · SOLICITUD DE COTIZACIÓN*',
-        `N° ${d.numero}`,
-        `Fecha: ${pnlFechaCorta(d.created_at)}`,
-        `Proveedor: ${d.proveedor_nombre}`,
-        `Tipo: ${d.tipo}`,
-        '',
-        '*Ítems:*',
-        ...lineas,
-        '',
-        `Subtotal: ${pnlFmt(d.subtotal)}`,
-        `IVA (${d.iva_pct}%): ${pnlFmt(d.iva_valor)}`,
-        `*TOTAL: ${pnlFmt(d.total)}*`,
-        d.vigencia ? `Vigencia: ${pnlFechaCorta(d.vigencia)}` : '',
-        d.notas ? `Notas: ${d.notas}` : '',
-        '',
-        'Por favor confirmar disponibilidad y precio. Gracias.'
-    ].join('\n');
-}
 async function cotEnviarWA() {
     let r;
     try { r = cotLeer(); } catch (e) { mostrarAlertaError(e.message); return; }
@@ -3379,20 +3669,6 @@ function cotPDF() {
     panelGenerarPDF(cotHTML(r.datos, r.prov), `Cotizacion_${r.datos.numero}.pdf`);
 }
 // ---------- BLOQUES DEL PDF PROFESIONAL ----------
-function repMembrete_old(titulo, subtitulo, meta) {
-    return `
-    <div class="rep-band">
-        <div class="rep-logo">JK</div>
-        <div class="rep-brand">
-            <h1>ACCESORIOS JK</h1>
-            <p>NIT: 1005715210 · Régimen simplificado</p>
-            <p>Servicio técnico y telefonía · Calle 14 # 2-67 Centro, Ibagué - Tolima</p>
-        </div>
-        <div class="rep-meta">${meta.map(m => `<div><strong>${contaEsc(m[0])}:</strong> ${contaEsc(m[1])}</div>`).join('')}</div>
-    </div>
-    <div class="rep-title"><h2>${contaEsc(titulo)}</h2><span>${contaEsc(subtitulo)}</span></div>
-    <div class="rep-body">`;
-}
 function repCierre(firmas) {
     return `${firmas || ''}<div class="rep-footer-note">Documento generado por el Sistema JK. Información confidencial de uso interno y de los proveedores o clientes involucrados.</div></div>`;
 }
@@ -3422,46 +3698,10 @@ function repTabla(head, rows, numCols = [], filaTotal = -1) {
     return `<table class="rep-table"><thead><tr>${head.map((h, i) => `<th class="${numCols.includes(i) ? 'num' : ''}">${contaEsc(h)}</th>`).join('')}</tr></thead><tbody>${cuerpo}</tbody></table>`;
 }
 // Genera el PDF a partir de HTML, con numeración de páginas y pie de página
-function panelGenerarPDF_old(html, filename) {
-    const overlay = document.createElement('div');
-    overlay.className = 'rep-overlay';
-    overlay.innerHTML = '<div class="rep-loader"><i class="fa-solid fa-file-pdf"></i><span>Generando PDF profesional…</span></div>';
-    const cont = document.createElement('div');
-    cont.className = 'rep-pdf';
-    cont.innerHTML = html;
-    document.body.appendChild(overlay);
-    document.body.appendChild(cont);
-    const limpiar = () => { cont.remove(); overlay.remove(); };
-    return html2pdf().set({
-        margin: [0.35, 0.3, 0.6, 0.3],
-        filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0, logging: false },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'], avoid: '.rep-sec' }
-    }).from(cont).toPdf().get('pdf').then(pdf => {
-        const total = pdf.internal.getNumberOfPages();
-        const W = pdf.internal.pageSize.getWidth();
-        const H = pdf.internal.pageSize.getHeight();
-        for (let i = 1; i <= total; i++) {
-            pdf.setPage(i);
-            pdf.setDrawColor(18, 216, 196);
-            pdf.setLineWidth(0.02);
-            pdf.line(0.3, H - 0.45, W - 0.3, H - 0.45);
-            pdf.setFontSize(8);
-            pdf.setTextColor(110);
-            pdf.text('Sistema JK · ACCESORIOS JK · Documento generado automáticamente', 0.3, H - 0.3);
-            pdf.text(`Página ${i} de ${total}`, W - 0.3, H - 0.3, { align: 'right' });
-        }
-        pdf.save(filename);
-    }).then(() => {
-        limpiar();
-        appCore.mostrarAvisoPDF();
-    }).catch(e => {
-        console.error(e);
-        limpiar();
-        mostrarAlertaError('No se pudo generar el PDF.');
-    });
+function panelGenerarPDF(html, filename) {
+    return repCrearPDFCanvas(html)
+        .then(pdf => { pdf.save(filename); appCore.mostrarAvisoPDF(); })
+        .catch(e => { console.error(e); mostrarAlertaError('No se pudo generar el PDF.'); });
 }
 function cotHTML(d, prov) {
     const p = prov || {};
@@ -3488,54 +3728,6 @@ function cotHTML(d, prov) {
     if (d.notas) h += `<div class="rep-sec"><h3>Condiciones y notas</h3><p class="rep-nota">${contaEsc(d.notas)}</p></div>`;
     return h + repCierre(repFirmas('Elaborado por\n' + contaEsc(d.asesor || ''), 'Aceptado por el proveedor\n' + contaEsc(d.proveedor_nombre || '')));
 }
-// ---------- REPORTE CONTABLE PDF (VERSION PROFESIONAL) ----------
-function contaReportePDFv2_old() {
-    if (!contaEstado.ultimo) { mostrarAlertaError('Primero carga la contabilidad.'); return; }
-    const { t, ops, egr, r } = contaEstado.ultimo;
-    const sesion = obtenerSesion() || {};
-    const hist = contaHistorico('dia');
-    const periodo = contaTextoPeriodo(contaEstado.periodo, r);
-    const fmtF = d => d ? new Date(d).toLocaleDateString('es-CO') : '—';
-    let h = repMembrete('Reporte contable', periodo, [
-        ['Periodo', periodo],
-        ['Generado', new Date().toLocaleString('es-CO')],
-        ['Elaborado por', sesion.nombre || 'N/A']
-    ]);
-    h += `<div class="rep-sec"><h3>1. Indicadores clave</h3>${repKpis([
-        { lbl: 'Ingresos', val: contaFmt(t.ingresos), col: '#15803d' },
-        { lbl: 'Egresos', val: contaFmt(t.egresos), col: '#b91c1c' },
-        { lbl: 'Balance neto', val: contaFmt(t.balance), col: t.balance < 0 ? '#b91c1c' : '#0f766e' },
-        { lbl: 'Pagos electrónicos', val: contaFmt(t.electronicos), col: '#1d4ed8' },
-        { lbl: 'Efectivo recibido', val: contaFmt(t.efectivo), col: '#6d28d9' },
-        { lbl: 'Saldo por cobrar', val: contaFmt(t.pendiente), col: '#b45309' }
-    ])}</div>`;
-    h += `<div class="rep-sec"><h3>2. Estado de cuentas</h3>${repTabla(
-        ['Concepto', 'Valor'],
-        [
-            ['Ingresos (abonos y pagos recibidos)', contaFmt(t.ingresos)],
-            ['(-) Egresos registrados', contaFmt(t.egresos)],
-            ['Balance neto del periodo', contaFmt(t.balance)],
-            ['Egresos pagados electrónicamente', contaFmt(t.egrElec)],
-            ['Número de operaciones', String(t.nOps)],
-            ['Número de egresos', String(t.nEgr)]
-        ], [1], 2)}</div>`;
-    const tipos = Object.keys(t.tipos).map(k => [contaEsc(CONTA_LABEL_TIPO[k] || k), contaFmt(t.tipos[k])]);
-    h += `<div class="rep-sec"><h3>3. Ingresos por tipo de operación</h3>${repTabla(['Tipo', 'Ingresos'], tipos, [1])}</div>`;
-    h += `<div class="rep-sec"><h3>4. Histórico del balance (últimos 14 días)</h3>${repTabla(
-        ['Día', 'Ingresos', 'Egresos', 'Electrónicos', 'Balance'],
-        hist.map(x => [contaEsc(x.etiqueta), contaFmt(x.ingresos), contaFmt(x.egresos), contaFmt(x.electronicos), contaFmt(x.balance)]),
-        [1, 2, 3, 4])}</div>`;
-    h += `<div class="rep-sec"><h3>5. Detalle de operaciones (${Math.min(ops.length, 120)} de ${ops.length})</h3>${repTabla(
-        ['Fecha', 'Factura', 'Tipo', 'Cliente', 'Pago', 'Total', 'Pagado'],
-        ops.slice(0, 120).map(o => [fmtF(o.created_at), contaEsc(o.numero_factura || '—'), contaEsc(o.tipo_operacion), contaEsc(o.customer_name), contaEsc(o.payment_method), contaFmt(o.total), contaFmt(o.amount_paid)]),
-        [5, 6])}</div>`;
-    h += `<div class="rep-sec"><h3>6. Detalle de egresos (${Math.min(egr.length, 120)} de ${egr.length})</h3>${repTabla(
-        ['Fecha', 'Concepto', 'Categoría', 'Método', 'Monto'],
-        egr.slice(0, 120).map(e => [fmtF(e.fecha), contaEsc(e.concepto), contaEsc(e.categoria || '—'), contaEsc(e.metodo_pago || '—'), contaFmt(e.monto)]),
-        [4])}</div>`;
-    h += repCierre(repFirmas('Elaborado por\n' + contaEsc(sesion.nombre || ''), 'Revisado / Gerencia\nACCESORIOS JK'));
-    panelGenerarPDF(h, `Reporte_Contable_JK_${contaHoyISO()}.pdf`);
-}
 // ---------- INICIO DE PANELES ----------
 // Los paneles se cargan tras ingresar la contraseña del comercio
 function cmdIniciar(c) {
@@ -3547,7 +3739,7 @@ function cmdIniciar(c) {
 </script>
 <script>
 /* =====================================================================
-   NUEVO: REPARACION COMPLETA (REVISION, FIRMA, FACTURA FINAL, ETIQUETA Y QR)
+   REPARACION COMPLETA (REVISION, FIRMA, FACTURA FINAL, ETIQUETA Y QR)
    ===================================================================== */
 const REP_CHECK = [
     ['pantalla', 'Pantalla'], ['sensor_proximidad', 'Sensor de proximidad'], ['bateria', 'Batería'],
@@ -3719,7 +3911,6 @@ function repFormatoClave(o) {
     }
     return 'No registrada';
 }
-
 // ---------- FIRMA DIGITAL ----------
 function firmaFondo(c, ctx) {
     ctx.fillStyle = '#ffffff';
@@ -3832,49 +4023,43 @@ function repQRTexto(d) {
         d.id ? 'ID: ' + d.id : ''
     ].filter(Boolean).join('\n').slice(0, 900);
 }
-function repQRDataURL_old(text) {
-    const tmp = document.createElement('div');
-    new QRCode(tmp, { text: text, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M });
-    const c = tmp.querySelector('canvas');
-    return c ? c.toDataURL('image/png') : '';
-}
-function repImprimirEtiqueta_old(d) {
+function repImprimirEtiqueta(d) {
     let qr = '';
-    try { qr = repQRDataURL(repQRTexto(d)); } catch (e) { console.error(e); mostrarAlertaError('No se pudo generar el código QR.'); return; }
+    try { qr = repQRSrc(repQRTexto(d)); } catch (e) { console.warn('QR no generado; la etiqueta se imprime sin QR.', e); }
     const w = window.open('', '_blank', 'width=520,height=460');
     if (!w) { mostrarAlertaError('Permite las ventanas emergentes para imprimir la etiqueta.'); return; }
     const recorta = (s, n) => { const t = String(s || '—'); return t.length > n ? t.slice(0, n) + '…' : t; };
     const ck = d.checklist || {};
     const nov = REP_CHECK.filter(([k]) => ck[k] === 'no').map(([, l]) => l);
+    const imgQR = qr ? `<img src="${qr}" alt="QR" onerror="this.style.display='none'">` : '';
     w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Etiqueta ${contaEsc(d.numero || '')}</title>
 <style>
-@page { size: 100mm 60mm; margin: 0; }
+@page { size: 80mm 50mm; margin: 0; }
 * { box-sizing: border-box; }
-body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #111; }
-.et { width: 100mm; height: 60mm; padding: 3mm; display: flex; gap: 3mm; border: 0.4mm solid #0b2e33; overflow: hidden; }
-.info { flex: 1; font-size: 7.6pt; line-height: 1.3; overflow: hidden; }
-.info h2 { margin: 0 0 1.5mm; font-size: 9pt; color: #0b2e33; }
-.info p { margin: 0 0 0.8mm; }
-.info b { color: #0b5f58; }
-.num { font-size: 9pt; font-weight: bold; color: #0b2e33; }
-.qr { width: 30mm; text-align: center; font-size: 6pt; }
-.qr img { width: 28mm; height: 28mm; display: block; margin: 0 auto 1mm; }
+html, body { margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; color: #000; background: #fff; }
+.et { width: 80mm; height: 50mm; padding: 2mm 2.5mm; display: flex; gap: 2mm; overflow: hidden; }
+.info { flex: 1; font-size: 6.8pt; line-height: 1.25; overflow: hidden; }
+.info h2 { margin: 0 0 1mm; font-size: 7.5pt; }
+.info p { margin: 0 0 0.6mm; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.num { font-size: 8.5pt !important; font-weight: bold; }
+.qr { width: 22mm; text-align: center; font-size: 5.5pt; flex-shrink: 0; }
+.qr img { width: 21mm; height: 21mm; display: block; margin: 0 auto 0.5mm; }
 </style></head>
-<body onload="setTimeout(function(){ window.print(); }, 250)">
+<body onload="setTimeout(function(){ window.print(); }, 400)">
 <div class="et">
     <div class="info">
-        <h2>ACCESORIOS JK · INGRESO DE EQUIPO</h2>
+        <h2>${contaEsc(JK_CFG.empresa)} · INGRESO DE EQUIPO</h2>
         <p class="num">${contaEsc(d.numero || 'Pendiente')}</p>
-        <p><b>Cliente:</b> ${contaEsc(recorta(d.cliente, 28))} · ${contaEsc(d.telefono || '—')}</p>
-        <p><b>Equipo:</b> ${contaEsc(recorta(d.equipo, 34))}</p>
+        <p><b>Cliente:</b> ${contaEsc(recorta(d.cliente, 26))} · ${contaEsc(d.telefono || '—')}</p>
+        <p><b>Equipo:</b> ${contaEsc(recorta(d.equipo, 30))}</p>
         <p><b>IMEI:</b> ${contaEsc(d.imei1 || '—')}</p>
-        <p><b>Falla:</b> ${contaEsc(recorta(d.falla, 60))}</p>
+        <p><b>Falla:</b> ${contaEsc(recorta(d.falla, 40))}</p>
         <p><b>Ingreso:</b> ${contaEsc(pnlFecha(d.fecha))}</p>
         <p><b>Garantía:</b> ${d.dias > 0 ? d.dias + ' días' : 'N/A'} · <b>Estado:</b> ${contaEsc(repEtiquetaEstado(d.estadoRaw))}</p>
-        <p><b>Novedades:</b> ${contaEsc(recorta(nov.join(', ') || 'Ninguna', 60))}</p>
+        <p><b>Novedades:</b> ${contaEsc(recorta(nov.join(', ') || 'Ninguna', 42))}</p>
     </div>
-    <div class="qr"><img src="${qr}" alt="QR"><div>Escanee para ver
-los datos del equipo</div></div>
+    <div class="qr">${imgQR}<div>Escanee para
+ver los datos</div></div>
 </div>
 </body></html>`);
     w.document.close();
@@ -3889,7 +4074,7 @@ function abrirQRReparacion(id) {
     if (!o) { mostrarAlertaError('No se encontró la reparación.'); return; }
     QR_DATA = repDatosDesdeOp(o);
     const txt = repQRTexto(QR_DATA);
-    try { document.getElementById('qr_img').src = repQRDataURL(txt); } catch (e) { console.error(e); mostrarAlertaError('No se pudo generar el QR.'); return; }
+    try { document.getElementById('qr_img').src = repQRSrc(txt); } catch (e) { console.error(e); mostrarAlertaError('No se pudo generar el QR.'); return; }
     document.getElementById('qr_txt').innerText = txt;
     abrirModalFormulario('modal_qr');
 }
@@ -3967,7 +4152,9 @@ function repFacturaHTML(d) {
     </tbody></table></div></div>`;
     h += `<div class="rep-sec"><h3>Términos y condiciones</h3><p class="rep-nota">${contaEsc(JK_CFG.terminosTaller)} Presente esta factura para cualquier reclamación. Método de pago: ${contaEsc(d.metodo || 'N/A')} (${contaEsc(d.tipoPago || '')}).</p></div>`;
     const firmaImg = d.firmaSrc ? `<img src="${d.firmaSrc}" alt="Firma" style="max-height:70px;display:block;margin:0 auto 4px;">` : '<div style="height:70px;"></div>';
-    return h + repCierre(repFirmas(`${firmaImg}Recibí conforme (cliente)\n${contaEsc(d.cliente || '')}`, `<div style="height:70px;"></div>Entregado por\n${contaEsc(d.asesor || 'ACCESORIOS JK')}`));
+    return h + repCierre(repFirmas(`${firmaImg}Recibí conforme (cliente)
+${contaEsc(d.cliente || '')}`, `<div style="height:70px;"></div>Entregado por
+${contaEsc(d.asesor || 'ACCESORIOS JK')}`));
 }
 function ftMostrarResumen(d) {
     const saldo = Math.max(0, d.total - d.abono);
@@ -4005,21 +4192,6 @@ function ftDescargar() {
         appCore.mostrarAvisoPDF();
     }).catch(e => { console.error(e); mostrarAlertaError('No se pudo generar el PDF.'); });
 }
-function ftMensajeCliente_old(d) {
-    const saldo = Math.max(0, d.total - d.abono);
-    return [
-        '*ACCESORIOS JK · SERVICIO TÉCNICO*',
-        `Hola ${d.cliente || ''}, le enviamos el detalle de su equipo:`,
-        `Factura: ${d.numero || ''}`,
-        `Equipo: ${d.equipo || ''}`,
-        `Estado actual: ${repEtiquetaEstado(d.estadoRaw)}`,
-        `Garantía: ${d.dias > 0 ? d.dias + ' días' : 'no aplica'}`,
-        `Saldo pendiente: ${contaFmt(saldo)}`,
-        d.observacion ? `Observaciones: ${d.observacion}` : '',
-        '',
-        'Adjuntamos el comprobante PDF con el detalle, la revisión del equipo y los términos de garantía. ¡Gracias por confiar en nosotros!'
-    ].filter(x => x !== '').join('\n');
-}
 async function ftEnviar() {
     if (!FT_DATA) return;
     const d = FT_DATA;
@@ -4044,38 +4216,7 @@ async function ftEnviar() {
     }
 }
 // Versión del PDF con los mismos membretes: crea el documento y devuelve jsPDF
-function repRenderPDF_old(html) {
-    const overlay = document.createElement('div');
-    overlay.className = 'rep-overlay';
-    overlay.innerHTML = '<div class="rep-loader"><i class="fa-solid fa-file-pdf"></i><span>Generando PDF profesional…</span></div>';
-    const cont = document.createElement('div');
-    cont.className = 'rep-pdf';
-    cont.innerHTML = html;
-    document.body.appendChild(overlay);
-    document.body.appendChild(cont);
-    return html2pdf().set({
-        margin: [0.35, 0.3, 0.6, 0.3],
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0, logging: false },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'], avoid: '.rep-sec' }
-    }).from(cont).toPdf().get('pdf').then(pdf => {
-        const total = pdf.internal.getNumberOfPages();
-        const W = pdf.internal.pageSize.getWidth();
-        const H = pdf.internal.pageSize.getHeight();
-        for (let i = 1; i <= total; i++) {
-            pdf.setPage(i);
-            pdf.setDrawColor(18, 216, 196);
-            pdf.setLineWidth(0.02);
-            pdf.line(0.3, H - 0.45, W - 0.3, H - 0.45);
-            pdf.setFontSize(8);
-            pdf.setTextColor(110);
-            pdf.text('Sistema JK · ACCESORIOS JK · Documento generado automáticamente', 0.3, H - 0.3);
-            pdf.text(`Página ${i} de ${total}`, W - 0.3, H - 0.3, { align: 'right' });
-        }
-        return pdf;
-    }).finally(() => { cont.remove(); overlay.remove(); });
-}
+function repRenderPDF(html) { return repCrearPDFCanvas(html); }
 // ---------- GUARDAR REPARACION COMPLETA ----------
 async function repGuardarCompleto() {
     if (!obtenerSesion()) { await guardarOperacion('rep', 'Reparacion'); return; }
@@ -4139,7 +4280,7 @@ repPatronInit();
 </script>
 <script>
 /* =====================================================================
-   NUEVO: CONFIGURACION DE FACTURAS (EDICION DE FACTURAS)
+   CONFIGURACION DE FACTURAS (EDICION DE FACTURAS)
    ===================================================================== */
 const JK_CFG_DEFAULT = {
     empresa: 'ACCESORIOS JK',
@@ -4204,13 +4345,11 @@ function cfgAplicarDOMCompleto() {
         else { sDiv.style.display = 'none'; sImg.src = ''; }
     }
 }
-
 // ============================================================================
 // COMERCIO — multi-tenant (ID + contraseña + tema + identidad)
 // ============================================================================
 window.JK_COMERCIO = null;
 window.JK_COMERCIO_ID = null;
-
 function jkSesionActiva() {
     try { var s = sessionStorage.getItem('jk_session'); if (s) return JSON.parse(s); } catch (e) {}
     return null;
@@ -4327,7 +4466,6 @@ async function jkValidarPassword(pwd) {
 function jkCargarConComercio() {
     var idActual = document.getElementById('com_id_actual');
     var hint = document.getElementById('com_id_hint');
-    var nombre = document.getElementById('com_nombre');
     if (idActual) idActual.textContent = (window.JK_COMERCIO && window.JK_COMERCIO.id) || 'COM-?????? (se generará al guardar)';
     if (hint) hint.textContent = (window.JK_COMERCIO && window.JK_COMERCIO.id) ? '(ID actual del comercio)' : '';
     (document.getElementById('btnComercio') || { innerHTML: '' }).innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar comercio';
@@ -4506,7 +4644,6 @@ function comSelloQuitar() {
     if (prev && img) { prev.style.display = 'none'; img.src = ''; }
 }
 function comSelloElegirFile() {}
-
 async function firmaCanvasSubir() {
     var c = document.getElementById('com_firma_canvas');
     if (!c) return null;
@@ -4637,7 +4774,6 @@ async function comGuardar() {
         btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar comercio';
     }
 }
-
 // Versiones que usan la configuración editable
 function repRenderLogo() {
     var c = window.JK_COMERCIO || {};
@@ -4696,7 +4832,7 @@ function cotMensajeWA(d) {
     ].join('\n');
 }
 /* =====================================================================
-   NUEVO: TECNICO IA (gratuita, sin clave) + enlaces de respaldo
+   TECNICO IA (gratuita, sin clave) + enlaces de respaldo
    ===================================================================== */
 const TEC_SYSTEM = 'Eres un técnico experto en reparación de celulares y equipos tecnológicos (pantallas, baterías, conectores de carga, cámaras, micrófono, altavoz, Face ID, WiFi, señal, humedad y software). Responde siempre en español, de forma práctica, con pasos numerados y advertencias de seguridad. Si la pregunta no es sobre reparación de equipos tecnológicos, indícalo amablemente y no respondas el tema. Sé conciso (máximo 250 palabras).';
 const TEC_HISTORIAL = [];
@@ -4766,7 +4902,8 @@ async function tecnicoPreguntar(texto) {
     if (btn) btn.disabled = false;
 }
 /* =====================================================================
-   NUEVO: GRAFICAS Y REPORTE CONTABLE SEGUN EL FILTRO
+   GRAFICAS Y REPORTE CONTABLE SEGUN EL FILTRO
+   (incluye los ingresos adicionales registrados con "Registrar ingreso")
    ===================================================================== */
 function contaCompactaFecha(d) { return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0'); }
 function contaArmarFilas(filas, r) {
@@ -4774,8 +4911,10 @@ function contaArmarFilas(filas, r) {
     return filas.map(f => {
         const ops = contaEstado.ops.filter(o => contaEnIntervalo(o.created_at, f.desde, f.hasta) && dentro(o.created_at));
         const egr = contaEstado.egr.filter(e => contaEnIntervalo(e.fecha, f.desde, f.hasta) && dentro(e.fecha));
-        const t = contaCalcular(ops, egr);
-        return { etiqueta: f.etiqueta, ingresos: t.ingresos, egresos: t.egresos, electronicos: t.electronicos, balance: t.balance };
+        // NUEVO: los ingresos manuales entran al histórico por su propia fecha
+        const ing = contaEstado.ing.filter(i => contaEnIntervalo(i.fecha, f.desde, f.hasta) && dentro(i.fecha));
+        const t = contaCalcular(ops, egr, ing);
+        return { etiqueta: f.etiqueta, ingresos: t.ingresos, egresos: t.egresos, electronicos: t.electronicos, balance: t.balance, manuales: t.ingresosManuales };
     });
 }
 // Histórico de pantalla (etiquetas compactas)
@@ -4806,7 +4945,7 @@ function contaHistoricoPeriodo(modo, r) {
     const minimo = new Date(hoy); minimo.setDate(minimo.getDate() - (modo === 'dia' ? 61 : 175));
     let inicio = r.desde;
     if (!inicio) {
-        const fechas = [...contaEstado.ops.map(o => new Date(o.created_at).getTime()), ...contaEstado.egr.map(e => new Date(e.fecha).getTime())].filter(x => !isNaN(x));
+        const fechas = [...contaEstado.ops.map(o => new Date(o.created_at).getTime()), ...contaEstado.egr.map(e => new Date(e.fecha).getTime()), ...contaEstado.ing.map(i => new Date(i.fecha).getTime())].filter(x => !isNaN(x));
         inicio = fechas.length ? new Date(Math.min(...fechas)) : new Date(hoy);
     }
     if (inicio < minimo) inicio = new Date(minimo);
@@ -4965,15 +5104,12 @@ async function repCrearPDFCanvas(html) {
         window.scrollTo(0, yGuardado);
     }
 }
-function panelGenerarPDF(html, filename) {
-    return repCrearPDFCanvas(html)
-        .then(pdf => { pdf.save(filename); appCore.mostrarAvisoPDF(); })
-        .catch(e => { console.error(e); mostrarAlertaError('No se pudo generar el PDF.'); });
-}
-function repRenderPDF(html) { return repCrearPDFCanvas(html); }
+/* =====================================================================
+   REPORTE CONTABLE PDF (incluye los ingresos adicionales)
+   ===================================================================== */
 function contaReportePDFv2() {
     if (!contaEstado.ultimo) { mostrarAlertaError('Primero carga la contabilidad.'); return; }
-    const { t, ops, egr, r } = contaEstado.ultimo;
+    const { t, ops, egr, ing, r } = contaEstado.ultimo;
     const sesion = obtenerSesion() || {};
     const periodo = contaTextoPeriodo(contaEstado.periodo, r);
     const modo = contaEstado.hist;
@@ -4984,53 +5120,75 @@ function contaReportePDFv2() {
         { label: 'Efectivo', value: t.efectivo, color: '#16a34a' },
         { label: 'Pagos electrónicos (transferencia / tarjeta)', value: t.electronicos, color: '#2563eb' }
     ];
-    const tipos = Object.keys(t.tipos).map((k, i) => ({ label: CONTA_LABEL_TIPO[k] || k, value: t.tipos[k], color: colores[i % colores.length] }));
+    const tipos = Object.keys(t.tipos).map((k, i) => ({ label: CONTA_LABEL_TIPO[k] || CONTA_LABEL_CAT_ING[k] || k, value: t.tipos[k], color: colores[i % colores.length] }));
     const imgBalance = contaGraficoBalance(hist, (modo === 'dia' ? 'Balance diario' : 'Balance semanal') + ' · ' + periodo);
     const imgMetodos = contaGraficoPie(metodos, 'Ingresos por método de pago');
     const imgTipos = contaGraficoPie(tipos, 'Ingresos por tipo de operación');
+    // NUEVO: detalle de los ingresos adicionales registrados en el periodo
+    const filasIng = (ing || []).map(i => [
+        fmtF(i.fecha),
+        contaEsc(i.concepto || '—'),
+        contaEsc(CONTA_LABEL_CAT_ING[i.categoria] || i.categoria || '—'),
+        contaEsc(i.metodo_pago || '—'),
+        i.operacion_id ? contaEsc(i.numero_factura || contaNumeroFacturaPorId(i.operacion_id) || 'Aplicada') : '—',
+        i.operacion_id ? '<span style="color:#0f766e">Aplicado a factura</span>' : '<span style="color:#15803d">Ingreso adicional</span>',
+        contaFmt(i.monto)
+    ]);
     let h = repMembrete('Reporte contable', periodo, [
         ['Periodo', periodo],
         ['Generado', new Date().toLocaleString('es-CO')],
         ['Elaborado por', sesion.nombre || 'N/A']
     ]);
     h += `<div class="rep-sec"><h3>1. Indicadores clave</h3>${repKpis([
-        { lbl: 'Ingresos', val: contaFmt(t.ingresos), col: '#15803d' },
+        { lbl: 'Ingresos totales', val: contaFmt(t.ingresos), col: '#15803d' },
+        { lbl: 'Ingresos por operaciones', val: contaFmt(t.ingresosOps), col: '#0f766e' },
+        { lbl: 'Ingresos adicionales', val: contaFmt(t.ingresosManuales), col: '#16a34a' },
         { lbl: 'Egresos', val: contaFmt(t.egresos), col: '#b91c1c' },
         { lbl: 'Balance neto', val: contaFmt(t.balance), col: t.balance < 0 ? '#b91c1c' : '#0f766e' },
         { lbl: 'Pagos electrónicos', val: contaFmt(t.electronicos), col: '#1d4ed8' },
         { lbl: 'Efectivo recibido', val: contaFmt(t.efectivo), col: '#6d28d9' },
-        { lbl: 'Saldo por cobrar', val: contaFmt(t.pendiente), col: '#b45309' }
+        { lbl: 'Cobros de cartera', val: contaFmt(t.cobrosCartera), col: '#b45309' },
+        { lbl: 'Saldo por cobrar', val: contaFmt(t.pendiente), col: '#a16207' }
     ])}</div>`;
     h += `<div class="rep-sec"><h3>2. Histórico del balance (${modo === 'dia' ? 'por día' : 'por semana'})</h3><img class="rep-img" src="${imgBalance}" alt="Histórico del balance"></div>`;
     h += `<div class="rep-sec"><h3>3. Distribución de ingresos</h3><img class="rep-img" src="${imgMetodos}" alt="Métodos de pago"><img class="rep-img" src="${imgTipos}" alt="Tipos de operación"></div>`;
-    h += `<div class="rep-sec"><h3>4. Estado de cuentas</h3>${repTabla(['Concepto', 'Valor'], [
-        ['Ingresos (abonos y pagos recibidos)', contaFmt(t.ingresos)],
+    h += `<div class="rep-sec"><h3>4. Estado de cuentas (desglose de los ingresos)</h3>${repTabla(['Concepto', 'Valor'], [
+        ['Ingresos por operaciones (abonos y pagos recibidos)', contaFmt(t.ingresosOps)],
+        ['(+) Ingresos adicionales registrados (libres)', contaFmt(t.ingresosManuales - t.cobrosCartera < 0 ? 0 : t.ingresosManuales - t.cobrosCartera)],
+        ['(+) Cobros de cartera contabilizados en el periodo', contaFmt(t.cobrosCartera)],
+        ['(=) Total ingresos del periodo', contaFmt(t.ingresos)],
         ['(-) Egresos registrados', contaFmt(t.egresos)],
         ['Balance neto del periodo', contaFmt(t.balance)],
         ['Egresos pagados electrónicamente', contaFmt(t.egrElec)],
+        ['Ingresos adicionales pagados electrónicamente', contaFmt(t.ingElec)],
+        ['Cobros aplicados a facturas de este periodo (ya incluidos)', contaFmt(t.cobrosAplicados)],
         ['Número de operaciones', String(t.nOps)],
+        ['Número de ingresos adicionales', String(t.nIng)],
         ['Número de egresos', String(t.nEgr)]
-    ], [1], 2)}</div>`;
-    h += `<div class="rep-sec"><h3>5. Ingresos por tipo de operación</h3>${repTabla(['Tipo', 'Ingresos'], tipos.map(x => [contaEsc(x.label), contaFmt(x.value)]), [1])}</div>`;
+    ], [1], 5)}
+    <p class="rep-nota">Nota contable: los cobros de cartera aplicados a facturas de este mismo periodo ya vienen incluidos en el pago de la operación correspondiente, por eso no se suman dos veces. Los cobros de facturas de periodos anteriores sí se contabilizan como ingreso adicional en la fecha del cobro.</p></div>`;
+    h += `<div class="rep-sec"><h3>5. Ingresos por tipo y categoría</h3>${repTabla(['Tipo / Categoría', 'Ingresos'], tipos.map(x => [contaEsc(x.label), contaFmt(x.value)]), [1])}</div>`;
     h += `<div class="rep-sec"><h3>6. Detalle del histórico</h3>${repTabla(['Periodo', 'Ingresos', 'Egresos', 'Electrónicos', 'Balance'],
         hist.map(x => [contaEsc(x.etiqueta), contaFmt(x.ingresos), contaFmt(x.egresos), contaFmt(x.electronicos), contaFmt(x.balance)]), [1, 2, 3, 4])}</div>`;
-    h += `<div class="rep-sec"><h3>7. Operaciones (${Math.min(ops.length, 120)} de ${ops.length})</h3>${repTabla(
+    h += `<div class="rep-sec"><h3>7. Detalle de ingresos adicionales (${(ing || []).length} registro(s))</h3>${repTabla(
+        ['Fecha', 'Concepto', 'Categoría', 'Método', 'Factura', 'Contabilizado como', 'Monto'],
+        filasIng, [6], -1)}
+    <p class="rep-nota">Ingresos registrados manualmente con el botón «Registrar ingreso». Total contabilizado en el periodo: ${contaFmt(t.ingresosManuales)} (${t.nIng} registro(s)). Cobros aplicados a facturas del mismo periodo: ${contaFmt(t.cobrosAplicados)}.</p></div>`;
+    h += `<div class="rep-sec"><h3>8. Operaciones (${Math.min(ops.length, 120)} de ${ops.length})</h3>${repTabla(
         ['Fecha', 'Factura', 'Tipo', 'Cliente', 'Pago', 'Total', 'Pagado'],
         ops.slice(0, 120).map(o => [fmtF(o.created_at), contaEsc(o.numero_factura || '—'), contaEsc(o.tipo_operacion), contaEsc(o.customer_name), contaEsc(o.payment_method), contaFmt(o.total), contaFmt(o.amount_paid)]),
         [5, 6])}</div>`;
-    h += `<div class="rep-sec"><h3>8. Egresos (${Math.min(egr.length, 120)} de ${egr.length})</h3>${repTabla(
+    h += `<div class="rep-sec"><h3>9. Egresos (${Math.min(egr.length, 120)} de ${egr.length})</h3>${repTabla(
         ['Fecha', 'Concepto', 'Categoría', 'Método', 'Monto'],
         egr.slice(0, 120).map(e => [fmtF(e.fecha), contaEsc(e.concepto), contaEsc(e.categoria || '—'), contaEsc(e.metodo_pago || '—'), contaFmt(e.monto)]),
         [4])}</div>`;
     h += repCierre(repFirmas('Elaborado por\n' + contaEsc(sesion.nombre || ''), 'Revisado / Gerencia\n' + contaEsc(JK_CFG.empresa)));
     panelGenerarPDF(h, `Reporte_Contable_JK_${contaHoyISO()}.pdf`);
 }
-// ---------- INICIO ----------
-
 </script>
 <script>
 /* =====================================================================
-   NUEVO: QR INDEPENDIENTE, ETIQUETA TERMICA Y QR EN TALLER
+   QR INDEPENDIENTE, ETIQUETA TERMICA Y QR EN TALLER
    ===================================================================== */
 // Genera el QR con la librería local; si falla, usa un servicio de QR en línea (sin clave)
 function repQRSrc(text) {
@@ -5048,48 +5206,6 @@ function repQRSrc(text) {
     return 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&ecc=M&data=' + encodeURIComponent(text);
 }
 function repQRDataURL(text) { return repQRSrc(text); }
-// Etiqueta térmica (80 x 50 mm). Se imprime aunque el QR no esté disponible.
-function repImprimirEtiqueta(d) {
-    let qr = '';
-    try { qr = repQRSrc(repQRTexto(d)); } catch (e) { console.warn('QR no generado; la etiqueta se imprime sin QR.', e); }
-    const w = window.open('', '_blank', 'width=520,height=460');
-    if (!w) { mostrarAlertaError('Permite las ventanas emergentes para imprimir la etiqueta.'); return; }
-    const recorta = (s, n) => { const t = String(s || '—'); return t.length > n ? t.slice(0, n) + '…' : t; };
-    const ck = d.checklist || {};
-    const nov = REP_CHECK.filter(([k]) => ck[k] === 'no').map(([, l]) => l);
-    const imgQR = qr ? `<img src="${qr}" alt="QR" onerror="this.style.display='none'">` : '';
-    w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Etiqueta ${contaEsc(d.numero || '')}</title>
-<style>
-@page { size: 80mm 50mm; margin: 0; }
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; color: #000; background: #fff; }
-.et { width: 80mm; height: 50mm; padding: 2mm 2.5mm; display: flex; gap: 2mm; overflow: hidden; }
-.info { flex: 1; font-size: 6.8pt; line-height: 1.25; overflow: hidden; }
-.info h2 { margin: 0 0 1mm; font-size: 7.5pt; }
-.info p { margin: 0 0 0.6mm; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.num { font-size: 8.5pt !important; font-weight: bold; }
-.qr { width: 22mm; text-align: center; font-size: 5.5pt; flex-shrink: 0; }
-.qr img { width: 21mm; height: 21mm; display: block; margin: 0 auto 0.5mm; }
-</style></head>
-<body onload="setTimeout(function(){ window.print(); }, 400)">
-<div class="et">
-    <div class="info">
-        <h2>${contaEsc(JK_CFG.empresa)} · INGRESO DE EQUIPO</h2>
-        <p class="num">${contaEsc(d.numero || 'Pendiente')}</p>
-        <p><b>Cliente:</b> ${contaEsc(recorta(d.cliente, 26))} · ${contaEsc(d.telefono || '—')}</p>
-        <p><b>Equipo:</b> ${contaEsc(recorta(d.equipo, 30))}</p>
-        <p><b>IMEI:</b> ${contaEsc(d.imei1 || '—')}</p>
-        <p><b>Falla:</b> ${contaEsc(recorta(d.falla, 40))}</p>
-        <p><b>Ingreso:</b> ${contaEsc(pnlFecha(d.fecha))}</p>
-        <p><b>Garantía:</b> ${d.dias > 0 ? d.dias + ' días' : 'N/A'} · <b>Estado:</b> ${contaEsc(repEtiquetaEstado(d.estadoRaw))}</p>
-        <p><b>Novedades:</b> ${contaEsc(recorta(nov.join(', ') || 'Ninguna', 42))}</p>
-    </div>
-    <div class="qr">${imgQR}<div>Escanee para
-ver los datos</div></div>
-</div>
-</body></html>`);
-    w.document.close();
-}
 // Taller: muestra el QR de las reparaciones registradas (se actualiza al guardar)
 function tallerQRRender() {
     const cont = document.getElementById('tallerQR');
@@ -5211,7 +5327,6 @@ function jkInstallAhoraNo() {
    NOTIFICACIONES PUSH (VAPID) — stock bajo
    ===================================================================== */
 const VAPID_PUBLIC_KEY = 'BH33bOLS6dkjLcJ13YNrH1RoIcw5tQ-ViYdhmpk-_NckxbpLodetnGpevX0otS1RzrrfA4jWgShNVu5Cj2OgwAc';
-
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -5313,7 +5428,6 @@ async function activarNotificacionesPush() {
         console.error('activarNotificacionesPush:', e);
     }
 }
-
 function textoAvisoStock(nivel, nombreProducto) {
     if (nivel === 3) return { title: '⚠ Stock bajo', body: '«' + nombreProducto + '»: quedan solo 3 unidades. Programa reposición.' };
     if (nivel === 2) return { title: '⚠⚠ Stock crítico', body: '«' + nombreProducto + '»: quedan solo 2 unidades. Repón pronto.' };
@@ -5356,7 +5470,6 @@ async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo,
     var niveles = [3, 2, 1, 0].filter(function (nivel) { return anterior > nivel && nuevo <= nivel; });
     for (const nivel of niveles) await enviarAvisoStockBajo(nombreProducto, nivel, productoId);
 }
-
 </script>
 <script>
 /* =====================================================================
@@ -5370,7 +5483,6 @@ async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo,
     var brand = active || cached;
     jkAplicarTema((brand && brand.theme) || 'oscuro');
     if (brand) { jkRenderMarca(brand); jkActualizarLockLogo(brand); }
-
     var form = document.getElementById('jkLockForm');
     var input = document.getElementById('jkLockPassword');
     var btn = document.getElementById('jkLockBtn');
@@ -5378,7 +5490,6 @@ async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo,
     var configurarBtn = document.getElementById('jkLockConfigurar');
     var lock = document.getElementById('jkLock');
     var cmd = typeof cmdIniciar === 'function' ? cmdIniciar : (window.cmdIniciar || null);
-
     function bindLockscreen() {
         if (form) form.addEventListener('submit', function (e) { e.preventDefault(); entrar(); });
         if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
@@ -5413,7 +5524,6 @@ async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo,
             btn.innerHTML = '<i class="fa-solid fa-lock"></i> Ingresar';
         });
     }
-
     if (configurar) {
         // Modo crear comercio desde cero: sin lockscreen
         if (lock) lock.classList.remove('show');
@@ -5421,28 +5531,23 @@ async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo,
         setTimeout(function () { abrirEdicionComercio(); }, 250);
         return;
     }
-
     // Binding lockscreen una sola vez
     bindLockscreen();
     window.addEventListener('jk-install-closed', unlockAndStart);
-
     if (active) {
         // Sesión activa — desbloquear, sin popup
         unlockAndStart();
         return;
     }
-
     // Sin sesión activa — popup de instalación primero
     if (!jkInstallDetected()) {
         jkShowInstallPopup();
         return;
     }
-
     // Sin popup (instalado o descartado en esta sesión) — lockscreen directo
     jkMostrarLockscreen();
 })();
 </script>
-
 <script>
 /* =====================================================================
    ESCÁNER QR DE PRODUCTOS — Accesorios y Celulares
@@ -5451,7 +5556,6 @@ var qrProductoPrefijo = null;
 var qrProductoReader = null;
 var qrProductoControls = null;
 var qrProductoProcesando = false;
-
 function detenerCamaraQR() {
     if (qrProductoControls && typeof qrProductoControls.stop === 'function') {
         try { qrProductoControls.stop(); } catch (e) {}
@@ -5627,5 +5731,3 @@ if ('serviceWorker' in navigator) {
     });
 }
 </script>
-</body>
-</html>
