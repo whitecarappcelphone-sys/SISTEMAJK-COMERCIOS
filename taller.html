@@ -156,16 +156,49 @@ body { font-family: 'Poppins', sans-serif; min-height: 100vh; color: #fff; backg
 .btn-action.btn-whatsapp:hover { background: rgba(37,211,102,.12); }
 .btn-action.btn-ver-img { border-color: rgba(18,216,196,.2); color: #12d8c4; }
 .btn-action.btn-ver-img:hover { background: rgba(18,216,196,.1); }
+.btn-action.btn-editar { border-color: rgba(245,158,11,.32); color: #fbbf24; }
+.btn-action.btn-editar:hover { background: rgba(245,158,11,.14); color: #fcd34d; }
 .btn-action.btn-pdf { border-color: rgba(255,94,94,.2); color: #ff7a7a; }
 .btn-action.btn-pdf:hover { background: rgba(255,94,94,.12); color: #ff5e5e; }
 .btn-action.btn-pdf:disabled { opacity: .6; cursor: not-allowed; }
+/* MODAL EDITAR REPARACION */
+.modal-edit-taller { position: fixed; inset: 0; background: rgba(6,9,14,.78); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 10050; padding: 18px; }
+.modal-edit-taller.show { display: flex; }
+.modal-edit-box { width: 100%; max-width: 720px; max-height: 92vh; overflow-y: auto; background: #171a21; border: 1px solid rgba(18,216,196,.25); border-radius: 18px; padding: 22px; box-shadow: 0 24px 70px rgba(0,0,0,.65); position: relative; }
+.modal-edit-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.modal-edit-head h3 { font-size: 17px; color: #12d8c4; margin: 0; }
+.modal-edit-head p { font-size: 11px; color: #7d8594; margin-top: 3px; }
+.modal-edit-close { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.06); color: #fff; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: .2s; }
+.modal-edit-close:hover { background: #ff5e5e; border-color: #ff5e5e; color: #fff; }
+.edit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.edit-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.edit-field.full { grid-column: 1 / -1; }
+.edit-field label { font-size: 11px; color: #bfc6d2; font-weight: 500; }
+.edit-field input, .edit-field select, .edit-field textarea { width: 100%; min-height: 40px; border: 1px solid rgba(255,255,255,.10); border-radius: 10px; background: #101319; color: #fff; padding: 8px 11px; font-family: 'Poppins', sans-serif; font-size: 12px; outline: none; }
+.edit-field textarea { min-height: 74px; resize: vertical; }
+.edit-field input:focus, .edit-field select:focus, .edit-field textarea:focus { border-color: #12d8c4; box-shadow: 0 0 10px rgba(18,216,196,.12); }
+.edit-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.btn-edit-cancel { height: 42px; padding: 0 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); color: #cbd5e1; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; }
+.btn-edit-save { height: 42px; padding: 0 18px; border-radius: 10px; border: 0; background: linear-gradient(135deg, #12d8c4, #22f5dd); color: #081014; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.btn-edit-save:disabled { opacity: .6; cursor: wait; }
+html[data-theme="claro"] .modal-edit-box { background: #ffffff !important; color: #1a1e28 !important; border-color: rgba(13,148,136,.3) !important; }
+html[data-theme="claro"] .modal-edit-head h3 { color: #0d9488 !important; }
+html[data-theme="claro"] .modal-edit-head p { color: #5b6673 !important; }
+html[data-theme="claro"] .modal-edit-close { background: #f1f4f8 !important; color: #1a1e28 !important; border-color: rgba(0,0,0,.18) !important; }
+html[data-theme="claro"] .modal-edit-close:hover { background: #e11d48 !important; color: #ffffff !important; border-color: #e11d48 !important; }
+html[data-theme="claro"] .btn-edit-cancel { background: #f1f4f8 !important; color: #334155 !important; border-color: rgba(20,30,50,.16) !important; }
+html[data-theme="claro"] .btn-edit-save { background: linear-gradient(135deg, #0d9488, #14b8a6) !important; color: #ffffff !important; }
+html[data-theme="claro"] .btn-action.btn-editar { color: #b45309 !important; border-color: rgba(180,83,9,.35) !important; }
+@media(max-width: 600px) { .edit-grid { grid-template-columns: 1fr; } .edit-field.full { grid-column: auto; } }
 /* SIN RESULTADOS */
 .empty-state { text-align: center; padding: 50px 20px; color: #596170; }
 .empty-state i { font-size: 48px; margin-bottom: 15px; opacity: .4; }
 .empty-state p { font-size: 14px; }
 /* MODAL IMAGEN */
 .modal-img { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.85); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; cursor: pointer; }
-.modal-img img { max-width: 90%; max-height: 85vh; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,.5); }
+.modal-img img { max-width: 90%; max-height: 85vh; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,.5); cursor: default; }
+.modal-img-close { position: absolute; top: 20px; right: 20px; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: rgba(23,26,33,.9); color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: .2s; z-index: 10001; }
+.modal-img-close:hover { background: #ff5e5e; border-color: #ff5e5e; color: #fff; transform: scale(1.08); }
 /* ALERTAS */
 .custom-alert-container { position: fixed; top: 25px; left: 0; right: 0; width: 280px; margin: 0 auto; z-index: 9999999; box-sizing: border-box; background: #171a21; border: 2px solid #12d8c4; border-radius: 14px; padding: 16px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.85); text-align: center; }
 .custom-alert-container.error { border-color: #ff5e5e; }
@@ -211,7 +244,6 @@ body { font-family: 'Poppins', sans-serif; min-height: 100vh; color: #fff; backg
     .btn-back { padding: 8px 9px; }
 }
 </style>
-
 <script>
 (function(){try{var c=null;var s=sessionStorage.getItem('jk_session');if(s){try{c=JSON.parse(s)}catch(e){}}if(!c){c=JSON.parse(localStorage.getItem('jk_comercio')||'null');}document.documentElement.setAttribute('data-theme',(c&&c.theme)||'oscuro');}catch(e){document.documentElement.setAttribute('data-theme','oscuro');}})();
 </script>
@@ -294,7 +326,6 @@ html[data-theme="claro"] .stat-value { color: #1a1e28 !important; }
 html[data-theme="claro"] .stat-label, html[data-theme="claro"] .stat-icon { color: #6b7280 !important; }
 html[data-theme="claro"] select option { color: #1a1e28 !important; background: #fff !important; }
 html[data-theme="claro"] .regi-line { color: #6b7280 !important; }
-
 /* ---- GRADIENTE ----- */
 html[data-theme="gradiente"] body { background: radial-gradient(circle at top left, #2a1a4a 0%, #16102b 48%, #0c0a16 100%) !important; color: #f5f3ff !important; }
 html[data-theme="gradiente"] h1, html[data-theme="gradiente"] h2, html[data-theme="gradiente"] h3 { color: #f5f3ff !important; }
@@ -345,7 +376,6 @@ html[data-theme="gradiente"] .hm-panel-title { color: #c4b5e8 !important; }
 html[data-theme="gradiente"] .hm-btn { background: rgba(167,139,250,.12) !important; border-color: rgba(167,139,250,.4) !important; }
 html[data-theme="gradiente"] .hm-btn span { background: #a78bfa !important; }
 html[data-theme="gradiente"] .hm-item:hover { border-color: rgba(167,139,250,.6) !important; background: rgba(167,139,250,.22) !important; }
-
 /* ---- ESMERALDA ----- */
 html[data-theme="esmeralda"] body { background: radial-gradient(circle at top left, #012b22 0%, #0b1f1a 50%, #061311 100%) !important; color: #f0fff9 !important; }
 html[data-theme="esmeralda"] h1, html[data-theme="esmeralda"] h2, html[data-theme="esmeralda"] h3 { color: #f0fff9 !important; }
@@ -390,7 +420,6 @@ html[data-theme="esmeralda"] .hm-panel-title { color: #7ea69b !important; }
 html[data-theme="esmeralda"] .hm-btn { background: rgba(52,211,153,.12) !important; border-color: rgba(52,211,153,.4) !important; }
 html[data-theme="esmeralda"] .hm-btn span { background: #34d399 !important; }
 html[data-theme="esmeralda"] .hm-item:hover { border-color: rgba(52,211,153,.6) !important; background: rgba(52,211,153,.22) !important; }
-
 /* ---- OCÉANO ----- */
 html[data-theme="oceano"] body { background: radial-gradient(circle at top left, #06192e 0%, #0d2133 45%, #05101f 100%) !important; color: #eef5ff !important; }
 html[data-theme="oceano"] h1, html[data-theme="oceano"] h2, html[data-theme="oceano"] h3 { color: #eef5ff !important; }
@@ -435,7 +464,6 @@ html[data-theme="oceano"] .hm-panel-title { color: #8aa1b8 !important; }
 html[data-theme="oceano"] .hm-btn { background: rgba(56,189,248,.12) !important; border-color: rgba(56,189,248,.4) !important; }
 html[data-theme="oceano"] .hm-btn span { background: #38bdf8 !important; }
 html[data-theme="oceano"] .hm-item:hover { border-color: rgba(56,189,248,.6) !important; background: rgba(56,189,248,.22) !important; }
-
 /* ========== LOCKSCREEN (todas las 5 paletas) ========== */
 .jk-lock { position: fixed; inset: 0; z-index: 15000; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(6,9,14,.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .jk-lock.show { display: flex; animation: jkLockIn .4s ease both; }
@@ -515,7 +543,6 @@ html[data-theme="oceano"] .jk-lock-warn i { color: #fde047 !important; }
 html[data-theme="oceano"] .jk-lock-foot { color: #8aa1b8 !important; }
 html[data-theme="oceano"] .jk-lock-link { color: #38bdf8 !important; }
 body.jk-locked { overflow: hidden !important; }
-
 </style>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_MX">
@@ -537,7 +564,6 @@ body.jk-locked { overflow: hidden !important; }
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sistema JK">
-
 <link rel="manifest" href="manifest.json">
 </head>
 <body>
@@ -556,7 +582,6 @@ body.jk-locked { overflow: hidden !important; }
         <div class="jk-lock-foot">¿Primera vez? <button type="button" id="jkLockConfigurar" class="jk-lock-link">Crear mi comercio</button></div>
     </div>
 </div>
-
 <div class="container">
     <!-- HEADER -->
     <header class="header">
@@ -596,7 +621,77 @@ body.jk-locked { overflow: hidden !important; }
     </div>
 </div>
 <!-- MODAL PARA VER IMAGEN -->
-<div class="modal-img" id="modalImagen" onclick="this.style.display='none'"><img src="" alt="Evidencia" id="modalImgSrc"></div>
+<div class="modal-img" id="modalImagen" onclick="if(event.target===this) cerrarModalImagen()"><button type="button" class="modal-img-close" aria-label="Cerrar imagen" onclick="cerrarModalImagen()"><i class="fa-solid fa-xmark"></i></button><img src="" alt="Evidencia" id="modalImgSrc"></div>
+<!-- MODAL PARA EDITAR REPARACION -->
+<div class="modal-edit-taller" id="modalEditarTaller" onclick="if(event.target===this) cerrarEdicionReparacion()">
+    <div class="modal-edit-box">
+        <div class="modal-edit-head">
+            <div>
+                <h3><i class="fa-solid fa-pen-to-square"></i> Editar reparación</h3>
+                <p>Corrige la información de la tarjeta y guarda los cambios.</p>
+            </div>
+            <button type="button" class="modal-edit-close" aria-label="Cerrar edición" onclick="cerrarEdicionReparacion()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form id="formEditarTaller" onsubmit="event.preventDefault(); guardarEdicionReparacion();">
+            <div class="edit-grid">
+                <div class="edit-field"><label for="et_equipo">Equipo (Marca / Modelo) *</label><input type="text" id="et_equipo" required></div>
+                <div class="edit-field"><label for="et_factura">Factura / Ticket</label><input type="text" id="et_factura"></div>
+                <div class="edit-field"><label for="et_cliente">Cliente *</label><input type="text" id="et_cliente" required></div>
+                <div class="edit-field"><label for="et_telefono">Teléfono</label><input type="tel" id="et_telefono"></div>
+                <div class="edit-field"><label for="et_imei">IMEI / Serial</label><input type="text" id="et_imei"></div>
+                <div class="edit-field"><label for="et_asesor">Asesor</label><input type="text" id="et_asesor"></div>
+                <div class="edit-field"><label for="et_total">Valor Reparación *</label><input type="number" id="et_total" min="0" required></div>
+                <div class="edit-field"><label for="et_abono">Valor Pagado / Abonado</label><input type="number" id="et_abono" min="0"></div>
+                <div class="edit-field">
+                    <label for="et_metodo">Método de Pago</label>
+                    <select id="et_metodo">
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Tarjeta">Tarjeta</option>
+                    </select>
+                </div>
+                <div class="edit-field">
+                    <label for="et_tipo_pago">Tipo de Pago</label>
+                    <select id="et_tipo_pago">
+                        <option value="Completo">Completo</option>
+                        <option value="Abono">Abono</option>
+                    </select>
+                </div>
+                <div class="edit-field">
+                    <label for="et_estado">Estado en Taller</label>
+                    <select id="et_estado">
+                        <option value="Pendiente">⏳ Pendiente</option>
+                        <option value="En Proceso">⚙️ En Proceso</option>
+                        <option value="Listo">✅ Listo para Entrega</option>
+                        <option value="Entregado">✓ Entregado al Cliente</option>
+                    </select>
+                </div>
+                <div class="edit-field">
+                    <label for="et_clave_tipo">Tipo de clave de desbloqueo</label>
+                    <select id="et_clave_tipo" onchange="toggleClaveEdicionTaller()">
+                        <option value="">Sin clave registrada</option>
+                        <option value="alfanumerica">Clave alfanumérica</option>
+                        <option value="patron">Patrón (nodos 1-9)</option>
+                    </select>
+                </div>
+                <div class="edit-field full" id="et_clave_alfa_wrap" style="display:none;">
+                    <label for="et_clave_alfa">Clave alfanumérica</label>
+                    <input type="text" id="et_clave_alfa" placeholder="Ej: 1234">
+                </div>
+                <div class="edit-field full" id="et_clave_patron_wrap" style="display:none;">
+                    <label for="et_clave_patron">Secuencia del patrón (separada por guiones, ej: 1-2-3-6-9)</label>
+                    <input type="text" id="et_clave_patron" placeholder="Ej: 1-2-5-8-9">
+                </div>
+                <div class="edit-field full"><label for="et_falla">Descripción de la Falla *</label><textarea id="et_falla" required></textarea></div>
+                <div class="edit-field full"><label for="et_novedades">Novedades de la reparación</label><textarea id="et_novedades" placeholder="Opcional..."></textarea></div>
+            </div>
+            <div class="edit-actions">
+                <button type="button" class="btn-edit-cancel" onclick="cerrarEdicionReparacion()">Cancelar</button>
+                <button type="submit" class="btn-edit-save" id="btnGuardarEdicionTaller"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
 <script>
 window.jkSupabase = window.jkSupabase || window.supabase.createClient(
     "https://omwbjbmodqybbogyafkz.supabase.co",
@@ -749,12 +844,18 @@ function renderizarLista(lista) {
         return;
     }
     lista.forEach(item => {
+        const idKey = String(item.id);
+        const idSafe = idKey.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
         const estado = item.estado_taller || 'Pendiente';
         const estadoClass = getEstadoClass(estado);
         const icono = getEstadoIcon(estado);
         const fecha = item.created_at ? obtenerFechaCorta(item.created_at) : 'Sin fecha';
         const hora = item.created_at ? obtenerHora(item.created_at) : '';
         const novedadesTxt = (item.novedades || '').trim();
+        const guardandoEsta = String(guardandoNovedadId) === idKey;
+        const generandoEsta = String(generandoPdfId) === idKey;
+        const imgUrl = item.imagen_url ? String(item.imagen_url).split('|')[0].trim() : '';
+        const imgSafe = imgUrl.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
         const card = document.createElement('div');
         card.className = 'repair-card';
         card.innerHTML = `
@@ -811,19 +912,20 @@ function renderizarLista(lista) {
                 </div>` : ''}
                 <div class="novedades-input-group">
                     <textarea 
-                        id="novedad-${item.id}" 
+                        id="novedad-${idKey}" 
                         placeholder="Escribe una novedad de la reparación..."
-                        onkeydown="if(event.ctrlKey && event.key==='Enter'){event.preventDefault();guardarNovedad(${item.id});}"
-                    >${novedadesDraft[item.id] || ''}</textarea>
+                        onkeydown="if(event.ctrlKey && event.key==='Enter'){event.preventDefault();guardarNovedad('${idSafe}');}"
+                    >${novedadesDraft[idKey] || ''}</textarea>
                     <button 
+                        type="button"
                         class="btn-guardar-novedad" 
-                        id="btn-novedad-${item.id}"
-                        onclick="guardarNovedad(${item.id})"
-                        ${(guardandoNovedadId === item.id || !(novedadesDraft[item.id] || '').trim()) ? 'disabled' : ''}
+                        id="btn-novedad-${idKey}"
+                        onclick="guardarNovedad('${idSafe}')"
+                        ${(guardandoEsta || !(novedadesDraft[idKey] || '').trim()) ? 'disabled' : ''}
                         title="Guardar novedad (Ctrl+Enter)"
                     >
-                        <i class="${guardandoNovedadId === item.id ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-floppy-disk'}"></i>
-                        ${guardandoNovedadId === item.id ? 'Guardando' : 'Guardar'}
+                        <i class="${guardandoEsta ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-floppy-disk'}"></i>
+                        ${guardandoEsta ? 'Guardando' : 'Guardar'}
                     </button>
                 </div>
             </div>
@@ -831,7 +933,7 @@ function renderizarLista(lista) {
             <div class="repair-actions">
                 <div class="estado-select-group">
                     <label>Actualizar estado:</label>
-                    <select class="select-estado" onchange="actualizarEstadoTaller(${item.id}, this.value)">
+                    <select class="select-estado" onchange="actualizarEstadoTaller('${idSafe}', this.value)">
                         <option value="Pendiente" ${estado.toLowerCase().includes('pendient') ? 'selected' : ''}>⏳ Pendiente</option>
                         <option value="En Proceso" ${(estado.toLowerCase().includes('proceso') || estado.toLowerCase().includes('esperando')) ? 'selected' : ''}>⚙️ En Proceso</option>
                         <option value="Listo" ${estado.toLowerCase().includes('list') ? 'selected' : ''}>✅ Listo para Entrega</option>
@@ -839,17 +941,19 @@ function renderizarLista(lista) {
                     </select>
                 </div>
                 <div class="action-buttons">
+                    <button type="button" class="btn-action btn-editar" onclick="abrirEdicionReparacion('${idSafe}')" title="Editar información de la reparación"><i class="fa-solid fa-pen"></i> Editar</button>
                     <a href="https://api.whatsapp.com/send?phone=${formatearWhatsapp(item.customer_phone)}&text=${encodeURIComponent(mensajeWhatsapp(item))}" target="_blank" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> Notificar</a>
-                    ${item.imagen_url ? `<button class="btn-action btn-ver-img" onclick="verImagen('${item.imagen_url}')"><i class="fa-solid fa-image"></i> Ver Evidencia</button>` : ''}
+                    ${imgUrl ? `<button type="button" class="btn-action btn-ver-img" onclick="verImagen('${imgSafe}')"><i class="fa-solid fa-image"></i> Ver Evidencia</button>` : ''}
                     <button 
+                        type="button"
                         class="btn-action btn-pdf" 
-                        id="btn-pdf-${item.id}"
-                        onclick="generarPDF(${item.id})"
-                        ${generandoPdfId === item.id ? 'disabled' : ''}
+                        id="btn-pdf-${idKey}"
+                        onclick="generarPDF('${idSafe}')"
+                        ${generandoEsta ? 'disabled' : ''}
                         title="Generar PDF con todos los datos"
                     >
-                        <i class="${generandoPdfId === item.id ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-file-pdf'}"></i>
-                        ${generandoPdfId === item.id ? 'Generando...' : 'PDF'}
+                        <i class="${generandoEsta ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-file-pdf'}"></i>
+                        ${generandoEsta ? 'Generando...' : 'PDF'}
                     </button>
                 </div>
             </div>
@@ -858,11 +962,12 @@ function renderizarLista(lista) {
     });
     // Agregar listeners para textarea
     lista.forEach(item => {
-        const textarea = document.getElementById(`novedad-${item.id}`);
+        const idKey = String(item.id);
+        const textarea = document.getElementById(`novedad-${idKey}`);
         if (textarea) {
             textarea.addEventListener('input', (e) => {
-                novedadesDraft[item.id] = e.target.value;
-                const btn = document.getElementById(`btn-novedad-${item.id}`);
+                novedadesDraft[idKey] = e.target.value;
+                const btn = document.getElementById(`btn-novedad-${idKey}`);
                 if (btn) {
                     btn.disabled = !e.target.value.trim();
                 }
@@ -875,13 +980,16 @@ function renderizarLista(lista) {
 // ==========================================
 async function actualizarEstadoTaller(idOperacion, nuevoEstado) {
     try {
-        const { error } = await window.jkSupabase
+        const idKey = String(idOperacion);
+        let q = window.jkSupabase
             .from(NOMBRE_TABLA)
             .update({ estado_taller: nuevoEstado })
             .eq('id', idOperacion);
+        if (window.JK_COMERCIO_ID) q = q.eq('comercio_id', window.JK_COMERCIO_ID);
+        const { error } = await q;
         if (error) throw error;
         // Actualizar localmente
-        const item = todasLasReparaciones.find(r => r.id === idOperacion);
+        const item = todasLasReparaciones.find(r => String(r.id) === idKey);
         if (item) item.estado_taller = nuevoEstado;
         
         actualizarStats();
@@ -896,35 +1004,38 @@ async function actualizarEstadoTaller(idOperacion, nuevoEstado) {
 // GUARDAR NOVEDAD
 // ==========================================
 async function guardarNovedad(idOperacion) {
-    const textarea = document.getElementById(`novedad-${idOperacion}`);
-    const texto = (textarea?.value || '').trim();
+    const idKey = String(idOperacion);
+    const textarea = document.getElementById(`novedad-${idKey}`);
+    const texto = (textarea?.value || novedadesDraft[idKey] || '').trim();
     
     if (!texto) {
         mostrarAlertaError("Escribe una novedad antes de guardar");
         return;
     }
     
-    guardandoNovedadId = idOperacion;
+    guardandoNovedadId = idKey;
     filtrarReparaciones();
     
     try {
-        const { error } = await window.jkSupabase
+        let q = window.jkSupabase
             .from(NOMBRE_TABLA)
             .update({ novedades: texto })
             .eq('id', idOperacion);
+        if (window.JK_COMERCIO_ID) q = q.eq('comercio_id', window.JK_COMERCIO_ID);
+        const { error } = await q;
         if (error) throw error;
         // Actualizar localmente
-        const item = todasLasReparaciones.find(r => r.id === idOperacion);
+        const item = todasLasReparaciones.find(r => String(r.id) === idKey);
         if (item) item.novedades = texto;
         
-        novedadesDraft[idOperacion] = '';
+        novedadesDraft[idKey] = '';
         mostrarAlertaExito("Novedad guardada correctamente");
-        filtrarReparaciones();
     } catch (e) {
         console.error(e);
         mostrarAlertaError("Error al guardar novedad: " + e.message);
     } finally {
         guardandoNovedadId = null;
+        filtrarReparaciones();
     }
 }
 // ==========================================
@@ -945,10 +1056,18 @@ async function jkImagenBase64(url) {
     } catch (e) { return null; }
 }
 async function generarPDF(idOperacion) {
-    const item = todasLasReparaciones.find(r => r.id === idOperacion);
-    if (!item) return;
+    const idKey = String(idOperacion);
+    const item = todasLasReparaciones.find(r => String(r.id) === idKey);
+    if (!item) {
+        mostrarAlertaError('No se encontró la reparación para generar el PDF');
+        return;
+    }
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        mostrarAlertaError('Librería PDF no disponible. Recarga la página.');
+        return;
+    }
     
-    generandoPdfId = idOperacion;
+    generandoPdfId = idKey;
     filtrarReparaciones();
     
     try {
@@ -1093,12 +1212,13 @@ async function generarPDF(idOperacion) {
         doc.setFontSize(9);
         doc.text(String(_direccion || ''), 40, pageHeight - 16);
         doc.text(`Generado: ${new Date().toLocaleString('es-CO')}`, pageWidth - 40, pageHeight - 16, { align: 'right' });
-        const fileName = `reparacion_${item.numero_factura || item.id || 'ticket'}.pdf`;
+        const safeRef = String(item.numero_factura || item.id || 'ticket').replace(/[\/\\\s:*?"<>|]/g, '-');
+        const fileName = `reparacion_${safeRef}.pdf`;
         doc.save(fileName);
         mostrarAlertaExito('PDF generado correctamente');
     } catch (e) {
         console.error(e);
-        mostrarAlertaError('Error al generar el PDF');
+        mostrarAlertaError('Error al generar el PDF: ' + (e && e.message ? e.message : 'error'));
     } finally {
         generandoPdfId = null;
         filtrarReparaciones();
@@ -1131,6 +1251,141 @@ function verImagen(url) {
     document.getElementById('modalImgSrc').src = url;
     modal.style.display = 'flex';
 }
+function cerrarModalImagen() {
+    const modal = document.getElementById('modalImagen');
+    if (modal) modal.style.display = 'none';
+}
+let editandoReparacionId = null;
+function toggleClaveEdicionTaller() {
+    const tipo = (document.getElementById('et_clave_tipo')?.value || '').trim();
+    const wrapAlfa = document.getElementById('et_clave_alfa_wrap');
+    const wrapPatron = document.getElementById('et_clave_patron_wrap');
+    if (wrapAlfa) wrapAlfa.style.display = tipo === 'alfanumerica' ? 'flex' : 'none';
+    if (wrapPatron) wrapPatron.style.display = tipo === 'patron' ? 'flex' : 'none';
+}
+function setSelectSeguroTaller(id, val) {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const v = String(val || '');
+    if (v && !Array.from(sel.options).some(o => o.value === v)) {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        sel.appendChild(opt);
+    }
+    sel.value = v;
+}
+function abrirEdicionReparacion(idOperacion) {
+    const idKey = String(idOperacion);
+    const item = todasLasReparaciones.find(r => String(r.id) === idKey);
+    if (!item) { mostrarAlertaError('No se encontró la reparación.'); return; }
+    editandoReparacionId = item.id;
+    document.getElementById('et_equipo').value = item.equipo || '';
+    document.getElementById('et_factura').value = item.numero_factura || '';
+    document.getElementById('et_cliente').value = item.customer_name || '';
+    document.getElementById('et_telefono').value = item.customer_phone || '';
+    document.getElementById('et_imei').value = item.imei_serial || '';
+    document.getElementById('et_asesor').value = item.asesor || '';
+    document.getElementById('et_total').value = Number(item.total) || 0;
+    document.getElementById('et_abono').value = Number(item.amount_paid) || 0;
+    setSelectSeguroTaller('et_metodo', item.payment_method || 'Efectivo');
+    setSelectSeguroTaller('et_tipo_pago', item.payment_type || 'Completo');
+    setSelectSeguroTaller('et_estado', item.estado_taller || 'Pendiente');
+    document.getElementById('et_clave_tipo').value = item.clave_tipo || '';
+    document.getElementById('et_clave_alfa').value = item.clave_dispositivo || '';
+    document.getElementById('et_clave_patron').value = item.patron_secuencia || '';
+    toggleClaveEdicionTaller();
+    document.getElementById('et_falla').value = item.falla || '';
+    document.getElementById('et_novedades').value = item.novedades || '';
+    const modal = document.getElementById('modalEditarTaller');
+    if (modal) modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+function cerrarEdicionReparacion() {
+    const modal = document.getElementById('modalEditarTaller');
+    if (modal) modal.classList.remove('show');
+    document.body.style.overflow = '';
+    editandoReparacionId = null;
+}
+async function guardarEdicionReparacion() {
+    if (editandoReparacionId === null || editandoReparacionId === undefined) return;
+    const equipo = document.getElementById('et_equipo').value.trim();
+    const cliente = document.getElementById('et_cliente').value.trim();
+    const falla = document.getElementById('et_falla').value.trim();
+    const total = parseFloat(document.getElementById('et_total').value);
+    const tipoPago = document.getElementById('et_tipo_pago').value || 'Completo';
+    const abonoRaw = parseFloat(document.getElementById('et_abono').value);
+    const abono = tipoPago === 'Abono' ? (isNaN(abonoRaw) ? 0 : abonoRaw) : (isNaN(total) ? 0 : total);
+    if (!equipo || !cliente || !falla || isNaN(total) || total < 0) {
+        mostrarAlertaError('Completa equipo, cliente, falla y un valor válido.');
+        return;
+    }
+    const claveTipo = (document.getElementById('et_clave_tipo').value || '').trim() || null;
+    let claveDispositivo = null, patronSecuencia = null, patronInicio = null, patronFin = null;
+    if (claveTipo === 'alfanumerica') {
+        claveDispositivo = document.getElementById('et_clave_alfa').value.trim() || null;
+    } else if (claveTipo === 'patron') {
+        const seq = document.getElementById('et_clave_patron').value.split(/[^1-9]+/).filter(Boolean);
+        if (seq.length > 0) {
+            patronSecuencia = seq.join('-');
+            patronInicio = parseInt(seq[0], 10);
+            patronFin = parseInt(seq[seq.length - 1], 10);
+        }
+    }
+    const payload = {
+        equipo: equipo,
+        descripcion: 'Reparación: ' + equipo,
+        numero_factura: document.getElementById('et_factura').value.trim() || null,
+        customer_name: cliente,
+        customer_phone: document.getElementById('et_telefono').value.trim() || null,
+        imei_serial: document.getElementById('et_imei').value.trim() || null,
+        asesor: document.getElementById('et_asesor').value.trim() || 'N/A',
+        price: total,
+        total: total,
+        amount_paid: abono,
+        payment_method: document.getElementById('et_metodo').value || 'Efectivo',
+        payment_type: tipoPago,
+        estado: (abono < total) ? 'Pendiente' : 'Completado',
+        estado_taller: document.getElementById('et_estado').value || 'Pendiente',
+        falla: falla,
+        novedades: document.getElementById('et_novedades').value.trim() || null,
+        clave_tipo: claveTipo,
+        clave_dispositivo: claveDispositivo,
+        patron_secuencia: patronSecuencia,
+        patron_inicio: patronInicio,
+        patron_fin: patronFin
+    };
+    const btn = document.getElementById('btnGuardarEdicionTaller');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+    try {
+        let q = window.jkSupabase
+            .from(NOMBRE_TABLA)
+            .update(payload)
+            .eq('id', editandoReparacionId);
+        if (window.JK_COMERCIO_ID) q = q.eq('comercio_id', window.JK_COMERCIO_ID);
+        const { error } = await q;
+        if (error) throw error;
+        const idx = todasLasReparaciones.findIndex(r => String(r.id) === String(editandoReparacionId));
+        if (idx !== -1) todasLasReparaciones[idx] = Object.assign({}, todasLasReparaciones[idx], payload);
+        actualizarStats();
+        filtrarReparaciones();
+        cerrarEdicionReparacion();
+        mostrarAlertaExito('Reparación actualizada correctamente.');
+    } catch (e) {
+        console.error(e);
+        mostrarAlertaError('Error al guardar cambios: ' + (e && e.message ? e.message : 'error'));
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
+    }
+}
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+        cerrarModalImagen();
+        cerrarEdicionReparacion();
+    }
+});
 // ==========================================
 // ALERTAS
 // ==========================================
@@ -1264,14 +1519,12 @@ function jkInicializar() {
     jkAplicarTema((brand && brand.theme) || 'oscuro');
     if (brand) { jkRenderMarca(brand); jkActualizarLockLogo(brand); }
     var cmd = window.cmdIniciar;
-
     var form = document.getElementById('jkLockForm');
     var input = document.getElementById('jkLockPassword');
     var btn = document.getElementById('jkLockBtn');
     var err = document.getElementById('jkLockErr');
     var configurarBtn = document.getElementById('jkLockConfigurar');
     var lock = document.getElementById('jkLock');
-
     function bindLockscreen() {
         if (form) form.addEventListener('submit', function (e) { e.preventDefault(); entrar(); });
         if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
@@ -1305,7 +1558,6 @@ function jkInicializar() {
             btn.innerHTML = '<i class="fa-solid fa-lock"></i> Ingresar';
         });
     }
-
     if (configurar) {
         // Modo crear comercio desde cero: sin lockscreen
         if (lock) lock.classList.remove('show');
@@ -1313,16 +1565,13 @@ function jkInicializar() {
         window.location.href = 'index.html?configurar=1';
         return;
     }
-
     bindLockscreen();
     window.addEventListener('jk-install-closed', unlockAndStart);
-
     if (active) {
         // Sesión activa — desbloquear, sin lockscreen
         unlockAndStart();
         return;
     }
-
     // Sin sesión activa — lockscreen
     jkMostrarLockscreen();
 }
