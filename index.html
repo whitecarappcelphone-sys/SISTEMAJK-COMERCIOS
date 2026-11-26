@@ -289,6 +289,8 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
 .conta-seg button.on { background: rgba(18,216,196,.15); color: #12d8c4; }
 .conta-btn { height: 38px; padding: 0 14px; border-radius: 11px; border: 1px solid rgba(18,216,196,.35); background: rgba(18,216,196,.10); color: #12d8c4; font-family: 'Poppins', sans-serif; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: .2s; display: inline-flex; align-items: center; gap: 7px; }
 .conta-btn:hover { background: rgba(18,216,196,.22); }
+.conta-btn-ingreso { background: #16a34a; border-color: #16a34a; color: #fff; }
+.conta-btn-ingreso:hover { background: #15803d; }
 .conta-btn-pdf { margin-left: auto; background: #ff4757; border-color: #ff4757; color: #fff; }
 .conta-btn-pdf:hover { background: #e63946; }
 .conta-periodo-label { color: #7d8594; font-size: 11.5px; margin-bottom: 16px; }
@@ -651,7 +653,6 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
     .hm-btn { width: 39px; height: 39px; }
 }
 </style>
-
 <!-- Script de inicialización temprana de tema -->
 <script>
 (function(){try{var c=null;var s=sessionStorage.getItem('jk_session');if(s){try{c=JSON.parse(s)}catch(e){}}if(!c){c=JSON.parse(localStorage.getItem('jk_comercio')||'null');}document.documentElement.setAttribute('data-theme',(c&&c.theme)||'oscuro');}catch(e){document.documentElement.setAttribute('data-theme','oscuro');}})();
@@ -698,6 +699,7 @@ html[data-theme="claro"] .btn-excel { background: #15803d !important; color: #ff
 html[data-theme="claro"] .submit { background: linear-gradient(135deg, #0d9488, #14b8a6) !important; color: #ffffff !important; }
 html[data-theme="claro"] .secondary-bill { background: rgba(13,148,136,.10) !important; color: #0d9488 !important; border-color: rgba(13,148,136,.4) !important; }
 html[data-theme="claro"] .conta-btn { background: rgba(13,148,136,.10) !important; color: #0d9488 !important; border-color: rgba(13,148,136,.35) !important; }
+html[data-theme="claro"] .conta-btn-ingreso { background: #16a34a !important; border-color: #16a34a !important; color: #ffffff !important; }
 html[data-theme="claro"] .conta-btn-pdf { background: #e11d48 !important; border-color: #e11d48 !important; color: #ffffff !important; }
 html[data-theme="claro"] .conta-btn-wa { background: #15803d !important; border-color: #15803d !important; color: #ffffff !important; }
 html[data-theme="claro"] .kpi span, html[data-theme="claro"] .kpi small { color: #6b7280 !important; }
@@ -735,7 +737,6 @@ html[data-theme="claro"] .stat-value { color: #1a1e28 !important; }
 html[data-theme="claro"] .stat-label, html[data-theme="claro"] .stat-icon { color: #6b7280 !important; }
 html[data-theme="claro"] select option { color: #1a1e28 !important; background: #fff !important; }
 html[data-theme="claro"] .regi-line { color: #6b7280 !important; }
-
 /* ---- GRADIENTE ----- */
 html[data-theme="gradiente"] body { background: radial-gradient(circle at top left, #2a1a4a 0%, #16102b 48%, #0c0a16 100%) !important; color: #f5f3ff !important; }
 html[data-theme="gradiente"] h1, html[data-theme="gradiente"] h2, html[data-theme="gradiente"] h3 { color: #f5f3ff !important; }
@@ -761,6 +762,7 @@ html[data-theme="gradiente"] .btn-sesion { background: rgba(167,139,250,.15) !im
 html[data-theme="gradiente"] .btn-add { background: linear-gradient(135deg, #a78bfa, #d8b4fe) !important; color: #1a1330 !important; }
 html[data-theme="gradiente"] .btn-excel { background: rgba(52,211,153,.13) !important; border-color: rgba(52,211,153,.35) !important; color: #34d399 !important; }
 html[data-theme="gradiente"] .conta-btn { background: rgba(167,139,250,.12) !important; color: #d8b4fe !important; border-color: rgba(167,139,250,.35) !important; }
+html[data-theme="gradiente"] .conta-btn-ingreso { background: #16a34a !important; border-color: #16a34a !important; color: #ffffff !important; }
 html[data-theme="gradiente"] .conta-btn-pdf { background: #e11d48 !important; border-color: #e11d48 !important; color: #ffffff !important; }
 html[data-theme="gradiente"] .conta-btn-wa { background: #15803d !important; border-color: #15803d !important; color: #ffffff !important; }
 html[data-theme="gradiente"] .secondary-bill { background: rgba(167,139,250,.12) !important; color: #d8b4fe !important; border-color: rgba(167,139,250,.4) !important; }
@@ -786,7 +788,6 @@ html[data-theme="gradiente"] .hm-panel-title { color: #c4b5e8 !important; }
 html[data-theme="gradiente"] .hm-btn { background: rgba(167,139,250,.12) !important; border-color: rgba(167,139,250,.4) !important; }
 html[data-theme="gradiente"] .hm-btn span { background: #a78bfa !important; }
 html[data-theme="gradiente"] .hm-item:hover { border-color: rgba(167,139,250,.6) !important; background: rgba(167,139,250,.22) !important; }
-
 /* ---- ESMERALDA ----- */
 html[data-theme="esmeralda"] body { background: radial-gradient(circle at top left, #012b22 0%, #0b1f1a 50%, #061311 100%) !important; color: #f0fff9 !important; }
 html[data-theme="esmeralda"] h1, html[data-theme="esmeralda"] h2, html[data-theme="esmeralda"] h3 { color: #f0fff9 !important; }
@@ -810,6 +811,7 @@ html[data-theme="esmeralda"] .btn-sesion { background: rgba(52,211,153,.16) !imp
 html[data-theme="esmeralda"] .btn-add { background: linear-gradient(135deg, #34d399, #6ee7b7) !important; color: #052e22 !important; }
 html[data-theme="esmeralda"] .btn-excel { background: rgba(16,185,129,.16) !important; border-color: rgba(16,185,129,.4) !important; color: #6ee7b7 !important; }
 html[data-theme="esmeralda"] .conta-btn { background: rgba(52,211,153,.12) !important; color: #6ee7b7 !important; border-color: rgba(52,211,153,.35) !important; }
+html[data-theme="esmeralda"] .conta-btn-ingreso { background: #16a34a !important; border-color: #16a34a !important; color: #ffffff !important; }
 html[data-theme="esmeralda"] .conta-btn-pdf { background: #e11d48 !important; border-color: #e11d48 !important; color: #ffffff !important; }
 html[data-theme="esmeralda"] .conta-btn-wa { background: #15803d !important; border-color: #15803d !important; color: #ffffff !important; }
 html[data-theme="esmeralda"] .secondary-bill { background: rgba(52,211,153,.12) !important; color: #6ee7b7 !important; border-color: rgba(52,211,153,.4) !important; }
@@ -831,7 +833,6 @@ html[data-theme="esmeralda"] .hm-panel-title { color: #7ea69b !important; }
 html[data-theme="esmeralda"] .hm-btn { background: rgba(52,211,153,.12) !important; border-color: rgba(52,211,153,.4) !important; }
 html[data-theme="esmeralda"] .hm-btn span { background: #34d399 !important; }
 html[data-theme="esmeralda"] .hm-item:hover { border-color: rgba(52,211,153,.6) !important; background: rgba(52,211,153,.22) !important; }
-
 /* ---- OCÉANO ----- */
 html[data-theme="oceano"] body { background: radial-gradient(circle at top left, #06192e 0%, #0d2133 45%, #05101f 100%) !important; color: #eef5ff !important; }
 html[data-theme="oceano"] h1, html[data-theme="oceano"] h2, html[data-theme="oceano"] h3 { color: #eef5ff !important; }
@@ -855,6 +856,7 @@ html[data-theme="oceano"] .btn-sesion { background: rgba(56,189,248,.16) !import
 html[data-theme="oceano"] .btn-add { background: linear-gradient(135deg, #38bdf8, #7dd3fc) !important; color: #0c1e3a !important; }
 html[data-theme="oceano"] .btn-excel { background: rgba(52,211,153,.13) !important; border-color: rgba(52,211,153,.38) !important; color: #6ee7b7 !important; }
 html[data-theme="oceano"] .conta-btn { background: rgba(56,189,248,.12) !important; color: #7dd3fc !important; border-color: rgba(56,189,248,.35) !important; }
+html[data-theme="oceano"] .conta-btn-ingreso { background: #16a34a !important; border-color: #16a34a !important; color: #ffffff !important; }
 html[data-theme="oceano"] .conta-btn-pdf { background: #e11d48 !important; border-color: #e11d48 !important; color: #ffffff !important; }
 html[data-theme="oceano"] .conta-btn-wa { background: #15803d !important; border-color: #15803d !important; color: #ffffff !important; }
 html[data-theme="oceano"] .secondary-bill { background: rgba(56,189,248,.12) !important; color: #7dd3fc !important; border-color: rgba(56,189,248,.4) !important; }
@@ -876,7 +878,6 @@ html[data-theme="oceano"] .hm-panel-title { color: #8aa1b8 !important; }
 html[data-theme="oceano"] .hm-btn { background: rgba(56,189,248,.12) !important; border-color: rgba(56,189,248,.4) !important; }
 html[data-theme="oceano"] .hm-btn span { background: #38bdf8 !important; }
 html[data-theme="oceano"] .hm-item:hover { border-color: rgba(56,189,248,.6) !important; background: rgba(56,189,248,.22) !important; }
-
 /* ========== LOCKSCREEN (todas las 5 paletas) ========== */
 .jk-lock { position: fixed; inset: 0; z-index: 15000; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(6,9,14,.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .jk-lock.show { display: flex; animation: jkLockIn .4s ease both; }
@@ -956,7 +957,6 @@ html[data-theme="oceano"] .jk-lock-warn i { color: #fde047 !important; }
 html[data-theme="oceano"] .jk-lock-foot { color: #8aa1b8 !important; }
 html[data-theme="oceano"] .jk-lock-link { color: #38bdf8 !important; }
 body.jk-locked { overflow: hidden !important; }
-
 </style>
 <style>
 /* ============ ESTILOS EDICIÓN DE COMERCIO ============ */
@@ -986,7 +986,6 @@ body.jk-locked { overflow: hidden !important; }
 .com-password-row .conta-btn { white-space: nowrap; }
 .com-cfg-titulo { display: flex; align-items: center; gap: 8px; margin: 18px 0 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.06); font-size: 14px; font-weight: 600; color: #e9f8f6; }
 .com-cfg-titulo i { color: #12d8c4; }
-
 /* ============ POPUP INSTALACIÓN ============ */
 .jk-install { position: fixed; inset: 0; z-index: 15500; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(6,12,16,.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .jk-install.show { display: flex; animation: jkLockIn .4s ease both; }
@@ -1013,7 +1012,6 @@ html[data-theme="claro"] .jk-install-primary { background: linear-gradient(135de
 html[data-theme="claro"] .jk-install-ghost { background: #f1f4f8 !important; color: #1a1e28 !important; border-color: rgba(20,30,50,.14) !important; }
 html[data-theme="claro"] .jk-install-hint { color: #5b6673 !important; }
 body.jk-install-open { overflow: hidden !important; }
-
 /* ============ FIRMA / SELLO ============ */
 .firma-canvas { width: 100%; height: 170px; max-width: 800px; background: #ffffff; border-radius: 12px; border: 1px dashed rgba(18,216,196,.45); touch-action: none; cursor: crosshair; display: block; }
 .firma-wrap, .com-sello-wrap { margin-bottom: 14px; }
@@ -1076,7 +1074,6 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sistema JK">
-
 <link rel="manifest" href="manifest.json">
 </head>
 <body>
@@ -1094,7 +1091,6 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
     </div>
 </div>
 <!-- LOCKSCREEN: contraseña del comercio -->
-
 <div class="jk-lock" id="jkLock">
     <div class="jk-lock-box">
         <div class="jk-lock-logo" id="jkLockLogo"><img id="jkLockLogoImg" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:20px;display:none"><span id="jkLockLogoText"><i class="fa-solid fa-lock"></i></span></div>
@@ -1210,6 +1206,7 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
                     <button type="button" data-periodo="todo" onclick="contaSetPeriodo('todo')">Todo</button>
                 </div>
                 <button type="button" class="conta-btn" onclick="contaCargar()"><i class="fa-solid fa-rotate"></i> Actualizar</button>
+                <button type="button" class="conta-btn conta-btn-ingreso" onclick="contaAbrirFormIngreso()"><i class="fa-solid fa-circle-plus"></i> Registrar ingreso</button>
                 <button type="button" class="conta-btn conta-btn-pdf" onclick="contaReportePDFv2()"><i class="fa-solid fa-file-pdf"></i> Reporte PDF</button>
             </div>
             <div class="conta-periodo-label" id="contaPeriodoLabel">Cargando...</div>
@@ -1244,6 +1241,36 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
                         <tbody id="contaHistBody"></tbody>
                     </table>
                 </div>
+            </div>
+            <div class="conta-sec" id="sec_registrar_ingreso" style="display:none;">
+                <div class="conta-sec-head">
+                    <h4><i class="fa-solid fa-circle-plus"></i> Registrar ingreso</h4>
+                    <button type="button" class="conta-btn" onclick="contaCerrarFormIngreso()"><i class="fa-solid fa-xmark"></i> Ocultar</button>
+                </div>
+                <form id="form_ingreso" class="conta-egreso-grid" onsubmit="event.preventDefault(); contaGuardarIngreso();">
+                    <div class="field full"><label>Concepto</label><input type="text" id="ing_concepto" placeholder="Ej: Venta de servicio extra / Aporte de capital" required></div>
+                    <div class="field"><label>Categoría</label>
+                        <select id="ing_categoria" required>
+                            <option value="Venta adicional">Venta adicional</option>
+                            <option value="Servicio técnico">Servicio técnico</option>
+                            <option value="Cobro de saldo">Cobro de saldo</option>
+                            <option value="Comisión">Comisión</option>
+                            <option value="Aporte de capital">Aporte de capital</option>
+                            <option value="Otros ingresos">Otros ingresos</option>
+                        </select>
+                    </div>
+                    <div class="field"><label>Monto</label><input type="number" id="ing_monto" min="1" required></div>
+                    <div class="field"><label>Método de pago</label>
+                        <select id="ing_metodo" required>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="Tarjeta">Tarjeta</option>
+                        </select>
+                    </div>
+                    <div class="field"><label>Fecha</label><input type="date" id="ing_fecha" required></div>
+                    <div class="field full"><label>Notas (opcional)</label><input type="text" id="ing_notas"></div>
+                    <button type="submit" class="submit" id="btnIngreso">Registrar ingreso</button>
+                </form>
             </div>
             <div class="conta-sec">
                 <h4><i class="fa-solid fa-money-bill-transfer"></i> Registrar egreso</h4>
@@ -1933,11 +1960,12 @@ PART 2
         <div class="pdf-garantia">
             <strong>TÉRMINOS DE GARANTÍA</strong>
             <p id="pdf-garantia-texto">La garantía de todo producto o reparación es de 30 días calendario contados a partir de la emisión de este comprobante. No cubre golpes directos, ingreso de humedad, manipulación de terceros ajenos a la tienda, sobrecargas eléctricas, ni remoción de sellos de seguridad instalados en los repuestos o equipos.</p>
-            <div class="inv-direccion"><strong>DIRECCIÓN:</strong> <span id="cfg-direccion">Calle 14 # 2-67 Centro Ibagué-Tolima</span> &nbsp;·&nbsp; <strong>SERVICIOS:</strong> <span id="cfg-servicios">Técnico profesional y telefonía.</span></div>
+            <div class="inv-direccion"><strong>DIRECCIÓN:</strong> <span id="cfg-direccion">Calle 14 # 2-67 Centro Ibagué-Tolima</span>  ·  <strong>SERVICIOS:</strong> <span id="cfg-servicios">Técnico profesional y telefonía.</span></div>
         </div>
         <div class="pdf-signatures">
             <div class="signature-box">Recibí Conforme<span id="pdf-firma-cliente"></span></div>
-            <div class="signature-box">Autorizado<br>
+            <div class="signature-box">Autorizado
+
                 <span id="cfg-firma-img" class="factura-firma-img" style="display:none"><img id="cfg-firma-img-src" src="" alt="Firma" style="max-height:70px;max-width:180px;object-fit:contain"></span>
                 <span id="cfg-sello-img" class="factura-sello-img" style="display:none"><img id="cfg-sello-img-src" src="" alt="Sello" style="max-height:60px;max-width:180px;object-fit:contain"></span>
                 <span id="cfg-firma">ACCESORIOS JK</span></div>
@@ -2626,13 +2654,15 @@ async function guardarOperacion(prefijo, tipoOperacion) {
 }
 // ============================================================
 // NUEVO: CONTABILIDAD
-// Lee la tabla 'operaciones' (ingresos, pagos electrónicos, por cobrar)
+// Lee la tabla 'operaciones' (ingresos, pagos electrónicos, por cobrar),
+// la tabla 'ingresos' (ver supabase_ingresos.sql)
 // y la tabla 'egresos' (ver supabase_contabilidad.sql).
 // ============================================================
 const CONTA_TABLA_OPS = 'operaciones';
 const CONTA_TABLA_EGR = 'egresos';
-const contaEstado = { ops: [], egr: [], periodo: 'semana', hist: 'dia', ultimo: null };
-const CONTA_LABEL_TIPO = { Accesorio: 'Accesorios', Celular: 'Celulares', Reparacion: 'Reparaciones' };
+const CONTA_TABLA_ING = 'ingresos';
+const contaEstado = { ops: [], egr: [], ing: [], periodo: 'semana', hist: 'dia', ultimo: null };
+const CONTA_LABEL_TIPO = { Accesorio: 'Accesorios', Celular: 'Celulares', Reparacion: 'Reparaciones', IngresoManual: 'Ingresos adicionales' };
 function contaFmt(n) { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(n) || 0); }
 function contaEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 function contaEsElectronico(m) { return /transfer|tarjeta|electr|nequi|daviplata|pse|dat[aá]fono/i.test(String(m || '')); }
@@ -2655,12 +2685,13 @@ function contaEnIntervalo(fecha, desde, hasta) {
     if (desde && x < desde.getTime()) return false;
     return x < hasta.getTime();
 }
-function contaCalcular(ops, egr) {
-    const t = { ingresos: 0, egresos: 0, electronicos: 0, efectivo: 0, pendiente: 0, nOps: 0, nEgr: 0, egrElec: 0, tipos: {} };
-    ops.forEach(o => {
+function contaCalcular(ops, egr, ing) {
+    const t = { ingresos: 0, ingresosOps: 0, ingresosManuales: 0, egresos: 0, electronicos: 0, efectivo: 0, pendiente: 0, nOps: 0, nIng: 0, nEgr: 0, egrElec: 0, tipos: {} };
+    (ops || []).forEach(o => {
         const pagado = Number(o.amount_paid) || 0;
         const total = Number(o.total) || 0;
         t.ingresos += pagado;
+        t.ingresosOps += pagado;
         t.nOps++;
         if (contaEsElectronico(o.payment_method)) t.electronicos += pagado; else t.efectivo += pagado;
         const pend = total - pagado;
@@ -2668,7 +2699,15 @@ function contaCalcular(ops, egr) {
         const tipo = o.tipo_operacion || 'Otro';
         t.tipos[tipo] = (t.tipos[tipo] || 0) + pagado;
     });
-    egr.forEach(e => {
+    (ing || []).forEach(i => {
+        const m = Number(i.monto) || 0;
+        t.ingresos += m;
+        t.ingresosManuales += m;
+        t.nIng++;
+        if (contaEsElectronico(i.metodo_pago)) t.electronicos += m; else t.efectivo += m;
+        t.tipos.IngresoManual = (t.tipos.IngresoManual || 0) + m;
+    });
+    (egr || []).forEach(e => {
         const m = Number(e.monto) || 0;
         t.egresos += m;
         t.nEgr++;
@@ -2711,7 +2750,8 @@ function contaHistorico_old(tipo) {
     return filas.map(f => {
         const ops = contaEstado.ops.filter(o => contaEnIntervalo(o.created_at, f.desde, f.hasta));
         const egr = contaEstado.egr.filter(e => contaEnIntervalo(e.fecha, f.desde, f.hasta));
-        const t = contaCalcular(ops, egr);
+        const ing = contaEstado.ing.filter(i => contaEnIntervalo(i.fecha, f.desde, f.hasta));
+        const t = contaCalcular(ops, egr, ing);
         return { etiqueta: f.etiqueta, ingresos: t.ingresos, egresos: t.egresos, electronicos: t.electronicos, balance: t.balance };
     });
 }
@@ -2730,12 +2770,13 @@ function contaRender() {
     const r = contaRangoPeriodo(contaEstado.periodo);
     const ops = contaEstado.ops.filter(o => contaEnIntervalo(o.created_at, r.desde, r.hasta));
     const egr = contaEstado.egr.filter(e => contaEnIntervalo(e.fecha, r.desde, r.hasta));
-    const t = contaCalcular(ops, egr);
-    contaEstado.ultimo = { t, ops, egr, r };
+    const ing = contaEstado.ing.filter(i => contaEnIntervalo(i.fecha, r.desde, r.hasta));
+    const t = contaCalcular(ops, egr, ing);
+    contaEstado.ultimo = { t, ops, egr, ing, r };
     document.querySelectorAll('#contaPeriodoSeg button').forEach(b => b.classList.toggle('on', b.dataset.periodo === contaEstado.periodo));
     document.getElementById('contaPeriodoLabel').innerText = contaTextoPeriodo(contaEstado.periodo, r);
     document.getElementById('kpi_ingresos').innerText = contaFmt(t.ingresos);
-    document.getElementById('kpi_ingresos_n').innerText = t.nOps + ' operaciones';
+    document.getElementById('kpi_ingresos_n').innerText = t.nOps + ' operaciones' + (t.nIng ? ' · ' + t.nIng + ' ingresos extra' : '');
     document.getElementById('kpi_egresos').innerText = contaFmt(t.egresos);
     document.getElementById('kpi_egresos_n').innerText = t.nEgr + ' registros';
     const bal = document.getElementById('kpi_balance');
@@ -2744,7 +2785,7 @@ function contaRender() {
     document.getElementById('kpi_electronicos').innerText = contaFmt(t.electronicos);
     document.getElementById('kpi_efectivo').innerText = contaFmt(t.efectivo);
     document.getElementById('kpi_pendiente').innerText = contaFmt(t.pendiente);
-    const base = ['Accesorio', 'Celular', 'Reparacion'];
+    const base = ['Accesorio', 'Celular', 'Reparacion', 'IngresoManual'];
     const extra = Object.keys(t.tipos).filter(k => !base.includes(k));
     document.getElementById('conta_tipos').innerHTML = base.concat(extra).map(k =>
         `<div class="conta-tipo"><span>${contaEsc(CONTA_LABEL_TIPO[k] || k)}</span><strong>${contaFmt(t.tipos[k] || 0)}</strong></div>`
@@ -2756,9 +2797,10 @@ function contaSetHist(h) { contaEstado.hist = h; contaRenderHistorico(); }
 async function contaCargar() {
     try {
         const sb = window.jkSupabase;
-        const [rOps, rEgr] = await Promise.all([
+        const [rOps, rEgr, rIng] = await Promise.all([
             sb.from(CONTA_TABLA_OPS).select('id, tipo_operacion, numero_factura, customer_name, total, amount_paid, payment_method, payment_type, created_at, asesor').eq('comercio_id', window.JK_COMERCIO_ID || '').order('created_at', { ascending: false }).limit(5000),
-            sb.from(CONTA_TABLA_EGR).select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('fecha', { ascending: false }).limit(5000)
+            sb.from(CONTA_TABLA_EGR).select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('fecha', { ascending: false }).limit(5000),
+            sb.from(CONTA_TABLA_ING).select('*').eq('comercio_id', window.JK_COMERCIO_ID || '').order('fecha', { ascending: false }).limit(5000)
         ]);
         if (rOps.error) throw rOps.error;
         contaEstado.ops = rOps.data || [];
@@ -2768,6 +2810,12 @@ async function contaCargar() {
             mostrarAlertaError('Tabla egresos no disponible. Ejecuta el archivo supabase_contabilidad.sql en Supabase.');
         } else {
             contaEstado.egr = rEgr.data || [];
+        }
+        if (rIng.error) {
+            console.warn('Tabla ingresos no disponible:', rIng.error);
+            contaEstado.ing = [];
+        } else {
+            contaEstado.ing = rIng.data || [];
         }
         contaRender();
     } catch (e) {
@@ -2782,8 +2830,58 @@ function abrirContabilidad() {
         return;
     }
     document.getElementById('eg_fecha').value = contaHoyISO();
+    const ingFecha = document.getElementById('ing_fecha');
+    if (ingFecha) ingFecha.value = contaHoyISO();
     abrirModalFormulario('modal_contabilidad');
     contaCargar();
+}
+function contaAbrirFormIngreso() {
+    const sec = document.getElementById('sec_registrar_ingreso');
+    if (!sec) return;
+    const ingFecha = document.getElementById('ing_fecha');
+    if (ingFecha && !ingFecha.value) ingFecha.value = contaHoyISO();
+    sec.style.display = 'block';
+    sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => { const c = document.getElementById('ing_concepto'); if (c) c.focus(); }, 250);
+}
+function contaCerrarFormIngreso() {
+    const sec = document.getElementById('sec_registrar_ingreso');
+    if (sec) sec.style.display = 'none';
+}
+async function contaGuardarIngreso() {
+    if (!obtenerSesion()) { mostrarAlertaError('Debes iniciar sesión para registrar ingresos.'); return; }
+    const concepto = document.getElementById('ing_concepto').value.trim();
+    const monto = parseFloat(document.getElementById('ing_monto').value);
+    if (!concepto || !(monto > 0)) { mostrarAlertaError('Escribe el concepto y un monto válido.'); return; }
+    const fechaVal = document.getElementById('ing_fecha').value;
+    const sesion = obtenerSesion() || {};
+    const data = {
+        concepto: concepto,
+        categoria: document.getElementById('ing_categoria').value,
+        monto: monto,
+        metodo_pago: document.getElementById('ing_metodo').value,
+        fecha: fechaVal ? new Date(fechaVal + 'T12:00:00').toISOString() : new Date().toISOString(),
+        notas: document.getElementById('ing_notas').value.trim() || null,
+        asesor: sesion.nombre || 'N/A',
+        comercio_id: window.JK_COMERCIO_ID || null
+    };
+    const btn = document.getElementById('btnIngreso');
+    btn.disabled = true;
+    btn.innerText = 'Guardando...';
+    try {
+        const { error } = await window.jkSupabase.from(CONTA_TABLA_ING).insert([data]);
+        if (error) throw error;
+        mostrarAlertaExito('Ingreso registrado correctamente.');
+        document.getElementById('form_ingreso').reset();
+        document.getElementById('ing_fecha').value = contaHoyISO();
+        await contaCargar();
+    } catch (e) {
+        console.error(e);
+        mostrarAlertaError('Error al guardar el ingreso: ' + e.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerText = 'Registrar ingreso';
+    }
 }
 async function contaGuardarEgreso() {
     if (!obtenerSesion()) { mostrarAlertaError('Debes iniciar sesión para registrar egresos.'); return; }
@@ -2822,7 +2920,7 @@ async function contaGuardarEgreso() {
 }
 function contaGenerarPDF() {
     if (!contaEstado.ultimo) { mostrarAlertaError('Primero carga la contabilidad.'); return; }
-    const { t, ops, egr, r } = contaEstado.ultimo;
+    const { t, ops, egr, ing, r } = contaEstado.ultimo;
     const ahora = new Date();
     const fmtFecha = d => d ? new Date(d).toLocaleDateString('es-CO') : '—';
     const sesion = obtenerSesion() || {};
@@ -2836,6 +2934,9 @@ function contaGenerarPDF() {
     const filasOps = ops.slice(0, 100).map(o =>
         `<tr><td>${fmtFecha(o.created_at)}</td><td>${contaEsc(o.numero_factura || '—')}</td><td>${contaEsc(o.tipo_operacion)}</td><td>${contaEsc(o.customer_name)}</td><td>${contaEsc(o.payment_method)}</td><td class="num">${contaFmt(o.total)}</td><td class="num">${contaFmt(o.amount_paid)}</td></tr>`
     ).join('') || '<tr><td colspan="7" class="vacio">Sin operaciones en el periodo</td></tr>';
+    const filasIng = (ing || []).slice(0, 100).map(i =>
+        `<tr><td>${fmtFecha(i.fecha)}</td><td>${contaEsc(i.concepto)}</td><td>${contaEsc(i.categoria || '—')}</td><td>${contaEsc(i.metodo_pago || '—')}</td><td class="num">${contaFmt(i.monto)}</td></tr>`
+    ).join('') || '<tr><td colspan="5" class="vacio">Sin ingresos adicionales en el periodo</td></tr>';
     const filasEgr = egr.slice(0, 100).map(e =>
         `<tr><td>${fmtFecha(e.fecha)}</td><td>${contaEsc(e.concepto)}</td><td>${contaEsc(e.categoria || '—')}</td><td>${contaEsc(e.metodo_pago || '—')}</td><td class="num">${contaFmt(e.monto)}</td></tr>`
     ).join('') || '<tr><td colspan="5" class="vacio">Sin egresos en el periodo</td></tr>';
@@ -2870,11 +2971,13 @@ function contaGenerarPDF() {
             <table>
                 <thead><tr><th>Concepto</th><th class="num">Valor</th></tr></thead>
                 <tbody>
-                    <tr><td>Ingresos (abonos y pagos recibidos)</td><td class="num">${contaFmt(t.ingresos)}</td></tr>
+                    <tr><td>Ingresos por operaciones (abonos y pagos recibidos)</td><td class="num">${contaFmt(t.ingresosOps)}</td></tr>
+                    <tr><td>Ingresos adicionales registrados</td><td class="num">${contaFmt(t.ingresosManuales)}</td></tr>
                     <tr><td>(-) Egresos registrados</td><td class="num">${contaFmt(t.egresos)}</td></tr>
                     <tr class="neto"><td>Balance neto del periodo</td><td class="num">${contaFmt(t.balance)}</td></tr>
                     <tr><td>Egresos pagados electrónicamente</td><td class="num">${contaFmt(t.egrElec)}</td></tr>
                     <tr><td>Número de operaciones</td><td class="num">${t.nOps}</td></tr>
+                    <tr><td>Número de ingresos adicionales</td><td class="num">${t.nIng}</td></tr>
                     <tr><td>Número de egresos</td><td class="num">${t.nEgr}</td></tr>
                 </tbody>
             </table>
@@ -2901,7 +3004,14 @@ function contaGenerarPDF() {
             </table>
         </div>
         <div class="sec">
-            <h2>6. Detalle de egresos (${Math.min(egr.length, 100)} de ${egr.length})</h2>
+            <h2>6. Detalle de ingresos adicionales (${Math.min((ing || []).length, 100)} de ${(ing || []).length})</h2>
+            <table>
+                <thead><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Método</th><th class="num">Monto</th></tr></thead>
+                <tbody>${filasIng}</tbody>
+            </table>
+        </div>
+        <div class="sec">
+            <h2>7. Detalle de egresos (${Math.min(egr.length, 100)} de ${egr.length})</h2>
             <table>
                 <thead><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Método</th><th class="num">Monto</th></tr></thead>
                 <tbody>${filasEgr}</tbody>
@@ -3719,7 +3829,6 @@ function repFormatoClave(o) {
     }
     return 'No registrada';
 }
-
 // ---------- FIRMA DIGITAL ----------
 function firmaFondo(c, ctx) {
     ctx.fillStyle = '#ffffff';
@@ -4204,13 +4313,11 @@ function cfgAplicarDOMCompleto() {
         else { sDiv.style.display = 'none'; sImg.src = ''; }
     }
 }
-
 // ============================================================================
 // COMERCIO — multi-tenant (ID + contraseña + tema + identidad)
 // ============================================================================
 window.JK_COMERCIO = null;
 window.JK_COMERCIO_ID = null;
-
 function jkSesionActiva() {
     try { var s = sessionStorage.getItem('jk_session'); if (s) return JSON.parse(s); } catch (e) {}
     return null;
@@ -4506,7 +4613,6 @@ function comSelloQuitar() {
     if (prev && img) { prev.style.display = 'none'; img.src = ''; }
 }
 function comSelloElegirFile() {}
-
 async function firmaCanvasSubir() {
     var c = document.getElementById('com_firma_canvas');
     if (!c) return null;
@@ -4637,7 +4743,6 @@ async function comGuardar() {
         btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar comercio';
     }
 }
-
 // Versiones que usan la configuración editable
 function repRenderLogo() {
     var c = window.JK_COMERCIO || {};
@@ -4774,7 +4879,8 @@ function contaArmarFilas(filas, r) {
     return filas.map(f => {
         const ops = contaEstado.ops.filter(o => contaEnIntervalo(o.created_at, f.desde, f.hasta) && dentro(o.created_at));
         const egr = contaEstado.egr.filter(e => contaEnIntervalo(e.fecha, f.desde, f.hasta) && dentro(e.fecha));
-        const t = contaCalcular(ops, egr);
+        const ing = contaEstado.ing.filter(i => contaEnIntervalo(i.fecha, f.desde, f.hasta) && dentro(i.fecha));
+        const t = contaCalcular(ops, egr, ing);
         return { etiqueta: f.etiqueta, ingresos: t.ingresos, egresos: t.egresos, electronicos: t.electronicos, balance: t.balance };
     });
 }
@@ -4806,7 +4912,7 @@ function contaHistoricoPeriodo(modo, r) {
     const minimo = new Date(hoy); minimo.setDate(minimo.getDate() - (modo === 'dia' ? 61 : 175));
     let inicio = r.desde;
     if (!inicio) {
-        const fechas = [...contaEstado.ops.map(o => new Date(o.created_at).getTime()), ...contaEstado.egr.map(e => new Date(e.fecha).getTime())].filter(x => !isNaN(x));
+        const fechas = [...contaEstado.ops.map(o => new Date(o.created_at).getTime()), ...contaEstado.egr.map(e => new Date(e.fecha).getTime()), ...contaEstado.ing.map(i => new Date(i.fecha).getTime())].filter(x => !isNaN(x));
         inicio = fechas.length ? new Date(Math.min(...fechas)) : new Date(hoy);
     }
     if (inicio < minimo) inicio = new Date(minimo);
@@ -4973,7 +5079,8 @@ function panelGenerarPDF(html, filename) {
 function repRenderPDF(html) { return repCrearPDFCanvas(html); }
 function contaReportePDFv2() {
     if (!contaEstado.ultimo) { mostrarAlertaError('Primero carga la contabilidad.'); return; }
-    const { t, ops, egr, r } = contaEstado.ultimo;
+    const { t, ops, egr, ing, r } = contaEstado.ultimo;
+    const ingLista = ing || [];
     const sesion = obtenerSesion() || {};
     const periodo = contaTextoPeriodo(contaEstado.periodo, r);
     const modo = contaEstado.hist;
@@ -5004,13 +5111,15 @@ function contaReportePDFv2() {
     h += `<div class="rep-sec"><h3>2. Histórico del balance (${modo === 'dia' ? 'por día' : 'por semana'})</h3><img class="rep-img" src="${imgBalance}" alt="Histórico del balance"></div>`;
     h += `<div class="rep-sec"><h3>3. Distribución de ingresos</h3><img class="rep-img" src="${imgMetodos}" alt="Métodos de pago"><img class="rep-img" src="${imgTipos}" alt="Tipos de operación"></div>`;
     h += `<div class="rep-sec"><h3>4. Estado de cuentas</h3>${repTabla(['Concepto', 'Valor'], [
-        ['Ingresos (abonos y pagos recibidos)', contaFmt(t.ingresos)],
+        ['Ingresos por operaciones (abonos y pagos recibidos)', contaFmt(t.ingresosOps)],
+        ['Ingresos adicionales registrados', contaFmt(t.ingresosManuales)],
         ['(-) Egresos registrados', contaFmt(t.egresos)],
         ['Balance neto del periodo', contaFmt(t.balance)],
         ['Egresos pagados electrónicamente', contaFmt(t.egrElec)],
         ['Número de operaciones', String(t.nOps)],
+        ['Número de ingresos adicionales', String(t.nIng)],
         ['Número de egresos', String(t.nEgr)]
-    ], [1], 2)}</div>`;
+    ], [1], 3)}</div>`;
     h += `<div class="rep-sec"><h3>5. Ingresos por tipo de operación</h3>${repTabla(['Tipo', 'Ingresos'], tipos.map(x => [contaEsc(x.label), contaFmt(x.value)]), [1])}</div>`;
     h += `<div class="rep-sec"><h3>6. Detalle del histórico</h3>${repTabla(['Periodo', 'Ingresos', 'Egresos', 'Electrónicos', 'Balance'],
         hist.map(x => [contaEsc(x.etiqueta), contaFmt(x.ingresos), contaFmt(x.egresos), contaFmt(x.electronicos), contaFmt(x.balance)]), [1, 2, 3, 4])}</div>`;
@@ -5018,7 +5127,11 @@ function contaReportePDFv2() {
         ['Fecha', 'Factura', 'Tipo', 'Cliente', 'Pago', 'Total', 'Pagado'],
         ops.slice(0, 120).map(o => [fmtF(o.created_at), contaEsc(o.numero_factura || '—'), contaEsc(o.tipo_operacion), contaEsc(o.customer_name), contaEsc(o.payment_method), contaFmt(o.total), contaFmt(o.amount_paid)]),
         [5, 6])}</div>`;
-    h += `<div class="rep-sec"><h3>8. Egresos (${Math.min(egr.length, 120)} de ${egr.length})</h3>${repTabla(
+    h += `<div class="rep-sec"><h3>8. Ingresos adicionales (${Math.min(ingLista.length, 120)} de ${ingLista.length})</h3>${repTabla(
+        ['Fecha', 'Concepto', 'Categoría', 'Método', 'Monto'],
+        ingLista.slice(0, 120).map(i => [fmtF(i.fecha), contaEsc(i.concepto), contaEsc(i.categoria || '—'), contaEsc(i.metodo_pago || '—'), contaFmt(i.monto)]),
+        [4])}</div>`;
+    h += `<div class="rep-sec"><h3>9. Egresos (${Math.min(egr.length, 120)} de ${egr.length})</h3>${repTabla(
         ['Fecha', 'Concepto', 'Categoría', 'Método', 'Monto'],
         egr.slice(0, 120).map(e => [fmtF(e.fecha), contaEsc(e.concepto), contaEsc(e.categoria || '—'), contaEsc(e.metodo_pago || '—'), contaFmt(e.monto)]),
         [4])}</div>`;
@@ -5026,7 +5139,6 @@ function contaReportePDFv2() {
     panelGenerarPDF(h, `Reporte_Contable_JK_${contaHoyISO()}.pdf`);
 }
 // ---------- INICIO ----------
-
 </script>
 <script>
 /* =====================================================================
@@ -5211,7 +5323,6 @@ function jkInstallAhoraNo() {
    NOTIFICACIONES PUSH (VAPID) — stock bajo
    ===================================================================== */
 const VAPID_PUBLIC_KEY = 'BH33bOLS6dkjLcJ13YNrH1RoIcw5tQ-ViYdhmpk-_NckxbpLodetnGpevX0otS1RzrrfA4jWgShNVu5Cj2OgwAc';
-
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -5313,7 +5424,6 @@ async function activarNotificacionesPush() {
         console.error('activarNotificacionesPush:', e);
     }
 }
-
 function textoAvisoStock(nivel, nombreProducto) {
     if (nivel === 3) return { title: '⚠ Stock bajo', body: '«' + nombreProducto + '»: quedan solo 3 unidades. Programa reposición.' };
     if (nivel === 2) return { title: '⚠⚠ Stock crítico', body: '«' + nombreProducto + '»: quedan solo 2 unidades. Repón pronto.' };
@@ -5356,7 +5466,6 @@ async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo,
     var niveles = [3, 2, 1, 0].filter(function (nivel) { return anterior > nivel && nuevo <= nivel; });
     for (const nivel of niveles) await enviarAvisoStockBajo(nombreProducto, nivel, productoId);
 }
-
 </script>
 <script>
 /* =====================================================================
@@ -5370,7 +5479,6 @@ async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo,
     var brand = active || cached;
     jkAplicarTema((brand && brand.theme) || 'oscuro');
     if (brand) { jkRenderMarca(brand); jkActualizarLockLogo(brand); }
-
     var form = document.getElementById('jkLockForm');
     var input = document.getElementById('jkLockPassword');
     var btn = document.getElementById('jkLockBtn');
@@ -5378,7 +5486,6 @@ async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo,
     var configurarBtn = document.getElementById('jkLockConfigurar');
     var lock = document.getElementById('jkLock');
     var cmd = typeof cmdIniciar === 'function' ? cmdIniciar : (window.cmdIniciar || null);
-
     function bindLockscreen() {
         if (form) form.addEventListener('submit', function (e) { e.preventDefault(); entrar(); });
         if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); entrar(); } });
@@ -5413,7 +5520,6 @@ async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo,
             btn.innerHTML = '<i class="fa-solid fa-lock"></i> Ingresar';
         });
     }
-
     if (configurar) {
         // Modo crear comercio desde cero: sin lockscreen
         if (lock) lock.classList.remove('show');
@@ -5421,28 +5527,23 @@ async function enviarAvisosStockCruce(nombreProducto, stockAnterior, stockNuevo,
         setTimeout(function () { abrirEdicionComercio(); }, 250);
         return;
     }
-
     // Binding lockscreen una sola vez
     bindLockscreen();
     window.addEventListener('jk-install-closed', unlockAndStart);
-
     if (active) {
         // Sesión activa — desbloquear, sin popup
         unlockAndStart();
         return;
     }
-
     // Sin sesión activa — popup de instalación primero
     if (!jkInstallDetected()) {
         jkShowInstallPopup();
         return;
     }
-
     // Sin popup (instalado o descartado en esta sesión) — lockscreen directo
     jkMostrarLockscreen();
 })();
 </script>
-
 <script>
 /* =====================================================================
    ESCÁNER QR DE PRODUCTOS — Accesorios y Celulares
@@ -5451,7 +5552,6 @@ var qrProductoPrefijo = null;
 var qrProductoReader = null;
 var qrProductoControls = null;
 var qrProductoProcesando = false;
-
 function detenerCamaraQR() {
     if (qrProductoControls && typeof qrProductoControls.stop === 'function') {
         try { qrProductoControls.stop(); } catch (e) {}
