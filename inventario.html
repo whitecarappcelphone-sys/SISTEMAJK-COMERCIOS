@@ -856,12 +856,12 @@ function imprimirEtiquetaProducto(id) {
     ].filter(Boolean).join('|');
     const qrHost = document.createElement('div');
     try {
-        new QRCode(qrHost, { text: textoQR, width: 420, height: 420, correctLevel: QRCode.CorrectLevel.M });
+        new QRCode(qrHost, { text: textoQR, width: 512, height: 512, correctLevel: QRCode.CorrectLevel.M });
     } catch (e) {
         // Respaldo de longitud mínima para evitar que el generador desborde.
         try {
             qrHost.innerHTML = '';
-            new QRCode(qrHost, { text: 'JK|' + String(producto.id || producto.sku || producto.nombre || 'PRODUCTO').slice(0, 80), width: 420, height: 420, correctLevel: QRCode.CorrectLevel.L });
+            new QRCode(qrHost, { text: 'JK|' + String(producto.id || producto.sku || producto.nombre || 'PRODUCTO').slice(0, 80), width: 512, height: 512, correctLevel: QRCode.CorrectLevel.L });
         } catch (fallbackError) {
             console.error('QR:', e, fallbackError);
             mostrarAlertaError('No se pudo generar el código QR para este producto.');
@@ -873,144 +873,150 @@ function imprimirEtiquetaProducto(id) {
     const qrSrc = qrCanvas ? qrCanvas.toDataURL('image/png') : (qrImgElement ? qrImgElement.src : '');
     if (!qrSrc) { mostrarAlertaError('No se pudo obtener la imagen del código QR.'); return; }
     const stockMinimoProd = (producto.stock_minimo !== null && producto.stock_minimo !== undefined && !isNaN(Number(producto.stock_minimo))) ? Number(producto.stock_minimo) : 3;
-    const win = window.open('', '_blank', 'width=420,height=640');
+    const win = window.open('', '_blank', 'width=520,height=740');
     if (!win) { mostrarAlertaError('Permite las ventanas emergentes para imprimir la etiqueta.'); return; }
     const logo = comercio.logo_url ? '<img class="logo" src="' + escaparHTML(comercio.logo_url) + '" alt="Logo">' : '';
     const html = `<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Etiqueta ${escaparHTML(producto.nombre || 'Producto')}</title>
 <style>
-@page { margin: 0 !important; }
+@page { size: auto; margin: 0 !important; }
 * { box-sizing: border-box; }
 html, body {
   margin: 0 !important;
   padding: 0 !important;
   width: 100% !important;
-  min-height: 100%;
+  height: 100% !important;
   font-family: Arial, Helvetica, sans-serif;
   color: #000000;
   background: #ffffff;
 }
 .etiqueta {
-  width: 100%;
-  margin: 0 auto;
-  padding: 4vw 3.5vw;
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 2.5vh 3.5vw;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: stretch;
-  gap: 2.2vw;
+  gap: 1.5vh;
   text-align: center;
-  border-bottom: 2px dashed #000000;
+  border: 0.6vw solid #000000;
 }
 .cabecera {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.5vw;
-  padding-bottom: 2vw;
-  border-bottom: 2px dashed #000000;
+  gap: 1vh;
+  padding-bottom: 1.4vh;
+  border-bottom: 0.5vw dashed #000000;
 }
 .logo {
-  width: 22vw;
-  max-width: 96px;
+  width: min(26vw, 13vh);
   height: auto;
-  max-height: 70px;
+  max-height: 13vh;
   object-fit: contain;
 }
 .empresa {
-  font-size: clamp(13px, 5.2vw, 24px);
-  font-weight: 800;
+  font-size: min(6.5vw, 3.6vh);
+  font-weight: 900;
   color: #000000;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
-  line-height: 1.15;
+  letter-spacing: 0.3vw;
+  line-height: 1.1;
 }
 .producto {
-  font-size: clamp(16px, 6.4vw, 30px);
-  font-weight: 800;
-  line-height: 1.15;
+  font-size: min(8.2vw, 4.6vh);
+  font-weight: 900;
+  line-height: 1.12;
   color: #000000;
-  margin: 1vw 0;
+  margin: 0;
   overflow-wrap: anywhere;
 }
 .precio-box {
   width: 100%;
-  border: 2px solid #000000;
-  border-radius: 6px;
-  padding: 2vw 2.5vw;
-  margin: 1vw 0;
+  border: 0.7vw solid #000000;
+  border-radius: 2vw;
+  padding: 1.6vh 2.5vw;
 }
 .precio {
-  font-size: clamp(18px, 7.6vw, 34px);
+  font-size: min(10.5vw, 6vh);
   font-weight: 900;
   color: #000000;
   margin: 0;
-  line-height: 1.1;
+  line-height: 1.05;
 }
 .datos {
   width: 100%;
   text-align: left;
-  border-top: 1px dashed #000000;
-  border-bottom: 1px dashed #000000;
-  padding: 2vw 0;
+  border-top: 0.45vw dashed #000000;
+  border-bottom: 0.45vw dashed #000000;
+  padding: 1.6vh 1vw;
   display: flex;
   flex-direction: column;
-  gap: 1vw;
+  gap: 0.9vh;
 }
 .linea {
-  font-size: clamp(11px, 4.1vw, 18px);
-  line-height: 1.3;
+  font-size: min(5vw, 2.8vh);
+  line-height: 1.25;
   margin: 0;
   color: #000000;
   overflow-wrap: anywhere;
 }
-.linea b { font-weight: 800; }
-.imei { font-size: clamp(10px, 3.7vw, 16px); font-weight: 700; }
+.linea b { font-weight: 900; }
+.imei { font-size: min(4.5vw, 2.5vh); font-weight: 700; }
 .stock {
-  font-size: clamp(11px, 4.1vw, 18px);
-  font-weight: 800;
-  color: ${Number(producto.stock) <= stockMinimoProd ? '#000000' : '#000000'};
+  font-size: min(5vw, 2.8vh);
+  font-weight: 900;
+  color: #000000;
 }
 .qr {
   width: 100%;
-  padding-top: 2vw;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding-top: 1vh;
 }
 .qr img {
   display: block;
-  width: 68vw;
-  max-width: 260px;
-  height: auto;
-  aspect-ratio: 1 / 1;
+  width: min(76vw, 38vh);
+  height: min(76vw, 38vh);
   margin: 0 auto;
   image-rendering: pixelated;
 }
 .qr small {
   display: block;
-  font-size: clamp(10px, 3.6vw, 15px);
-  font-weight: 700;
+  font-size: min(4.2vw, 2.3vh);
+  font-weight: 800;
   color: #000000;
-  margin-top: 1.8vw;
+  margin-top: 1.2vh;
   text-transform: uppercase;
+  letter-spacing: 0.2vw;
 }
 @media print {
-  @page { margin: 0 !important; }
+  @page { size: auto; margin: 0 !important; }
   html, body {
     width: 100% !important;
+    height: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    overflow: hidden !important;
   }
   .etiqueta {
     width: 100% !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
     max-width: 100% !important;
+    page-break-before: avoid !important;
+    page-break-after: avoid !important;
     page-break-inside: avoid !important;
     break-inside: avoid-page !important;
   }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
-</style></head><body onload="setTimeout(function(){window.focus();window.print();},300)">
+</style></head><body onload="setTimeout(function(){window.focus();window.print();},350)">
 <div class="etiqueta">
   <div class="cabecera">${logo}<span class="empresa">${escaparHTML(nombreComercio)}</span></div>
   <p class="producto">${escaparHTML(producto.nombre || 'Producto')}</p>
