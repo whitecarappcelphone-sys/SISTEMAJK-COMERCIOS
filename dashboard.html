@@ -1074,6 +1074,11 @@ html[data-theme="claro"] .op-edit-field label { color:#44505d !important; }
 html[data-theme="claro"] .op-edit-field input,html[data-theme="claro"] .op-edit-field select,html[data-theme="claro"] .op-edit-field textarea { background:#f1f4f8 !important; color:#1a1e28 !important; border-color:rgba(20,30,50,.14) !important; }
 html[data-theme="claro"] .op-edit-head p { color:#64748b !important; }
 html[data-theme="claro"] .op-edit-cancel { background:#f1f4f8 !important; color:#334155 !important; border-color:rgba(20,30,50,.14) !important; }
+html[data-theme="claro"] .op-edit-close { background:#f1f4f8 !important; color:#1a1e28 !important; border-color:rgba(20,30,50,.18) !important; }
+.dash-toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 999999; background: #171a21; color: #ffffff; border: 2px solid #12d8c4; border-radius: 12px; padding: 12px 18px; font: 600 12px 'Poppins', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,.6); max-width: 90vw; text-align: center; transition: opacity .35s ease; }
+.dash-toast.error { border-color: #ff5e5e; color: #ffd4d4; }
+html[data-theme="claro"] .dash-toast { background: #ffffff !important; color: #1a1e28 !important; border-color: #0d9488 !important; }
+html[data-theme="claro"] .dash-toast.error { border-color: #e11d48 !important; color: #b91c1c !important; }
 @media(max-width:620px) { .op-edit-grid { grid-template-columns:1fr; } .op-edit-field.full { grid-column:auto; } .op-actions { align-items:flex-start; } .op-actions-right { width:100%; } .op-manage-btn { flex:1; } .op-edit-dialog { padding:18px; } }
 </style>
 </head>
@@ -1206,16 +1211,16 @@ html[data-theme="claro"] .op-edit-cancel { background:#f1f4f8 !important; color:
             <div class="op-edit-field"><label for="editPrecio">Precio unitario</label><input id="editPrecio" type="number" min="0" step="1"></div>
             <div class="op-edit-field"><label for="editTotal">Total de operación</label><input id="editTotal" type="number" min="0" step="1"></div>
             <div class="op-edit-field"><label for="editPagado">Monto recibido / pagado</label><input id="editPagado" type="number" min="0" step="1"></div>
-            <div class="op-edit-field"><label for="editPendiente">Saldo pendiente</label><input id="editPendiente" type="number" min="0" step="1"></div>
+            <div class="op-edit-field"><label for="editPendiente">Saldo pendiente (0 = al día)</label><input id="editPendiente" type="number" min="0" step="1"></div>
             <div class="op-edit-field"><label for="editImei1">IMEI / Serial 1</label><input id="editImei1" type="text"></div>
             <div class="op-edit-field"><label for="editImei2">IMEI / Serial 2</label><input id="editImei2" type="text"></div>
             <div class="op-edit-field"><label for="editEstadoTaller">Estado del taller</label><select id="editEstadoTaller"><option value="">No aplica</option><option value="Pendiente">Pendiente</option><option value="En Proceso">En Proceso</option><option value="Listo">Listo</option><option value="Entregado">Entregado</option></select></div>
             <div class="op-edit-field full"><label for="editDetalle">Descripción / producto</label><textarea id="editDetalle"></textarea></div>
             <div class="op-edit-field full"><label for="editEquipo">Equipo / modelo</label><input id="editEquipo" type="text"></div>
             <div class="op-edit-field full"><label for="editFalla">Falla / observación</label><textarea id="editFalla"></textarea></div>
-            <div class="op-edit-field"><label for="editImagen1">URL evidencia 1</label><input id="editImagen1" type="url"></div>
-            <div class="op-edit-field"><label for="editImagen2">URL evidencia 2</label><input id="editImagen2" type="url"></div>
-            <div class="op-edit-field"><label for="editImagen3">URL evidencia 3</label><input id="editImagen3" type="url"></div>
+            <div class="op-edit-field"><label for="editImagen1">URL evidencia 1</label><input id="editImagen1" type="text"></div>
+            <div class="op-edit-field"><label for="editImagen2">URL evidencia 2</label><input id="editImagen2" type="text"></div>
+            <div class="op-edit-field"><label for="editImagen3">URL evidencia 3</label><input id="editImagen3" type="text"></div>
           </div>
           <div class="op-edit-actions">
             <button type="button" class="op-edit-cancel" onclick="cerrarEdicionOperacion()">Cancelar</button>
@@ -1529,7 +1534,7 @@ if (urlsImagenes.length > 0) {
           set('editPrecio', item.price);
           set('editTotal', item.total);
           set('editPagado', item.amount_paid);
-          set('editPendiente', Math.max(0, (Number(item.total) || 0) - (Number(item.amount_paid) || 0)));
+          set('editPendiente', Math.max(0, obtenerValorNumerico(item.total) - obtenerValorNumerico(item.amount_paid)));
           set('editImei1', item.imei_serial);
           set('editImei2', item.imei_serial_2);
           setSelectValue('editEstadoTaller', item.estado_taller === 'N/A' ? '' : item.estado_taller);
@@ -1542,6 +1547,33 @@ if (urlsImagenes.length > 0) {
           document.getElementById('modalEditarOperacion').classList.add('show');
           document.body.style.overflow = 'hidden';
         }
+        function sincronizarFinanzasEdicion(origen) {
+          const totalEl = document.getElementById('editTotal');
+          const pagadoEl = document.getElementById('editPagado');
+          const pendEl = document.getElementById('editPendiente');
+          const estadoEl = document.getElementById('editEstado');
+          const tipoPagoEl = document.getElementById('editTipoPago');
+          if (!totalEl || !pagadoEl || !pendEl) return;
+          const total = Math.max(0, Number(totalEl.value) || 0);
+          let pagado = Math.max(0, Number(pagadoEl.value) || 0);
+          let pendiente = Math.max(0, Number(pendEl.value) || 0);
+          if (origen === 'pendiente') {
+            if (pendiente > total) pendiente = total;
+            pagado = Math.max(0, total - pendiente);
+            pagadoEl.value = String(pagado);
+          } else {
+            pendiente = Math.max(0, total - pagado);
+            pendEl.value = String(pendiente);
+          }
+          if (estadoEl) estadoEl.value = pendiente === 0 ? 'Completado' : 'Pendiente';
+          if (tipoPagoEl) tipoPagoEl.value = pendiente === 0 ? 'Completo' : 'Abono';
+        }
+        const editTotalInput = document.getElementById('editTotal');
+        const editPagadoInput = document.getElementById('editPagado');
+        const editPendienteInput = document.getElementById('editPendiente');
+        if (editTotalInput) editTotalInput.addEventListener('input', () => sincronizarFinanzasEdicion('total'));
+        if (editPagadoInput) editPagadoInput.addEventListener('input', () => sincronizarFinanzasEdicion('pagado'));
+        if (editPendienteInput) editPendienteInput.addEventListener('input', () => sincronizarFinanzasEdicion('pendiente'));
         function cerrarEdicionOperacion() {
           const modal = document.getElementById('modalEditarOperacion');
           if (modal) modal.classList.remove('show');
@@ -1580,27 +1612,29 @@ if (urlsImagenes.length > 0) {
           if (!item || item.eliminado) { dashToast('Esta operación ya no se puede editar.', true); cerrarEdicionOperacion(); return; }
           const comercioId = window.JK_COMERCIO_ID;
           if (!comercioId || String(item.comercio_id) !== String(comercioId)) { dashToast('Comercio no válido para esta operación.', true); return; }
-          const val = (id) => document.getElementById(id).value.trim();
+          const val = (id) => (document.getElementById(id)?.value || '').trim();
           const cantidad = Number(val('editCantidad'));
           const precio = Number(val('editPrecio'));
           const total = Number(val('editTotal'));
           const pagado = Number(val('editPagado'));
-          if (!Number.isFinite(cantidad) || cantidad < 0 || !Number.isFinite(precio) || precio < 0 || !Number.isFinite(total) || total < 0 || !Number.isFinite(pagado) || pagado < 0) {
-            dashToast('Verifica cantidad, precio, total y valor recibido.', true); return;
+          const pendiente = Number(val('editPendiente'));
+          if (!Number.isFinite(cantidad) || cantidad < 0 || !Number.isFinite(precio) || precio < 0 || !Number.isFinite(total) || total < 0 || !Number.isFinite(pagado) || pagado < 0 || !Number.isFinite(pendiente) || pendiente < 0) {
+            dashToast('Verifica cantidad, precio, total, valor recibido y saldo pendiente.', true); return;
           }
           const fechaRaw = val('editFecha');
           const fecha = fechaRaw ? new Date(fechaRaw) : new Date(item.created_at || Date.now());
           if (Number.isNaN(fecha.getTime())) { dashToast('La fecha ingresada no es válida.', true); return; }
+          const saldoCalculado = Math.max(0, total - pagado);
           const payload = {
             numero_factura: val('editFactura') || null,
             created_at: fecha.toISOString(),
             tipo_operacion: val('editTipo') || 'Otro',
-            estado: val('editEstado') || (pagado >= total ? 'Completado' : 'Pendiente'),
+            estado: saldoCalculado === 0 ? 'Completado' : (val('editEstado') || 'Pendiente'),
             customer_name: val('editCliente') || null,
             customer_phone: val('editTelefono') || null,
             asesor: val('editAsesor') || null,
             payment_method: val('editMetodo') || null,
-            payment_type: val('editTipoPago') || null,
+            payment_type: saldoCalculado === 0 ? 'Completo' : (val('editTipoPago') || 'Abono'),
             quantity: cantidad,
             price: precio,
             total: total,
@@ -1620,12 +1654,16 @@ if (urlsImagenes.length > 0) {
           let stockAjuste = null;
           try {
             stockAjuste = await ajustarStockVinculado(item, cantidad, payload.tipo_operacion, comercioId);
-            const { data: updated, error } = await supabase.from(NOMBRE_TABLA).update(payload)
-              .eq('id', operacionEditandoId).eq('comercio_id', comercioId).eq('eliminado', false).select('id').maybeSingle();
-            if (error) throw error;
-            if (!updated) throw new Error('No se encontró la operación activa para actualizar.');
+            let res = await supabase.from(NOMBRE_TABLA).update(payload)
+              .eq('id', item.id).eq('comercio_id', comercioId).or('eliminado.is.null,eliminado.eq.false').select('id').maybeSingle();
+            if (res.error && /eliminado/i.test(res.error.message || '')) {
+              res = await supabase.from(NOMBRE_TABLA).update(payload)
+                .eq('id', item.id).eq('comercio_id', comercioId).select('id').maybeSingle();
+            }
+            if (res.error) throw res.error;
+            if (!res.data) throw new Error('No se encontró la operación activa para actualizar.');
             cerrarEdicionOperacion();
-            dashToast('Cambios guardados.');
+            dashToast('Cambios guardados correctamente.');
             await cargarDashboard();
           } catch (error) {
             await restaurarStockVinculado(stockAjuste, comercioId);
@@ -1651,7 +1689,7 @@ if (urlsImagenes.length > 0) {
               eliminado_at: new Date().toISOString(),
               eliminado_por: (session && session.nombre) || 'Administrador',
               estado: 'Eliminado'
-            }).eq('id', id).eq('comercio_id', window.JK_COMERCIO_ID).eq('eliminado', false).select('id').maybeSingle();
+            }).eq('id', item.id).eq('comercio_id', window.JK_COMERCIO_ID).or('eliminado.is.null,eliminado.eq.false').select('id').maybeSingle();
             if (error) throw error;
             if (!updated) throw new Error('No se encontró la operación activa para marcar como eliminada.');
             dashToast('Operación marcada como eliminada; se conserva en el historial.');
@@ -1662,25 +1700,9 @@ if (urlsImagenes.length > 0) {
             dashToast('No se pudo marcar como eliminada: ' + (error.message || error), true);
           }
         }
-        // Sincroniza Total / Pagado / Pendiente en el formulario de edición
-        function sincronizarSaldoEdicion(origen) {
-          const total = Number(document.getElementById('editTotal').value) || 0;
-          const pagadoEl = document.getElementById('editPagado');
-          const pendEl = document.getElementById('editPendiente');
-          const estadoEl = document.getElementById('editEstado');
-          let pagado = Number(pagadoEl.value) || 0;
-          if (origen === 'pendiente') {
-            pagado = Math.max(0, total - (Number(pendEl.value) || 0));
-            pagadoEl.value = pagado;
-          }
-          const pendiente = Math.max(0, total - pagado);
-          pendEl.value = pendiente;
-          estadoEl.value = pendiente > 0 ? 'Pendiente' : 'Completado';
-        }
-        ['editTotal', 'editPagado', 'editPendiente'].forEach((campo) => {
-          const el = document.getElementById(campo);
-          if (el) el.addEventListener('input', () => sincronizarSaldoEdicion(campo === 'editPendiente' ? 'pendiente' : 'pagado'));
-        });
+        window.abrirEdicionOperacion = abrirEdicionOperacion;
+        window.cerrarEdicionOperacion = cerrarEdicionOperacion;
+        window.guardarEdicionOperacion = guardarEdicionOperacion;
         const modalEditar = document.getElementById('modalEditarOperacion');
         if (modalEditar) modalEditar.addEventListener('click', (event) => { if (event.target === modalEditar) cerrarEdicionOperacion(); });
         document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modalEditar && modalEditar.classList.contains('show')) cerrarEdicionOperacion(); });
@@ -2083,4 +2105,3 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
-
