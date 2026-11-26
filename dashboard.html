@@ -1057,7 +1057,9 @@ body.jk-locked { overflow: hidden !important; }
 .op-edit-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; padding-bottom:15px; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,.08); }
 .op-edit-head h3 { color:#12d8c4; font-size:18px; margin:0; }
 .op-edit-head p { color:#7d8594; font-size:11px; margin-top:4px; }
-.op-edit-close { width:36px;height:36px; flex-shrink:0; border-radius:50%; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); color:#fff; cursor:pointer; }
+.op-edit-close { width:38px;height:38px; flex-shrink:0; border-radius:50%; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#ffffff; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition:.2s; padding:0; }
+.op-edit-close svg { width:18px; height:18px; display:block; }
+.op-edit-close:hover { background:#ff5e5e; border-color:#ff5e5e; color:#ffffff; transform:scale(1.06); }
 .op-edit-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
 .op-edit-field { display:flex; flex-direction:column; gap:6px; min-width:0; }
 .op-edit-field.full { grid-column:1/-1; }
@@ -1065,6 +1067,16 @@ body.jk-locked { overflow: hidden !important; }
 .op-edit-field input,.op-edit-field select,.op-edit-field textarea { width:100%; min-height:40px; border:1px solid rgba(255,255,255,.10); border-radius:9px; background:#101319; color:#fff; padding:8px 10px; font:12px 'Poppins',sans-serif; outline:none; }
 .op-edit-field textarea { min-height:70px; resize:vertical; }
 .op-edit-field input:focus,.op-edit-field select:focus,.op-edit-field textarea:focus { border-color:#12d8c4; box-shadow:0 0 10px rgba(18,216,196,.12); }
+.op-ev-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:4px; }
+.op-ev-slot { background:#101319; border:1px dashed rgba(18,216,196,.28); border-radius:12px; padding:10px; display:flex; flex-direction:column; align-items:center; gap:8px; }
+.op-ev-title { font-size:10px; font-weight:600; color:#8d95a5; text-transform:uppercase; letter-spacing:.06em; }
+.op-ev-preview { width:100%; height:110px; border-radius:9px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03); display:flex; align-items:center; justify-content:center; overflow:hidden; color:#6b7280; font-size:11px; text-align:center; padding:6px; }
+.op-ev-preview img { width:100%; height:100%; object-fit:cover; display:block; cursor:pointer; }
+.op-ev-btns { display:flex; gap:6px; width:100%; }
+.op-ev-btn { flex:1; min-height:32px; padding:4px 8px; border-radius:8px; border:1px solid rgba(18,216,196,.32); background:rgba(18,216,196,.10); color:#12d8c4; font:600 10px 'Poppins',sans-serif; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:4px; transition:.2s; }
+.op-ev-btn:hover { background:rgba(18,216,196,.22); border-color:#12d8c4; }
+.op-ev-btn.remove { flex:0 0 auto; border-color:rgba(255,94,94,.35); background:rgba(255,94,94,.10); color:#ff7b7b; }
+.op-ev-btn.remove:hover { background:rgba(255,94,94,.22); border-color:#ff5e5e; color:#ff5e5e; }
 .op-edit-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; flex-wrap:wrap; }
 .op-edit-save { min-height:42px; padding:0 18px; border:0; border-radius:10px; background:linear-gradient(135deg,#12d8c4,#22f5dd); color:#081014; font:700 12px 'Poppins',sans-serif; cursor:pointer; }
 .op-edit-cancel { min-height:42px; padding:0 16px; border:1px solid rgba(255,255,255,.14); border-radius:10px; background:rgba(255,255,255,.05); color:#cbd5e1; font:600 12px 'Poppins',sans-serif; cursor:pointer; }
@@ -1074,7 +1086,14 @@ html[data-theme="claro"] .op-edit-field label { color:#44505d !important; }
 html[data-theme="claro"] .op-edit-field input,html[data-theme="claro"] .op-edit-field select,html[data-theme="claro"] .op-edit-field textarea { background:#f1f4f8 !important; color:#1a1e28 !important; border-color:rgba(20,30,50,.14) !important; }
 html[data-theme="claro"] .op-edit-head p { color:#64748b !important; }
 html[data-theme="claro"] .op-edit-cancel { background:#f1f4f8 !important; color:#334155 !important; border-color:rgba(20,30,50,.14) !important; }
-html[data-theme="claro"] .op-edit-close { background:#f1f4f8 !important; color:#1a1e28 !important; border-color:rgba(20,30,50,.18) !important; }
+html[data-theme="claro"] .op-edit-close { background:#f1f4f8 !important; color:#1a1e28 !important; border:1px solid rgba(20,30,50,.22) !important; }
+html[data-theme="claro"] .op-edit-close:hover { background:#e11d48 !important; color:#ffffff !important; border-color:#e11d48 !important; }
+html[data-theme="claro"] .op-ev-slot { background:#f8fafc !important; border-color:rgba(13,148,136,.35) !important; }
+html[data-theme="claro"] .op-ev-title { color:#475569 !important; }
+html[data-theme="claro"] .op-ev-preview { background:#eef2f6 !important; border-color:rgba(20,30,50,.12) !important; color:#64748b !important; }
+html[data-theme="claro"] .op-ev-btn { background:rgba(13,148,136,.10) !important; color:#0d9488 !important; border-color:rgba(13,148,136,.38) !important; }
+html[data-theme="claro"] .op-ev-btn.remove { background:rgba(225,29,72,.10) !important; color:#e11d48 !important; border-color:rgba(225,29,72,.38) !important; }
+@media(max-width:620px) { .op-ev-grid { grid-template-columns:1fr; } }
 .dash-toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 999999; background: #171a21; color: #ffffff; border: 2px solid #12d8c4; border-radius: 12px; padding: 12px 18px; font: 600 12px 'Poppins', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,.6); max-width: 90vw; text-align: center; transition: opacity .35s ease; }
 .dash-toast.error { border-color: #ff5e5e; color: #ffd4d4; }
 html[data-theme="claro"] .dash-toast { background: #ffffff !important; color: #1a1e28 !important; border-color: #0d9488 !important; }
@@ -1194,7 +1213,7 @@ html[data-theme="claro"] .dash-toast.error { border-color: #e11d48 !important; c
       <div class="op-edit-dialog">
         <div class="op-edit-head">
           <div><h3 id="opEditTitle">Editar operación</h3><p>Los cambios se guardan en el comercio activo.</p></div>
-          <button type="button" class="op-edit-close" aria-label="Cerrar" onclick="cerrarEdicionOperacion()"><i class="fa-solid fa-xmark"></i></button>
+          <button type="button" class="op-edit-close" aria-label="Cerrar" onclick="cerrarEdicionOperacion()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
         <form id="formEditarOperacion" onsubmit="event.preventDefault(); guardarEdicionOperacion();">
           <div class="op-edit-grid">
@@ -1218,9 +1237,38 @@ html[data-theme="claro"] .dash-toast.error { border-color: #e11d48 !important; c
             <div class="op-edit-field full"><label for="editDetalle">Descripción / producto</label><textarea id="editDetalle"></textarea></div>
             <div class="op-edit-field full"><label for="editEquipo">Equipo / modelo</label><input id="editEquipo" type="text"></div>
             <div class="op-edit-field full"><label for="editFalla">Falla / observación</label><textarea id="editFalla"></textarea></div>
-            <div class="op-edit-field"><label for="editImagen1">URL evidencia 1</label><input id="editImagen1" type="text"></div>
-            <div class="op-edit-field"><label for="editImagen2">URL evidencia 2</label><input id="editImagen2" type="text"></div>
-            <div class="op-edit-field"><label for="editImagen3">URL evidencia 3</label><input id="editImagen3" type="text"></div>
+            <div class="op-edit-field full">
+              <label>Evidencias fotográficas (toca la foto para ver en grande o sube una nueva para reemplazar)</label>
+              <div class="op-ev-grid">
+                <div class="op-ev-slot">
+                  <span class="op-ev-title">Evidencia 1</span>
+                  <div class="op-ev-preview" id="editEvPreview1">Sin evidencia</div>
+                  <input type="file" id="editEvFile1" accept="image/*" style="display:none" onchange="seleccionarEvidenciaEdicion(1, this)">
+                  <div class="op-ev-btns">
+                    <button type="button" class="op-ev-btn" onclick="document.getElementById('editEvFile1').click()">Subir / Reemplazar</button>
+                    <button type="button" class="op-ev-btn remove" id="editEvRemove1" onclick="quitarEvidenciaEdicion(1)" style="display:none">Quitar</button>
+                  </div>
+                </div>
+                <div class="op-ev-slot">
+                  <span class="op-ev-title">Evidencia 2</span>
+                  <div class="op-ev-preview" id="editEvPreview2">Sin evidencia</div>
+                  <input type="file" id="editEvFile2" accept="image/*" style="display:none" onchange="seleccionarEvidenciaEdicion(2, this)">
+                  <div class="op-ev-btns">
+                    <button type="button" class="op-ev-btn" onclick="document.getElementById('editEvFile2').click()">Subir / Reemplazar</button>
+                    <button type="button" class="op-ev-btn remove" id="editEvRemove2" onclick="quitarEvidenciaEdicion(2)" style="display:none">Quitar</button>
+                  </div>
+                </div>
+                <div class="op-ev-slot">
+                  <span class="op-ev-title">Evidencia 3</span>
+                  <div class="op-ev-preview" id="editEvPreview3">Sin evidencia</div>
+                  <input type="file" id="editEvFile3" accept="image/*" style="display:none" onchange="seleccionarEvidenciaEdicion(3, this)">
+                  <div class="op-ev-btns">
+                    <button type="button" class="op-ev-btn" onclick="document.getElementById('editEvFile3').click()">Subir / Reemplazar</button>
+                    <button type="button" class="op-ev-btn remove" id="editEvRemove3" onclick="quitarEvidenciaEdicion(3)" style="display:none">Quitar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="op-edit-actions">
             <button type="button" class="op-edit-cancel" onclick="cerrarEdicionOperacion()">Cancelar</button>
@@ -1541,11 +1589,73 @@ if (urlsImagenes.length > 0) {
           set('editDetalle', item.descripcion);
           set('editEquipo', item.equipo);
           set('editFalla', item.falla);
-          set('editImagen1', item.imagen_url);
-          set('editImagen2', item.imagen_url_2);
-          set('editImagen3', item.imagen_url_3);
+          cargarEvidenciasEnEdicion(item);
           document.getElementById('modalEditarOperacion').classList.add('show');
           document.body.style.overflow = 'hidden';
+        }
+        let evidenciasEdicion = {
+          1: { url: null, file: null, preview: null },
+          2: { url: null, file: null, preview: null },
+          3: { url: null, file: null, preview: null }
+        };
+        function extraerUrlsEvidenciasItem(item) {
+          const urls = [];
+          [item.imagen_url, item.imagen_url_2, item.imagen_url_3].filter(Boolean).forEach((u) => {
+            String(u).split('|').map((s) => s.trim()).filter(Boolean).forEach((s) => {
+              if (!urls.includes(s)) urls.push(s);
+            });
+          });
+          return urls;
+        }
+        function renderPreviewEvidenciaEdicion(slot) {
+          const prevEl = document.getElementById('editEvPreview' + slot);
+          const remBtn = document.getElementById('editEvRemove' + slot);
+          const estado = evidenciasEdicion[slot];
+          if (!prevEl) return;
+          const src = (estado && (estado.preview || estado.url)) || null;
+          if (src) {
+            const safeSrc = src.replace(/'/g, "\\'");
+            prevEl.innerHTML = `<img src="${src}" alt="Evidencia ${slot}" onclick="abrirImagenGrande('${safeSrc}')">`;
+            if (remBtn) remBtn.style.display = 'inline-flex';
+          } else {
+            prevEl.textContent = 'Sin evidencia';
+            if (remBtn) remBtn.style.display = 'none';
+          }
+        }
+        function cargarEvidenciasEnEdicion(item) {
+          const urls = extraerUrlsEvidenciasItem(item);
+          [1, 2, 3].forEach((slot) => {
+            const fileInput = document.getElementById('editEvFile' + slot);
+            if (fileInput) fileInput.value = '';
+            evidenciasEdicion[slot] = { url: urls[slot - 1] || null, file: null, preview: null };
+            renderPreviewEvidenciaEdicion(slot);
+          });
+        }
+        function seleccionarEvidenciaEdicion(slot, input) {
+          if (!input || !input.files || !input.files[0]) return;
+          const file = input.files[0];
+          evidenciasEdicion[slot].file = file;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            evidenciasEdicion[slot].preview = e.target.result;
+            renderPreviewEvidenciaEdicion(slot);
+          };
+          reader.readAsDataURL(file);
+        }
+        function quitarEvidenciaEdicion(slot) {
+          const fileInput = document.getElementById('editEvFile' + slot);
+          if (fileInput) fileInput.value = '';
+          evidenciasEdicion[slot] = { url: null, file: null, preview: null };
+          renderPreviewEvidenciaEdicion(slot);
+        }
+        async function subirEvidenciaDashboard(file) {
+          if (!file) return null;
+          const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+          const nombreArchivo = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
+          const { error } = await supabase.storage.from('evidencias').upload(nombreArchivo, file);
+          if (error) throw error;
+          const { data } = supabase.storage.from('evidencias').getPublicUrl(nombreArchivo);
+          return data.publicUrl;
         }
         function sincronizarFinanzasEdicion(origen) {
           const totalEl = document.getElementById('editTotal');
@@ -1625,40 +1735,60 @@ if (urlsImagenes.length > 0) {
           const fecha = fechaRaw ? new Date(fechaRaw) : new Date(item.created_at || Date.now());
           if (Number.isNaN(fecha.getTime())) { dashToast('La fecha ingresada no es válida.', true); return; }
           const saldoCalculado = Math.max(0, total - pagado);
-          const payload = {
-            numero_factura: val('editFactura') || null,
-            created_at: fecha.toISOString(),
-            tipo_operacion: val('editTipo') || 'Otro',
-            estado: saldoCalculado === 0 ? 'Completado' : (val('editEstado') || 'Pendiente'),
-            customer_name: val('editCliente') || null,
-            customer_phone: val('editTelefono') || null,
-            asesor: val('editAsesor') || null,
-            payment_method: val('editMetodo') || null,
-            payment_type: saldoCalculado === 0 ? 'Completo' : (val('editTipoPago') || 'Abono'),
-            quantity: cantidad,
-            price: precio,
-            total: total,
-            amount_paid: pagado,
-            imei_serial: val('editImei1') || null,
-            imei_serial_2: val('editImei2') || null,
-            estado_taller: val('editEstadoTaller') || 'N/A',
-            descripcion: val('editDetalle') || null,
-            equipo: val('editEquipo') || null,
-            falla: val('editFalla') || null,
-            imagen_url: val('editImagen1') || null,
-            imagen_url_2: val('editImagen2') || null,
-            imagen_url_3: val('editImagen3') || null,
-          };
           const saveBtn = document.getElementById('btnGuardarOperacion');
-          saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+          saveBtn.disabled = true; saveBtn.textContent = 'Guardando...';
           let stockAjuste = null;
           try {
+            const urlsFinales = [];
+            for (const slot of [1, 2, 3]) {
+              const ev = evidenciasEdicion[slot] || {};
+              if (ev.file) {
+                urlsFinales.push(await subirEvidenciaDashboard(ev.file));
+              } else {
+                urlsFinales.push(ev.url || null);
+              }
+            }
+            const payload = {
+              numero_factura: val('editFactura') || null,
+              created_at: fecha.toISOString(),
+              tipo_operacion: val('editTipo') || 'Otro',
+              estado: saldoCalculado === 0 ? 'Completado' : (val('editEstado') || 'Pendiente'),
+              customer_name: val('editCliente') || null,
+              customer_phone: val('editTelefono') || null,
+              asesor: val('editAsesor') || null,
+              payment_method: val('editMetodo') || null,
+              payment_type: saldoCalculado === 0 ? 'Completo' : (val('editTipoPago') || 'Abono'),
+              quantity: cantidad,
+              price: precio,
+              total: total,
+              amount_paid: pagado,
+              imei_serial: val('editImei1') || null,
+              imei_serial_2: val('editImei2') || null,
+              estado_taller: val('editEstadoTaller') || 'N/A',
+              descripcion: val('editDetalle') || null,
+              equipo: val('editEquipo') || null,
+              falla: val('editFalla') || null,
+              imagen_url: urlsFinales[0] || null,
+              imagen_url_2: urlsFinales[1] || null,
+              imagen_url_3: urlsFinales[2] || null,
+            };
             stockAjuste = await ajustarStockVinculado(item, cantidad, payload.tipo_operacion, comercioId);
-            let res = await supabase.from(NOMBRE_TABLA).update(payload)
-              .eq('id', item.id).eq('comercio_id', comercioId).or('eliminado.is.null,eliminado.eq.false').select('id').maybeSingle();
-            if (res.error && /eliminado/i.test(res.error.message || '')) {
-              res = await supabase.from(NOMBRE_TABLA).update(payload)
-                .eq('id', item.id).eq('comercio_id', comercioId).select('id').maybeSingle();
+            const ejecutarUpdate = async (datos) => {
+              let r = await supabase.from(NOMBRE_TABLA).update(datos)
+                .eq('id', item.id).eq('comercio_id', comercioId).or('eliminado.is.null,eliminado.eq.false').select('id').maybeSingle();
+              if (r.error && /eliminado/i.test(r.error.message || '')) {
+                r = await supabase.from(NOMBRE_TABLA).update(datos)
+                  .eq('id', item.id).eq('comercio_id', comercioId).select('id').maybeSingle();
+              }
+              return r;
+            };
+            let res = await ejecutarUpdate(payload);
+            if (res.error && /imagen_url_2|imagen_url_3/i.test(res.error.message || '')) {
+              const payloadSimple = Object.assign({}, payload);
+              delete payloadSimple.imagen_url_2;
+              delete payloadSimple.imagen_url_3;
+              payloadSimple.imagen_url = urlsFinales.filter(Boolean).join(' | ') || null;
+              res = await ejecutarUpdate(payloadSimple);
             }
             if (res.error) throw res.error;
             if (!res.data) throw new Error('No se encontró la operación activa para actualizar.');
@@ -1670,7 +1800,7 @@ if (urlsImagenes.length > 0) {
             console.error('Editar operación:', error);
             dashToast('No se pudieron guardar los cambios: ' + (error.message || error), true);
           } finally {
-            saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
+            saveBtn.disabled = false; saveBtn.textContent = 'Guardar cambios';
           }
         }
         async function eliminarOperacion(id) {
@@ -1703,6 +1833,8 @@ if (urlsImagenes.length > 0) {
         window.abrirEdicionOperacion = abrirEdicionOperacion;
         window.cerrarEdicionOperacion = cerrarEdicionOperacion;
         window.guardarEdicionOperacion = guardarEdicionOperacion;
+        window.seleccionarEvidenciaEdicion = seleccionarEvidenciaEdicion;
+        window.quitarEvidenciaEdicion = quitarEvidenciaEdicion;
         const modalEditar = document.getElementById('modalEditarOperacion');
         if (modalEditar) modalEditar.addEventListener('click', (event) => { if (event.target === modalEditar) cerrarEdicionOperacion(); });
         document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modalEditar && modalEditar.classList.contains('show')) cerrarEdicionOperacion(); });
