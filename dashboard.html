@@ -1206,6 +1206,7 @@ html[data-theme="claro"] .op-edit-cancel { background:#f1f4f8 !important; color:
             <div class="op-edit-field"><label for="editPrecio">Precio unitario</label><input id="editPrecio" type="number" min="0" step="1"></div>
             <div class="op-edit-field"><label for="editTotal">Total de operación</label><input id="editTotal" type="number" min="0" step="1"></div>
             <div class="op-edit-field"><label for="editPagado">Monto recibido / pagado</label><input id="editPagado" type="number" min="0" step="1"></div>
+            <div class="op-edit-field"><label for="editPendiente">Saldo pendiente</label><input id="editPendiente" type="number" min="0" step="1"></div>
             <div class="op-edit-field"><label for="editImei1">IMEI / Serial 1</label><input id="editImei1" type="text"></div>
             <div class="op-edit-field"><label for="editImei2">IMEI / Serial 2</label><input id="editImei2" type="text"></div>
             <div class="op-edit-field"><label for="editEstadoTaller">Estado del taller</label><select id="editEstadoTaller"><option value="">No aplica</option><option value="Pendiente">Pendiente</option><option value="En Proceso">En Proceso</option><option value="Listo">Listo</option><option value="Entregado">Entregado</option></select></div>
@@ -1528,6 +1529,7 @@ if (urlsImagenes.length > 0) {
           set('editPrecio', item.price);
           set('editTotal', item.total);
           set('editPagado', item.amount_paid);
+          set('editPendiente', Math.max(0, (Number(item.total) || 0) - (Number(item.amount_paid) || 0)));
           set('editImei1', item.imei_serial);
           set('editImei2', item.imei_serial_2);
           setSelectValue('editEstadoTaller', item.estado_taller === 'N/A' ? '' : item.estado_taller);
@@ -1660,6 +1662,25 @@ if (urlsImagenes.length > 0) {
             dashToast('No se pudo marcar como eliminada: ' + (error.message || error), true);
           }
         }
+        // Sincroniza Total / Pagado / Pendiente en el formulario de edición
+        function sincronizarSaldoEdicion(origen) {
+          const total = Number(document.getElementById('editTotal').value) || 0;
+          const pagadoEl = document.getElementById('editPagado');
+          const pendEl = document.getElementById('editPendiente');
+          const estadoEl = document.getElementById('editEstado');
+          let pagado = Number(pagadoEl.value) || 0;
+          if (origen === 'pendiente') {
+            pagado = Math.max(0, total - (Number(pendEl.value) || 0));
+            pagadoEl.value = pagado;
+          }
+          const pendiente = Math.max(0, total - pagado);
+          pendEl.value = pendiente;
+          estadoEl.value = pendiente > 0 ? 'Pendiente' : 'Completado';
+        }
+        ['editTotal', 'editPagado', 'editPendiente'].forEach((campo) => {
+          const el = document.getElementById(campo);
+          if (el) el.addEventListener('input', () => sincronizarSaldoEdicion(campo === 'editPendiente' ? 'pendiente' : 'pagado'));
+        });
         const modalEditar = document.getElementById('modalEditarOperacion');
         if (modalEditar) modalEditar.addEventListener('click', (event) => { if (event.target === modalEditar) cerrarEdicionOperacion(); });
         document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modalEditar && modalEditar.classList.contains('show')) cerrarEdicionOperacion(); });
@@ -2062,3 +2083,4 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
