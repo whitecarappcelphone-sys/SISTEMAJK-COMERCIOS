@@ -417,7 +417,7 @@ input.validado { border-color: #12d8c4 !important; background: rgba(18,216,196,.
 .chk-pill input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; padding: 0; border: 0; pointer-events: none; }
 .chk-si:has(input:checked) { background: rgba(34,197,94,.18); border-color: #22c55e; color: #22c55e; }
 .chk-no:has(input:checked) { background: rgba(239,68,68,.18); border-color: #ef4444; color: #ef4444; }
-#rep_firma_canvas { width: 100%; height: 150px; background: #ffffff; border-radius: 12px; border: 1px dashed rgba(18,216,196,.4); touch-action: none; cursor: crosshair; }
+#rep_firma_canvas, #acc_firma_canvas, #cel_firma_canvas { width: 100%; height: 150px; background: #ffffff; border-radius: 12px; border: 1px dashed rgba(18,216,196,.4); touch-action: none; cursor: crosshair; }
 .ck-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .ck-item { background: #171a21; border: 1px solid rgba(255,255,255,.06); border-radius: 10px; padding: 8px 10px; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .ck-item span { font-size: 10px; color: #aab2c0; }
@@ -1494,11 +1494,17 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
                         </div>
                     </div>
                 </div>
+                <div class="field full">
+                    <label>Firma digital del cliente (opcional)</label>
+                    <canvas id="acc_firma_canvas" width="800" height="240"></canvas>
+                    <button type="button" class="conta-btn" style="margin-top:8px; align-self:flex-start;" onclick="firmaLimpiarPrefijo('acc')"><i class="fa-solid fa-eraser"></i> Borrar firma</button>
+                </div>
             </div>
             <div class="total-box">
                 <div class="total-item"><span>Total Operación</span><strong id="tot_acc_general">$0</strong></div>
                 <div class="total-item pendiente"><span>Saldo Pendiente</span><strong id="tot_acc_pendiente">$0</strong></div>
             </div>
+            <button type="button" class="secondary-bill" onclick="ftAbrirDesdeVenta('acc')"><i class="fa-solid fa-file-circle-check"></i> Factura final (con PDF y envío al cliente)</button>
             <button type="button" class="secondary-bill" onclick="appCore.prepararFactura('acc')"><i class="fa-solid fa-file-invoice"></i> Crear Factura</button>
             <button type="submit" class="submit">Registrar Venta</button>
         </form>
@@ -1578,8 +1584,14 @@ html[data-theme="claro"] .rep-patron-resumen { color: #1f2937 !important; backgr
                         </div>
                     </div>
                 </div>
+                <div class="field full">
+                    <label>Firma digital del cliente (opcional)</label>
+                    <canvas id="cel_firma_canvas" width="800" height="240"></canvas>
+                    <button type="button" class="conta-btn" style="margin-top:8px; align-self:flex-start;" onclick="firmaLimpiarPrefijo('cel')"><i class="fa-solid fa-eraser"></i> Borrar firma</button>
+                </div>
             </div>
             <div class="total-box"><div class="total-item"><span>Total Operación</span><strong id="tot_cel_general">$0</strong></div><div class="total-item pendiente"><span>Saldo Pendiente</span><strong id="tot_cel_pendiente">$0</strong></div></div>
+            <button type="button" class="secondary-bill" onclick="ftAbrirDesdeVenta('cel')"><i class="fa-solid fa-file-circle-check"></i> Factura final (con PDF y envío al cliente)</button>
             <button type="button" class="secondary-bill" onclick="appCore.prepararFactura('cel')"><i class="fa-solid fa-file-invoice"></i> Crear Factura</button>
             <button type="submit" class="submit">Registrar Venta</button>
         </form>
@@ -1740,7 +1752,7 @@ PART 2
         <div class="conta-wrap">
             <div class="form-header">
                 <div class="form-icon"><i class="fa-solid fa-file-circle-check"></i></div>
-                <div><h3>Factura final del taller</h3><p>Descarga el PDF con membrete o envíalo al cliente desde aquí.</p></div>
+                <div><h3 id="ft_titulo">Factura final del taller</h3><p>Descarga el PDF con membrete o envíalo al cliente desde aquí.</p></div>
             </div>
             <div class="conta-sec"><div id="ft_resumen"></div></div>
             <div class="conta-toolbar" style="justify-content:center;">
@@ -1963,7 +1975,9 @@ PART 2
             <div class="inv-direccion"><strong>DIRECCIÓN:</strong> <span id="cfg-direccion">Calle 14 # 2-67 Centro Ibagué-Tolima</span>  ·  <strong>SERVICIOS:</strong> <span id="cfg-servicios">Técnico profesional y telefonía.</span></div>
         </div>
         <div class="pdf-signatures">
-            <div class="signature-box">Recibí Conforme<span id="pdf-firma-cliente"></span></div>
+            <div class="signature-box">Recibí Conforme
+                <span id="pdf-firma-cliente-img" class="factura-firma-img" style="display:none"><img id="pdf-firma-cliente-img-src" src="" alt="Firma del cliente" style="max-height:70px;max-width:180px;object-fit:contain"></span>
+                <span id="pdf-firma-cliente"></span></div>
             <div class="signature-box">Autorizado
 
                 <span id="cfg-firma-img" class="factura-firma-img" style="display:none"><img id="cfg-firma-img-src" src="" alt="Firma" style="max-height:70px;max-width:180px;object-fit:contain"></span>
@@ -2454,6 +2468,13 @@ const appCore = {
         document.getElementById('pdf-abono').innerText = appCore.formatoMoneda(abono);
         document.getElementById('pdf-pendiente').innerText = appCore.formatoMoneda(pendiente < 0 ? 0 : pendiente);
         document.getElementById('pdf-garantia-texto').innerText = textoGarantia;
+        const firmaClienteSrc = (typeof firmaDataURLPrefijo === 'function') ? firmaDataURLPrefijo(prefijo) : null;
+        const fcWrap = document.getElementById('pdf-firma-cliente-img');
+        const fcImg = document.getElementById('pdf-firma-cliente-img-src');
+        if (fcWrap && fcImg) {
+            if (firmaClienteSrc) { fcImg.src = firmaClienteSrc; fcWrap.style.display = 'block'; }
+            else { fcImg.src = ''; fcWrap.style.display = 'none'; }
+        }
         document.getElementById('pdf-firma-cliente').innerHTML = `${cliente}
 (Asesor: ${asesor})`;
         let msg = `*${encodeURIComponent(JK_CFG.empresa)}*%0A*NIT:* ${encodeURIComponent(JK_CFG.nit)}%0A*RÉGIMEN:* ${encodeURIComponent(JK_CFG.regimen)}%0A*${encodeURIComponent(JK_CFG.servicios)}*%0A*DIRECCIÓN:* ${encodeURIComponent(JK_CFG.direccion)}%0A%0A*COMPROBANTE DE COMPRA*%0A--------------------------------%0A*Comprobante N°:* ${numFactura}%0A*Fecha:* ${fechaStr}%0A*Hora:* ${horaStr}%0A%0A*DATOS DEL CLIENTE:*%0A*Cliente:* ${encodeURIComponent(cliente)}%0A*Teléfono:* ${encodeURIComponent(telefono)}%0A%0A*DETALLE DE LA OPERACIÓN:*%0A*Equipo:* ${encodeURIComponent(desc.replace("Reparación: ", ""))}%0A*IMEI / Serial:* ${encodeURIComponent(textoImei)}%0A`;
@@ -2565,6 +2586,9 @@ async function guardarOperacion(prefijo, tipoOperacion) {
         const urlImagen = await subirImagenSupabase(inputEvidencia);
         const urlImagen2 = await subirImagenSupabase(inputEvidencia2);
         const urlImagen3 = await subirImagenSupabase(inputEvidencia3);
+        const urlFirmaVenta = (prefijo === 'acc' || prefijo === 'cel') && (typeof subirFirmaPrefijo === 'function')
+            ? await subirFirmaPrefijo(prefijo)
+            : null;
         let descripcion = "", equipo = null, imei = null, imei2 = null, falla = null;
         let inputProducto = null;
         if (prefijo === 'acc') {
@@ -2608,6 +2632,7 @@ async function guardarOperacion(prefijo, tipoOperacion) {
             inventario_id: (inputProducto && inputProducto.dataset.idInventario) ? inputProducto.dataset.idInventario : null,
             comercio_id: window.JK_COMERCIO_ID || null
         };
+        if (urlFirmaVenta) data.firma_url = urlFirmaVenta;
         // NUEVO: se intenta guardar las evidencias 2 y 3 en columnas propias;
         // si la tabla no tiene esas columnas, se guardan todas las URLs en imagen_url separadas por " | ".
         let error = null;
@@ -2638,12 +2663,14 @@ async function guardarOperacion(prefijo, tipoOperacion) {
         mostrarAlertaExito(`${tipoOperacion} registrado y stock actualizado con éxito.`);
         document.getElementById(`form_${tipoOperacion.toLowerCase()}`).reset();
         appCore.actualizarTotales(prefijo);
+        if ((prefijo === 'acc' || prefijo === 'cel') && typeof firmaLimpiarPrefijo === 'function') firmaLimpiarPrefijo(prefijo);
         document.getElementById(`preview_${prefijo}`).innerHTML = "Vista previa 1";
         document.getElementById(`preview_${prefijo}_2`).innerHTML = "Vista previa 2";
         document.getElementById(`preview_${prefijo}_3`).innerHTML = "Vista previa 3";
         const divGar = document.getElementById(`div_${prefijo}_garantia`);
         if (divGar) divGar.style.display = 'none';
         datosFacturaActual = {};
+        if (prefijo === 'acc' || prefijo === 'cel') { try { await panelCargarTodo(); } catch (err) {} }
     } catch (e) {
         console.error(e);
         mostrarAlertaError("Ocurrió un error: " + e.message);
@@ -3265,11 +3292,18 @@ function abrirDetalleOperacion(id) {
         : '<div class="vacio-box">Sin evidencias fotográficas registradas.</div>';
     document.getElementById('det_titulo').innerText = 'Factura ' + (o.numero_factura || '—');
     document.getElementById('det_sub').innerText = (o.tipo_operacion || '') + ' · ' + (o.customer_name || '');
+    const ventaExtra = !esRep ? `
+        ${o.firma_url ? `<div class="det-sec"><h4><i class="fa-solid fa-signature"></i> Firma del cliente</h4><img src="${contaEsc(o.firma_url)}" alt="Firma del cliente" style="max-height:120px;background:#fff;border-radius:10px;padding:8px;"></div>` : ''}
+        <div class="det-sec"><h4><i class="fa-solid fa-bolt"></i> Acciones</h4>
+            <div class="det-acc-row">
+                <button type="button" class="conta-btn" onclick="ftAbrirVentaDesdeOp('${String(o.id).replace(/'/g, '')}')"><i class="fa-solid fa-file-circle-check"></i> Factura final (con PDF y envío al cliente)</button>
+            </div>
+        </div>` : '';
     document.getElementById('det_body').innerHTML = `
         <div style="margin-bottom:14px">${pnlChip(pnlEstadoOp(o))}</div>
         <div class="det-grid">${grid}${falla}</div>
         ${control}
-        ${esRep ? repDetalleExtraHTML(o) : ''}
+        ${esRep ? repDetalleExtraHTML(o) : ventaExtra}
         <div class="det-sec"><h4><i class="fa-solid fa-images"></i> Evidencias (${urls.length})</h4>${evid}</div>`;
     abrirModalFormulario('modal_detalle');
 }
@@ -3667,7 +3701,12 @@ const REP_CHECK = [
     ['auricular', 'Auricular'], ['huella', 'Huella'], ['patron', 'Patrón'], ['codigo', 'Código'],
     ['bluetooth', 'Bluetooth'], ['sim', 'Reconoce SIM']
 ];
-const FIRMA = { dibujando: false, trazos: false };
+const FIRMAS = {
+    rep: { dibujando: false, trazos: false },
+    acc: { dibujando: false, trazos: false },
+    cel: { dibujando: false, trazos: false }
+};
+const FIRMA = FIRMAS.rep;
 let FT_DATA = null;
 let QR_DATA = null;
 function repChecklistInit() {
@@ -3838,55 +3877,70 @@ function firmaFondo(c, ctx) {
     ctx.lineJoin = 'round';
     ctx.strokeStyle = '#111111';
 }
-function firmaInit() {
-    const c = document.getElementById('rep_firma_canvas');
-    if (!c) return;
+function firmaInitPrefijo(prefijo) {
+    const c = document.getElementById(`${prefijo}_firma_canvas`);
+    if (!c || c.dataset.firmaReady === '1') return;
+    c.dataset.firmaReady = '1';
+    const estado = FIRMAS[prefijo] || (FIRMAS[prefijo] = { dibujando: false, trazos: false });
     const ctx = c.getContext('2d');
     firmaFondo(c, ctx);
     const pos = e => { const r = c.getBoundingClientRect(); return { x: (e.clientX - r.left) * c.width / r.width, y: (e.clientY - r.top) * c.height / r.height }; };
     c.addEventListener('pointerdown', e => {
-        FIRMA.dibujando = true;
+        estado.dibujando = true;
         const p = pos(e);
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
-        c.setPointerCapture(e.pointerId);
+        try { c.setPointerCapture(e.pointerId); } catch (err) {}
         e.preventDefault();
     });
     c.addEventListener('pointermove', e => {
-        if (!FIRMA.dibujando) return;
+        if (!estado.dibujando) return;
         const p = pos(e);
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
-        FIRMA.trazos = true;
+        estado.trazos = true;
     });
-    const fin = () => { FIRMA.dibujando = false; };
+    const fin = () => { estado.dibujando = false; };
     c.addEventListener('pointerup', fin);
     c.addEventListener('pointercancel', fin);
 }
-function firmaLimpiar() {
-    const c = document.getElementById('rep_firma_canvas');
+function firmaInit() {
+    ['rep', 'acc', 'cel'].forEach(firmaInitPrefijo);
+}
+function firmaLimpiarPrefijo(prefijo) {
+    const c = document.getElementById(`${prefijo}_firma_canvas`);
     if (!c) return;
     firmaFondo(c, c.getContext('2d'));
-    FIRMA.trazos = false;
+    if (FIRMAS[prefijo]) FIRMAS[prefijo].trazos = false;
+}
+function firmaLimpiar() {
+    firmaLimpiarPrefijo('rep');
+}
+function firmaDataURLPrefijo(prefijo) {
+    const c = document.getElementById(`${prefijo}_firma_canvas`);
+    const estado = FIRMAS[prefijo];
+    return (c && estado && estado.trazos) ? c.toDataURL('image/png') : null;
 }
 function firmaDataURL() {
-    const c = document.getElementById('rep_firma_canvas');
-    return (c && FIRMA.trazos) ? c.toDataURL('image/png') : null;
+    return firmaDataURLPrefijo('rep');
 }
-async function repSubirFirma() {
-    const src = firmaDataURL();
+async function subirFirmaPrefijo(prefijo) {
+    const src = firmaDataURLPrefijo(prefijo);
     if (!src) return null;
     try {
         const blob = await (await fetch(src)).blob();
-        const nombre = `firma_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.png`;
+        const nombre = `firma_${prefijo}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.png`;
         const { error } = await window.jkSupabase.storage.from('evidencias').upload(nombre, blob, { contentType: 'image/png' });
         if (error) throw error;
         return window.jkSupabase.storage.from('evidencias').getPublicUrl(nombre).data.publicUrl;
     } catch (e) {
         console.warn(e);
-        mostrarAlertaError('No se pudo subir la firma; la reparación se guardará sin firma.');
+        mostrarAlertaError('No se pudo subir la firma; la operación se guardará sin firma.');
         return null;
     }
+}
+async function repSubirFirma() {
+    return subirFirmaPrefijo('rep');
 }
 // ---------- DATOS PARA FACTURA / ETIQUETA / QR ----------
 function repDatosDesdeOp(o) {
@@ -4075,11 +4129,138 @@ function repFacturaHTML(d) {
         <tr class="total"><td>SALDO PENDIENTE</td><td class="num">${contaFmt(saldo)}</td></tr>
     </tbody></table></div></div>`;
     h += `<div class="rep-sec"><h3>Términos y condiciones</h3><p class="rep-nota">${contaEsc(JK_CFG.terminosTaller)} Presente esta factura para cualquier reclamación. Método de pago: ${contaEsc(d.metodo || 'N/A')} (${contaEsc(d.tipoPago || '')}).</p></div>`;
-    const firmaImg = d.firmaSrc ? `<img src="${d.firmaSrc}" alt="Firma" style="max-height:70px;display:block;margin:0 auto 4px;">` : '<div style="height:70px;"></div>';
-    return h + repCierre(repFirmas(`${firmaImg}Recibí conforme (cliente)\n${contaEsc(d.cliente || '')}`, `<div style="height:70px;"></div>Entregado por\n${contaEsc(d.asesor || 'ACCESORIOS JK')}`));
+    const firmaImg = d.firmaSrc ? `<img src="${d.firmaSrc}" alt="Firma del cliente" style="max-height:70px;display:block;margin:0 auto 4px;">` : '<div style="height:70px;"></div>';
+    const firmaComercio = repFirmaImgHtml();
+    const comData = (window.JK_COMERCIO && window.JK_COMERCIO.data) || {};
+    const selloComercio = comData.sello_url ? `<img src="${comData.sello_url}" alt="Sello" style="display:block;margin:0 auto 2px;max-height:44px;max-width:60%;object-fit:contain;opacity:.8;">` : '';
+    const bloqueEmpresa = (firmaComercio || selloComercio) ? (firmaComercio + selloComercio) : '<div style="height:70px;"></div>';
+    const firmasHTML = `<div class="rep-firmas"><div class="rep-firma">${firmaImg}Recibí conforme (cliente)\n${contaEsc(d.cliente || '')}</div><div class="rep-firma">${bloqueEmpresa}Entregado por\n${contaEsc(d.asesor || JK_CFG.firmaAutorizado || JK_CFG.empresa)}</div></div>`;
+    return h + repCierre(firmasHTML);
+}
+function ventaDatosDesdeForm(prefijo, num) {
+    const g = id => (document.getElementById(id)?.value || '').trim();
+    const esCel = prefijo === 'cel';
+    const prod = esCel ? g('cel_modelo') : g('acc_producto');
+    const cant = Math.max(1, parseFloat(g(`${prefijo}_cantidad`)) || 1);
+    const precio = parseFloat(g(`${prefijo}_precio`)) || 0;
+    const total = precio * cant;
+    const tipoPago = g(`${prefijo}_tipo_pago`) || 'Completo';
+    const abono = tipoPago === 'Abono' ? (parseFloat(g(`${prefijo}_abono`)) || 0) : total;
+    return {
+        modo: 'venta',
+        tipoOperacion: esCel ? 'Celular' : 'Accesorio',
+        id: null,
+        numero: num || 'Pendiente',
+        fecha: new Date().toISOString(),
+        cliente: g(`${prefijo}_cliente`),
+        telefono: g(`${prefijo}_telefono`),
+        asesor: g(`${prefijo}_asesor`) || 'N/A',
+        producto: prod,
+        equipo: prod,
+        cantidad: cant,
+        precio: precio,
+        total: total,
+        abono: abono,
+        metodo: g(`${prefijo}_metodo_pago`) || 'Efectivo',
+        tipoPago: tipoPago,
+        imei1: g(`${prefijo}_imei`),
+        imei2: esCel ? g('cel_imei2') : '',
+        garantia: obtenerTextoGarantia(prefijo),
+        firmaSrc: firmaDataURLPrefijo(prefijo)
+    };
+}
+function ventaDatosDesdeOp(o) {
+    const total = Number(o.total) || 0;
+    const abono = Number(o.amount_paid) || 0;
+    return {
+        modo: 'venta',
+        tipoOperacion: o.tipo_operacion || 'Venta',
+        id: o.id,
+        numero: o.numero_factura || 'Pendiente',
+        fecha: o.created_at,
+        cliente: o.customer_name || '—',
+        telefono: o.customer_phone || '',
+        asesor: o.asesor || 'N/A',
+        producto: o.equipo || o.descripcion || '—',
+        equipo: o.equipo || o.descripcion || '—',
+        cantidad: Number(o.quantity) || 1,
+        precio: Number(o.price) || total,
+        total: total,
+        abono: abono,
+        metodo: o.payment_method || 'N/A',
+        tipoPago: o.payment_type || (abono < total ? 'Abono' : 'Completo'),
+        imei1: o.imei_serial || '',
+        imei2: o.imei_serial_2 || '',
+        garantia: GARANTIA_POR_DEFECTO,
+        firmaSrc: o.firma_url || null
+    };
+}
+function ventaFacturaHTML(d) {
+    const saldo = Math.max(0, d.total - d.abono);
+    const imeiTxt = [d.imei1 ? 'IMEI 1: ' + d.imei1 : '', d.imei2 ? 'IMEI 2: ' + d.imei2 : ''].filter(Boolean).join(' | ') || 'N/A';
+    let h = repMembrete('Factura de venta · ' + (d.tipoOperacion || 'Operación'), JK_CFG.subtitulo || 'Comprobante de Operación Comercial', [
+        ['Factura N°', d.numero || 'Pendiente'],
+        ['Fecha', pnlFecha(d.fecha)],
+        ['Asesor', d.asesor || 'N/A']
+    ]);
+    h += `<div class="rep-sec"><h3>Datos del cliente</h3><table class="rep-table"><tbody>
+        <tr><td><b>Cliente</b></td><td>${contaEsc(d.cliente || '—')}</td><td><b>Teléfono</b></td><td>${contaEsc(d.telefono || '—')}</td></tr>
+        <tr><td><b>IMEI / Serial</b></td><td colspan="3">${contaEsc(imeiTxt)}</td></tr>
+    </tbody></table></div>`;
+    h += `<div class="rep-sec"><h3>Detalle de la operación</h3>${repTabla(
+        ['Descripción', 'Cant.', 'V. Unitario', 'Total'],
+        [[contaEsc(d.producto || '—'), String(d.cantidad || 1), contaFmt(d.precio), contaFmt(d.total)]],
+        [1, 2, 3]
+    )}<div class="rep-totales"><table class="rep-table"><tbody>
+        <tr><td>Subtotal</td><td class="num">${contaFmt(d.total)}</td></tr>
+        <tr><td>Tipo de pago (${contaEsc(d.metodo || 'N/A')})</td><td class="num">${contaEsc(d.tipoPago || 'Completo')}</td></tr>
+        <tr><td>Valor abonado / pagado</td><td class="num">${contaFmt(d.abono)}</td></tr>
+        <tr class="total"><td>SALDO PENDIENTE</td><td class="num">${contaFmt(saldo)}</td></tr>
+    </tbody></table></div></div>`;
+    h += `<div class="rep-sec"><h3>Términos de garantía</h3><p class="rep-nota">${contaEsc(d.garantia || GARANTIA_POR_DEFECTO)}</p></div>`;
+    const firmaImg = d.firmaSrc ? `<img src="${d.firmaSrc}" alt="Firma del cliente" style="max-height:70px;display:block;margin:0 auto 4px;">` : '<div style="height:70px;"></div>';
+    const firmaComercio = repFirmaImgHtml();
+    const comData = (window.JK_COMERCIO && window.JK_COMERCIO.data) || {};
+    const selloComercio = comData.sello_url ? `<img src="${comData.sello_url}" alt="Sello" style="display:block;margin:0 auto 2px;max-height:44px;max-width:60%;object-fit:contain;opacity:.8;">` : '';
+    const bloqueEmpresa = (firmaComercio || selloComercio) ? (firmaComercio + selloComercio) : '<div style="height:70px;"></div>';
+    const firmasHTML = `<div class="rep-firmas"><div class="rep-firma">${firmaImg}Recibí conforme (cliente)\n${contaEsc(d.cliente || '')}</div><div class="rep-firma">${bloqueEmpresa}Autorizado\n${contaEsc(JK_CFG.firmaAutorizado || d.asesor || JK_CFG.empresa)}</div></div>`;
+    return h + repCierre(firmasHTML);
+}
+function ftMensajeVentaCliente(d) {
+    const saldo = Math.max(0, d.total - d.abono);
+    return [
+        `*${JK_CFG.empresa} · COMPROBANTE DE COMPRA*`,
+        `Hola ${d.cliente || ''}, le enviamos la factura de su compra:`,
+        `Factura: ${d.numero || ''}`,
+        `Producto: ${d.producto || ''}`,
+        `Cantidad: ${d.cantidad || 1}`,
+        `Total: ${contaFmt(d.total)}`,
+        `Pagado: ${contaFmt(d.abono)}`,
+        `Saldo pendiente: ${contaFmt(saldo)}`,
+        '',
+        JK_CFG.mensajeGracias || '¡GRACIAS POR SU COMPRA!'
+    ].filter(x => x !== '').join('\n');
 }
 function ftMostrarResumen(d) {
     const saldo = Math.max(0, d.total - d.abono);
+    const esVenta = d.modo === 'venta';
+    const tituloEl = document.getElementById('ft_titulo');
+    if (tituloEl) tituloEl.innerText = esVenta ? ('Factura final · ' + (d.tipoOperacion || 'Venta')) : 'Factura final del taller';
+    const firmaPreview = d.firmaSrc
+        ? `<div class="det-item det-full"><span>Firma digital del cliente</span><img src="${d.firmaSrc}" alt="Firma del cliente" style="max-height:95px;background:#fff;border-radius:8px;padding:6px;margin-top:6px;display:block;"></div>`
+        : `<div class="det-item det-full"><span>Firma digital del cliente</span><strong>Sin firma registrada (opcional)</strong></div>`;
+    if (esVenta) {
+        document.getElementById('ft_resumen').innerHTML = `<div class="det-grid" style="margin:0;">
+            <div class="det-item"><span>Factura</span><strong>${contaEsc(d.numero || 'Pendiente')}</strong></div>
+            <div class="det-item"><span>Cliente</span><strong>${contaEsc(d.cliente || '—')}</strong></div>
+            <div class="det-item"><span>Producto</span><strong>${contaEsc(d.producto || '—')}</strong></div>
+            <div class="det-item"><span>Total</span><strong>${contaFmt(d.total)}</strong></div>
+            <div class="det-item"><span>Pagado</span><strong>${contaFmt(d.abono)}</strong></div>
+            <div class="det-item"><span>Saldo pendiente</span><strong>${contaFmt(saldo)}</strong></div>
+            ${firmaPreview}
+        </div>`;
+        return;
+    }
     document.getElementById('ft_resumen').innerHTML = `<div class="det-grid" style="margin:0;">
         <div class="det-item"><span>Factura</span><strong>${contaEsc(d.numero || 'Pendiente')}</strong></div>
         <div class="det-item"><span>Cliente</span><strong>${contaEsc(d.cliente || '—')}</strong></div>
@@ -4087,12 +4268,33 @@ function ftMostrarResumen(d) {
         <div class="det-item"><span>Estado</span><strong>${contaEsc(repEtiquetaEstado(d.estadoRaw))}</strong></div>
         <div class="det-item"><span>Saldo pendiente</span><strong>${contaFmt(saldo)}</strong></div>
         <div class="det-item"><span>Garantía</span><strong>${d.dias > 0 ? d.dias + ' días' : 'Sin garantía'}</strong></div>
+        ${firmaPreview}
     </div>`;
 }
 function ftAbrirDesdeOp(id) {
     const o = PANEL.ops.find(x => String(x.id) === String(id));
     if (!o) { mostrarAlertaError('No se encontró la reparación.'); return; }
     FT_DATA = repDatosDesdeOp(o);
+    ftMostrarResumen(FT_DATA);
+    abrirModalFormulario('modal_factura_taller');
+}
+function ftAbrirVentaDesdeOp(id) {
+    const o = PANEL.ops.find(x => String(x.id) === String(id));
+    if (!o) { mostrarAlertaError('No se encontró la operación.'); return; }
+    FT_DATA = ventaDatosDesdeOp(o);
+    ftMostrarResumen(FT_DATA);
+    abrirModalFormulario('modal_factura_taller');
+}
+async function ftAbrirDesdeVenta(prefijo) {
+    const cliente = (document.getElementById(`${prefijo}_cliente`)?.value || '').trim();
+    const prod = (document.getElementById(prefijo === 'cel' ? 'cel_modelo' : 'acc_producto')?.value || '').trim();
+    if (!cliente || !prod) {
+        mostrarAlertaError('Completa al menos el cliente y el producto para generar la factura.');
+        return;
+    }
+    const num = datosFacturaActual.numeroFactura || await obtenerSiguienteNumeroFactura();
+    datosFacturaActual.numeroFactura = num;
+    FT_DATA = ventaDatosDesdeForm(prefijo, num);
     ftMostrarResumen(FT_DATA);
     abrirModalFormulario('modal_factura_taller');
 }
@@ -4105,11 +4307,15 @@ function ftAbrirDesdeFormulario() {
     ftMostrarResumen(FT_DATA);
     abrirModalFormulario('modal_factura_taller');
 }
-function ftNombreArchivo(d) { return `Factura_Taller_${String(d.numero || 'SN').replace(/[\/\s]/g, '-')}.pdf`; }
+function ftHTMLActual(d) { return d && d.modo === 'venta' ? ventaFacturaHTML(d) : repFacturaHTML(d); }
+function ftNombreArchivo(d) {
+    const pref = (d && d.modo === 'venta') ? 'Factura_Venta_' : 'Factura_Taller_';
+    return `${pref}${String(d.numero || 'SN').replace(/[\/\s]/g, '-')}.pdf`;
+}
 function ftDescargar() {
     if (!FT_DATA) return;
     const nombre = ftNombreArchivo(FT_DATA);
-    repRenderPDF(repFacturaHTML(FT_DATA)).then(pdf => {
+    repRenderPDF(ftHTMLActual(FT_DATA)).then(pdf => {
         pdf.save(nombre);
         appCore.mostrarAvisoPDF();
     }).catch(e => { console.error(e); mostrarAlertaError('No se pudo generar el PDF.'); });
@@ -4134,12 +4340,12 @@ async function ftEnviar() {
     const d = FT_DATA;
     const nombre = ftNombreArchivo(d);
     try {
-        const pdf = await repRenderPDF(repFacturaHTML(d));
+        const pdf = await repRenderPDF(ftHTMLActual(d));
         const blob = pdf.output('blob');
         const file = new File([blob], nombre, { type: 'application/pdf' });
-        const texto = ftMensajeCliente(d);
+        const texto = d.modo === 'venta' ? ftMensajeVentaCliente(d) : ftMensajeCliente(d);
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: 'Factura taller ' + d.numero, text: texto });
+            await navigator.share({ files: [file], title: (d.modo === 'venta' ? 'Factura ' : 'Factura taller ') + d.numero, text: texto });
             return;
         }
         pdf.save(nombre);
